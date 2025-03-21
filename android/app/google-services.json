@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "588412437604",
+    "project_id": "voting-app-32675",
+    "storage_bucket": "voting-app-32675.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588412437604:android:53c7b5a899341e2446cb71",
+        "android_client_info": {
+          "package_name": "com.polls.voting_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRzblRDDH-wXMD3VdSSzipivPSosk7Brk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
