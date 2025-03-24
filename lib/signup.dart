@@ -4,12 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
 
-class Register extends StatefulWidget {
+class SignUp extends StatefulWidget {
   @override
-  _RegisterState createState() => _RegisterState();
+  _SignUpState createState() => _SignUpState();
 }
 
-class _RegisterState extends State<Register> {
+class _SignUpState extends State<SignUp> {
   bool showProgress = false;
   bool _isObscure = true;
   bool _isObscure2 = true;
@@ -45,7 +45,7 @@ class _RegisterState extends State<Register> {
                     children: [
                       SizedBox(height: 80),
                       Text(
-                        "Register Now",
+                        "Sign up Now",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -169,7 +169,7 @@ class _RegisterState extends State<Register> {
         _button("Login", () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
         }),
-        _button("Register", () {
+        _button("SignUp", () {
           setState(() => showProgress = true);
           signUp(emailController.text, passwordController.text, role);
         }),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
+import 'signup.dart';
 
 class Splash extends StatelessWidget {
-  const Splash({Key? key}) : super(key: key);
+  //const Splash({Key? key}) : super(key: key);
+  const Splash({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +68,12 @@ class Splash extends StatelessWidget {
                   // Sign Up Button
                   OutlinedButton(
                     onPressed: () {
-                      //Signup nav
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignUp(),
+                        ),
+                      );
                     },
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Color(0xFF9A4C43)),
