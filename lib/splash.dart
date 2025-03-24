@@ -22,7 +22,9 @@ class Splash extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   image: DecorationImage(
-                    image: NetworkImage("https://res.cloudinary.com/dmtsrrnid/image/upload/v1742726238/voting_image_pqwrks.jpg"),
+                    image: NetworkImage(
+                      "https://res.cloudinary.com/dmtsrrnid/image/upload/v1742726238/voting_image_pqwrks.jpg",
+                    ),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -43,9 +45,7 @@ class Splash extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => LoginPage(),
-                        ),
+                        MaterialPageRoute(builder: (context) => LoginPage()),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -70,9 +70,7 @@ class Splash extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => SignUp(),
-                        ),
+                        MaterialPageRoute(builder: (context) => SignUp()),
                       );
                     },
                     style: OutlinedButton.styleFrom(
