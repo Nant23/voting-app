@@ -69,13 +69,23 @@ class _SignUpState extends State<SignUp> {
                         keyboardType: TextInputType.emailAddress,
                       ),
                       SizedBox(height: 20),
-                      _passwordField(passwordController, "Password", _isObscure, () {
-                        setState(() => _isObscure = !_isObscure);
-                      }),
+                      _passwordField(
+                        passwordController,
+                        "Password",
+                        _isObscure,
+                        () {
+                          setState(() => _isObscure = !_isObscure);
+                        },
+                      ),
                       SizedBox(height: 20),
-                      _passwordField(confirmpassController, "Confirm Password", _isObscure2, () {
-                        setState(() => _isObscure2 = !_isObscure2);
-                      }),
+                      _passwordField(
+                        confirmpassController,
+                        "Confirm Password",
+                        _isObscure2,
+                        () {
+                          setState(() => _isObscure2 = !_isObscure2);
+                        },
+                      ),
                       SizedBox(height: 20),
                       _roleDropdown(),
                       SizedBox(height: 20),
@@ -110,7 +120,12 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget _passwordField(TextEditingController controller, String hintText, bool obscureText, VoidCallback toggleVisibility) {
+  Widget _passwordField(
+    TextEditingController controller,
+    String hintText,
+    bool obscureText,
+    VoidCallback toggleVisibility,
+  ) {
     return TextFormField(
       obscureText: obscureText,
       controller: controller,
@@ -121,7 +136,8 @@ class _SignUpState extends State<SignUp> {
         ),
       ),
       validator: (value) {
-        if (hintText == "Confirm Password" && value != passwordController.text) {
+        if (hintText == "Confirm Password" &&
+            value != passwordController.text) {
           return "Password did not match";
         }
         if (value == null || value.isEmpty || value.length < 6) {
@@ -138,18 +154,26 @@ class _SignUpState extends State<SignUp> {
       children: [
         Text(
           "Role:",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         SizedBox(width: 10),
         DropdownButton<String>(
           dropdownColor: Colors.blue[900],
           iconEnabledColor: Colors.white,
-          items: options.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value, style: TextStyle(color: Colors.white, fontSize: 18)),
-            );
-          }).toList(),
+          items:
+              options.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                );
+              }).toList(),
           onChanged: (newValue) {
             setState(() {
               _currentItemSelected = newValue!;
@@ -167,7 +191,10 @@ class _SignUpState extends State<SignUp> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _button("Login", () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
         }),
         _button("SignUp", () {
           setState(() => showProgress = true);
@@ -191,7 +218,8 @@ class _SignUpState extends State<SignUp> {
   void signUp(String email, String password, String role) async {
     if (_formKey.currentState!.validate()) {
       try {
-        UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+        UserCredential userCredential = await _auth
+            .createUserWithEmailAndPassword(email: email, password: password);
         postDetailsToFirestore(userCredential.user, email, role);
       } catch (e) {
         setState(() => showProgress = false);
@@ -201,9 +229,15 @@ class _SignUpState extends State<SignUp> {
 
   void postDetailsToFirestore(User? user, String email, String role) async {
     if (user != null) {
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({'email': email, 'role': role}, SetOptions(merge: true));
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'email': email,
+        'role': role,
+      }, SetOptions(merge: true));
       setState(() => showProgress = false);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
     }
   }
 }
