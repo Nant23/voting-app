@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voting_app/signup.dart';
 import 'login.dart';
 
 class Splash extends StatelessWidget {
@@ -48,7 +49,7 @@ class Splash extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
+                          builder: (context) => LoginPage(),
                         ),
                       );
                     },
@@ -72,7 +73,12 @@ class Splash extends StatelessWidget {
                   // Sign Up Button
                   OutlinedButton(
                     onPressed: () {
-                      //Signup nav
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignUp(),
+                        ),
+                      );
                     },
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Color(0xFF46639B)),
