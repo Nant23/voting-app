@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dialogs.dart' as popup;
-import 'admin.dart';
-import 'user.dart' as users;
+import 'admin_dash.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -13,11 +10,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _isObscure3 = true;
-  bool visible = false;
-  final _formkey = GlobalKey<FormState>();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  String dropdownValue = 'Voter';
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +66,6 @@ class _LoginPageState extends State<LoginPage> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 20.0),
                             child: TextField(
-                              controller: emailController,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Email',
@@ -103,25 +95,10 @@ class _LoginPageState extends State<LoginPage> {
                           child: Padding(
                             padding: const EdgeInsets.only(left: 20.0),
                             child: TextField(
-                              controller: passwordController,
-                              obscureText: _isObscure3,
+                              obscureText: true,
                               decoration: InputDecoration(
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    _isObscure3
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _isObscure3 = !_isObscure3;
-                                    });
-                                  },
-                                ),
-                                filled: true,
-                                fillColor: Colors.white,
+                                border: InputBorder.none,
                                 hintText: 'Password',
-                                enabled: true,
                               ),
                             ),
                           ),
@@ -136,8 +113,12 @@ class _LoginPageState extends State<LoginPage> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      //popup.Dialog.successDialog(context);
-                      signIn(emailController.text, passwordController.text);
+                      popup.Dialog.successDialog(context).then((_) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => AdminDash()),
+                        );
+                      });
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF46639B),
@@ -188,61 +169,5 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  void route() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    var kk = FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        if (documentSnapshot.get('role') == "Admin") {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => Admin()),
-          );
-        } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => users.User()),
-          );
-        }
-      } else {
-        print('Document does not exist on the database');
-      }
-    });
-  }
-
-  void showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
-    );
-  }
-
-  void signIn(String email, String password) async {
-    if (_formkey.currentState!.validate()) {
-      try {
-        // UserCredential userCredential =
-        //     await FirebaseAuth.instance.signInWithEmailAndPassword(
-        //   email: email,
-        //   password: password,
-        // );
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-        route();
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          showError('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          showError('Wrong password provided.');
-        } else {
-          showError('An error occurred: ${e.message}');
-        }
-      }
-    }
   }
 }

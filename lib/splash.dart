@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
-import 'signup.dart';
 
 class Splash extends StatelessWidget {
-  //const Splash({Key? key}) : super(key: key);
-  const Splash({super.key});
+  const Splash({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +21,7 @@ class Splash extends StatelessWidget {
                   width: 426,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    image: DecorationImage(
+                    image: const DecorationImage(
                       image: NetworkImage(
                         "https://res.cloudinary.com/dmtsrrnid/image/upload/v1742726238/voting_image_pqwrks.jpg",
                       ),
@@ -33,29 +31,32 @@ class Splash extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
+
               const Text(
-                "Welcome to Voting App",
+                "Welcome to Voting App!",
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 60),
 
               // Buttons
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   // Login Button
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPage(),
+                        ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF46639B),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
+                        horizontal: 48,
+                        vertical: 15,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -71,13 +72,11 @@ class Splash extends StatelessWidget {
                   // Sign Up Button
                   OutlinedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignUp()),
-                      );
+                      //Signup nav
                     },
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Color(0xFF46639B)),
+                      backgroundColor: Color(0xFFFFFFFF),
                       padding: const EdgeInsets.symmetric(
                         horizontal: 44,
                         vertical: 15,
