@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Dialog {
-  static void successDialog(BuildContext context) {
-    showDialog(
+  static Future<void> successDialog(BuildContext context) {
+    return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -17,7 +17,6 @@ class Dialog {
               style: TextStyle(fontSize: 22, color: Colors.white),
             ),
           ),
-
           actions: [
             TextButton(
               onPressed: () {

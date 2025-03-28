@@ -10,10 +10,6 @@ class AddOfficer extends StatefulWidget {
 class _AddOfficerState extends State<AddOfficer> {
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar: AppBar(
-        title: Text('Add Officer')
-      )
-    );
+    return Scaffold(appBar: AppBar(title: Text('Add Officer')));
   }
 }
