@@ -1,42 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:voting_app/signup.dart';
 import 'login.dart';
-import 'signup.dart';
 
 class Splash extends StatelessWidget {
-  //const Splash({Key? key}) : super(key: key);
-  const Splash({super.key});
+  const Splash({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE3E5F3),
+      backgroundColor: const Color(0xFFBED2EE),
       body: SafeArea(
         child: Center(
           child: Column(
             children: [
-              const SizedBox(height: 30),
+              const SizedBox(height: 45),
               // Image
-              Container(
-                height: 300,
-                width: 300,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  image: DecorationImage(
-                    image: NetworkImage("https://res.cloudinary.com/dmtsrrnid/image/upload/v1742726238/voting_image_pqwrks.jpg"),
-                    fit: BoxFit.cover,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Container(
+                  height: 426,
+                  width: 426,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    image: const DecorationImage(
+                      image: NetworkImage(
+                        "https://res.cloudinary.com/dmtsrrnid/image/upload/v1742726238/voting_image_pqwrks.jpg",
+                      ),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 40),
+
               const Text(
-                "Welcome to Voting App",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                "Welcome to Voting App!",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 60),
 
               // Buttons
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   // Login Button
                   ElevatedButton(
@@ -49,10 +54,10 @@ class Splash extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF9A4C43),
+                      backgroundColor: const Color(0xFF46639B),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
+                        horizontal: 48,
+                        vertical: 15,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -76,10 +81,11 @@ class Splash extends StatelessWidget {
                       );
                     },
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Color(0xFF9A4C43)),
+                      side: const BorderSide(color: Color(0xFF46639B)),
+                      backgroundColor: Color(0xFFFFFFFF),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 12,
+                        horizontal: 44,
+                        vertical: 15,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -87,7 +93,7 @@ class Splash extends StatelessWidget {
                     ),
                     child: const Text(
                       "Sign Up",
-                      style: TextStyle(color: Color(0xFF9A4C43)),
+                      style: TextStyle(color: Color(0xFF46639B)),
                     ),
                   ),
                 ],
