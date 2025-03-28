@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'admin_tools.dart';
+//import 'admin_tools.dart';
 import 'add_officer.dart';
 
 import 'login.dart';
@@ -61,8 +61,7 @@ class _AdminState extends State<Admin> {
   Future<void> logout(BuildContext context) async {
     CircularProgressIndicator();
     await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacement(
-      context,
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => LoginPage(),
       ),
