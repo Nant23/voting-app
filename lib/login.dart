@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:voting_app/officer_dashboard.dart';
 import 'admin.dart';
 import 'user.dart' as users;
 
@@ -179,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void route() async{
     User? user = FirebaseAuth.instance.currentUser;
-    var kk = FirebaseFirestore.instance
+    FirebaseFirestore.instance
             .collection('users')
             .doc(user!.uid)
             .get()
@@ -192,13 +193,20 @@ class _LoginPageState extends State<LoginPage> {
             builder: (context) =>  Admin(),
           ),
         );
-        }else{
+        }else if (documentSnapshot.get('role') == "User"){
           Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) =>  users.User(),
           ),
         );
+        } else if (documentSnapshot.get('role') == "Officer") {
+          Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>  Officer(),
+          ),
+          );
         }
       } else {
         print('Document does not exist on the database');
