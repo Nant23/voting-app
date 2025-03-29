@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:voting_app/officer_dashboard.dart';
-import 'admin.dart';
+import 'admin_dash.dart';
 import 'user.dart' as users;
 //import 'dialogs.dart' as popup;
 
@@ -204,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
       if (role == "Admin") {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => Admin()),
+          MaterialPageRoute(builder: (context) => AdminDash()),
         );
       } else if (role == "User") {
         Navigator.pushReplacement(
@@ -255,5 +255,3 @@ class _LoginPageState extends State<LoginPage> {
       }
   }
 }
-
-

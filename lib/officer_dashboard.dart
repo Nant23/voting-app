@@ -10,10 +10,11 @@ class Officer extends StatefulWidget {
 class _OfficerState extends State<Officer> {
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: Text('Officer Dashboardddddddd')
-      )
+        title: Text('Officer Dashboard'),
+      ),
+      backgroundColor: Color(0xFF46639B), // Set background color
     );
   }
 }
