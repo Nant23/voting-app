@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'user.dart' as u;
 import 'components/my_textfield.dart';
-import 'components/my_button.dart';
+//import 'components/my_button.dart';
 
 class SignUp extends StatefulWidget {
   @override
