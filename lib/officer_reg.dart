@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'textfield_wid.dart';
 import 'navigation_bar.dart';
+import 'dialogs.dart';
 
 class OfficerReg extends StatefulWidget {
   const OfficerReg({Key? key}) : super(key: key);
@@ -58,6 +59,7 @@ class _OfficerRegState extends State<OfficerReg> {
                   ElevatedButton(
                     onPressed: () {
                       createOfficerAccount(
+                          context,
                           emailController.text,
                           passwordController.text,
                           nameController.text,
@@ -84,8 +86,8 @@ class _OfficerRegState extends State<OfficerReg> {
   }
 }
 
-Future<void> createOfficerAccount(String email, String password, String name,
-    String country, String id) async {
+Future<void> createOfficerAccount(BuildContext context, String email,
+    String password, String name, String country, String id) async {
   try {
     // Get current user
     User? adminUser = FirebaseAuth.instance.currentUser;
@@ -127,10 +129,13 @@ Future<void> createOfficerAccount(String email, String password, String name,
     print("Officer account created successfully.");
 
     //Pop up: Successful code here
-    //
+    CustomDialog.showDialogBox(context,
+        title: "Success", message: "Officer account created successfully.");
   } catch (e) {
     print("Error creating officer account: $e");
 
     // Pop up: Unsuccesfful code here
+    CustomDialog.showDialogBox(context,
+        title: "Error", message: "Failed to create officer account: $e");
   }
 }
