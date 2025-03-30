@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.voting_app"
+    namespace = "com.polls.voting_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
