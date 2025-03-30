@@ -16,7 +16,7 @@ class _OfficerRegState extends State<OfficerReg> {
   final TextEditingController officerIdController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController emailController =TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController countryController = TextEditingController();
   final TextEditingController confirmPassController = TextEditingController();
 
@@ -35,37 +35,45 @@ class _OfficerRegState extends State<OfficerReg> {
       appBar: AppBar(title: Text('Officer Registration')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            textfield_wid(label: 'Officer ID', controller: officerIdController),
-            textfield_wid(label: 'Name', controller: nameController),
-            textfield_wid(label: 'Email', controller: emailController),
-            textfield_wid(
-                label: 'Password',
-                controller: passwordController,
-                obscureText: true),
-            textfield_wid(
-                label: 'Confirm Password',
-                controller: confirmPassController,
-                obscureText: true),
-            textfield_wid(label: 'Country', controller: countryController),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    createOfficerAccount(emailController.text, passwordController.text, nameController.text, countryController.text, officerIdController.text);
-                  },
-                  child: Text('Add'),
-                ),
-                OutlinedButton(
-                  onPressed: () {},
-                  child: Text('Remove'),
-                ),
-              ],
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              textfield_wid(
+                  label: 'Officer ID', controller: officerIdController),
+              textfield_wid(label: 'Name', controller: nameController),
+              textfield_wid(label: 'Email', controller: emailController),
+              textfield_wid(
+                  label: 'Password',
+                  controller: passwordController,
+                  obscureText: true),
+              textfield_wid(
+                  label: 'Confirm Password',
+                  controller: confirmPassController,
+                  obscureText: true),
+              textfield_wid(label: 'Country', controller: countryController),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      createOfficerAccount(
+                          emailController.text,
+                          passwordController.text,
+                          nameController.text,
+                          countryController.text,
+                          officerIdController.text);
+                    },
+                    child: Text('Add'),
+                  ),
+                  OutlinedButton(
+                    onPressed: () {},
+                    child: Text('Remove'),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: NavBar(
@@ -76,7 +84,8 @@ class _OfficerRegState extends State<OfficerReg> {
   }
 }
 
-Future<void> createOfficerAccount(String email, String password, String name, String country, String id) async {
+Future<void> createOfficerAccount(String email, String password, String name,
+    String country, String id) async {
   try {
     // Get current user
     User? adminUser = FirebaseAuth.instance.currentUser;
@@ -116,7 +125,12 @@ Future<void> createOfficerAccount(String email, String password, String name, St
     });
 
     print("Officer account created successfully.");
+
+    //Pop up: Successful code here
+    //
   } catch (e) {
     print("Error creating officer account: $e");
+
+    // Pop up: Unsuccesfful code here
   }
 }
