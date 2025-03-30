@@ -23,7 +23,6 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController countryController = TextEditingController();
 
-
   var options = ['User', 'Admin'];
   //var _currentItemSelected = "User";
   var role = "User"; // Ensuring role defaults to 'User'
@@ -31,93 +30,113 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xFFBED2EE),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 50),
+      backgroundColor: const Color(0xFFBED2EE),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 50),
 
-                // Get started text
-                const Text(
-                  'Let\'s Get Started!',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 35,
+              // Get started text
+              const Text(
+                'Let\'s Get Started!',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 35,
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              MyTextfield(
+                  controller: usernameController,
+                  hintText: 'Username',
+                  obscureText: false),
+              const SizedBox(height: 10),
+
+              MyTextfield(
+                  controller: passwordController,
+                  hintText: 'Password',
+                  obscureText: true),
+              const SizedBox(height: 10),
+
+              MyTextfield(
+                  controller: confirmpassController,
+                  hintText: 'Confirm password',
+                  obscureText: true),
+              const SizedBox(height: 10),
+
+              MyTextfield(
+                  controller: emailController,
+                  hintText: 'Email',
+                  obscureText: false),
+              const SizedBox(height: 10),
+
+              MyTextfield(
+                  controller: countryController,
+                  hintText: 'Country',
+                  obscureText: false),
+              const SizedBox(height: 20),
+
+              //Sign up button
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    signUp(usernameController.text, emailController.text,
+                        passwordController.text, countryController.text, role);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF46639B),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 55,
+                      vertical: 15,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: const Text(
+                      'Sign up',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
                   ),
                 ),
-
-                const SizedBox(height: 20),
-
-                MyTextfield(controller: usernameController, hintText: 'Username', obscureText: false),
-                const SizedBox(height: 10),
-
-                MyTextfield(controller: passwordController, hintText: 'Password', obscureText: true),
-                const SizedBox(height: 10),
-
-                MyTextfield(controller: confirmpassController, hintText: 'Confirm password', obscureText: true),
-                const SizedBox(height: 10),
-
-                MyTextfield(controller: emailController, hintText: 'Email', obscureText: false),
-                const SizedBox(height: 10),
-
-                MyTextfield(controller: countryController, hintText: 'Country', obscureText: false),
-                const SizedBox(height: 20),
-
-
-                //Sign up button
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      signUp(usernameController.text, emailController.text, passwordController.text, countryController.text, role);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF46639B),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 55,
-                        vertical: 15,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: const Text(
-                        'Sign up',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
+      ),
     );
   }
 
-
-
-
-
-
-  void signUp(String username, String email, String password, String country, String role) async {
-      try {
-        UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-        postDetailsToFirestore(userCredential.user, username, email, country, role);
-      } catch (e) {
-        setState(() => showProgress = false);
-      }
+  void signUp(String username, String email, String password, String country,
+      String role) async {
+    try {
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+      postDetailsToFirestore(
+          userCredential.user, username, email, country, role);
+    } catch (e) {
+      setState(() => showProgress = false);
+    }
   }
 
-  void postDetailsToFirestore(User? user, String username, String email, String country, String role) async {
+  void postDetailsToFirestore(User? user, String username, String email,
+      String country, String role) async {
     if (user != null) {
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({'userName': username, 'email': email, 'country': country, 'role': role}, SetOptions(merge: true));
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'userName': username,
+        'email': email,
+        'country': country,
+        'role': role
+      }, SetOptions(merge: true));
       setState(() => showProgress = false);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => u.User()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => u.User()));
     }
   }
 }

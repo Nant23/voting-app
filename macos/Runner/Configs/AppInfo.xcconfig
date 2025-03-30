@@ -8,7 +8,14 @@
 PRODUCT_NAME = voting_app
 
 // The application's bundle identifier
+<<<<<<< HEAD
 PRODUCT_BUNDLE_IDENTIFIER = com.polls.votingApp
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2025 com.polls. All rights reserved.
+=======
+PRODUCT_BUNDLE_IDENTIFIER = com.example.votingApp
+
+// The copyright displayed in application information
+PRODUCT_COPYRIGHT = Copyright © 2025 com.example. All rights reserved.
+>>>>>>> 0be1aff (login,splash commit)
