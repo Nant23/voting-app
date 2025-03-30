@@ -110,12 +110,13 @@ Future<void> createOfficerAccount(String email, String password, String name, St
         .collection('users')
         .doc(userCredential.user!.uid)
         .set({
-      'email': email,
-      'role': 'Officer',
-      'id': id,
-      'name': name,
-      'country': country, // Assign officer role
-    });
+          'email': email,
+          'role': 'Officer',
+          'id': id,
+          'name': name,
+          'country': country, // Assign officer role
+        }
+    );
 
     print("Officer account created successfully.");
     
