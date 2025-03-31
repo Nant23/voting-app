@@ -385,7 +385,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
+<<<<<<< HEAD
 				PRODUCT_BUNDLE_IDENTIFIER = com.polls.votingApp.RunnerTests;
+=======
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.votingApp.RunnerTests;
+>>>>>>> 0be1aff (login,splash commit)
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/voting_app.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/voting_app";
@@ -399,7 +403,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
+<<<<<<< HEAD
 				PRODUCT_BUNDLE_IDENTIFIER = com.polls.votingApp.RunnerTests;
+=======
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.votingApp.RunnerTests;
+>>>>>>> 0be1aff (login,splash commit)
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/voting_app.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/voting_app";
@@ -413,7 +421,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
+<<<<<<< HEAD
 				PRODUCT_BUNDLE_IDENTIFIER = com.polls.votingApp.RunnerTests;
+=======
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.votingApp.RunnerTests;
+>>>>>>> 0be1aff (login,splash commit)
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/voting_app.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/voting_app";

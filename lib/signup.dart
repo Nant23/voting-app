@@ -46,46 +46,36 @@ class _SignUpState extends State<SignUp> {
               const SizedBox(height: 20),
 
               MyTextfield(
-                controller: usernameController,
-                hintText: 'Username',
-                obscureText: false,
-                hintStyle: const TextStyle(fontSize: 16), // ✅ FIXED
-              ),
+                  controller: usernameController,
+                  hintText: 'Username',
+                  obscureText: false),
               const SizedBox(height: 10),
 
               MyTextfield(
-                controller: passwordController,
-                hintText: 'Password',
-                obscureText: true,
-                hintStyle: const TextStyle(fontSize: 16), // ✅ FIXED
-              ),
+                  controller: passwordController,
+                  hintText: 'Password',
+                  obscureText: true),
               const SizedBox(height: 10),
 
               MyTextfield(
-                controller: confirmpassController,
-                hintText: 'Confirm password',
-                obscureText: true,
-                hintStyle: const TextStyle(fontSize: 16), // ✅ FIXED
-              ),
+                  controller: confirmpassController,
+                  hintText: 'Confirm password',
+                  obscureText: true),
               const SizedBox(height: 10),
 
               MyTextfield(
-                controller: emailController,
-                hintText: 'Email',
-                obscureText: false,
-                hintStyle: const TextStyle(fontSize: 16), // ✅ FIXED
-              ),
+                  controller: emailController,
+                  hintText: 'Email',
+                  obscureText: false),
               const SizedBox(height: 10),
 
               MyTextfield(
-                controller: countryController,
-                hintText: 'Country',
-                obscureText: false,
-                hintStyle: const TextStyle(fontSize: 16), // ✅ FIXED
-              ),
+                  controller: countryController,
+                  hintText: 'Country',
+                  obscureText: false),
               const SizedBox(height: 20),
 
-              // Sign up button
+              //Sign up button
               Center(
                 child: ElevatedButton(
                   onPressed: () {
@@ -102,9 +92,9 @@ class _SignUpState extends State<SignUp> {
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: const Text(
                       'Sign up',
                       style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
@@ -118,23 +108,30 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  void signUp(String username, String email, String password, String country, String role) async {
+  void signUp(String username, String email, String password, String country,
+      String role) async {
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      postDetailsToFirestore(userCredential.user, username, email, country, role);
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+      postDetailsToFirestore(
+          userCredential.user, username, email, country, role);
     } catch (e) {
       setState(() => showProgress = false);
     }
   }
 
-  void postDetailsToFirestore(User? user, String username, String email, String country, String role) async {
+  void postDetailsToFirestore(User? user, String username, String email,
+      String country, String role) async {
     if (user != null) {
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set(
-          {'userName': username, 'email': email, 'country': country, 'role': role},
-          SetOptions(merge: true));
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'userName': username,
+        'email': email,
+        'country': country,
+        'role': role
+      }, SetOptions(merge: true));
       setState(() => showProgress = false);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => u.User()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => u.User()));
     }
   }
 }

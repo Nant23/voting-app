@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'textfield_wid.dart';
 import 'navigation_bar.dart';
+import 'dialogs.dart';
 
 class OfficerReg extends StatefulWidget {
   const OfficerReg({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class _OfficerRegState extends State<OfficerReg> {
   final TextEditingController officerIdController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController emailController =TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController countryController = TextEditingController();
   final TextEditingController confirmPassController = TextEditingController();
 
@@ -38,7 +39,8 @@ class _OfficerRegState extends State<OfficerReg> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              textfield_wid(label: 'Officer ID', controller: officerIdController),
+              textfield_wid(
+                  label: 'Officer ID', controller: officerIdController),
               textfield_wid(label: 'Name', controller: nameController),
               textfield_wid(label: 'Email', controller: emailController),
               textfield_wid(
@@ -56,7 +58,13 @@ class _OfficerRegState extends State<OfficerReg> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      createOfficerAccount(emailController.text, passwordController.text, nameController.text, countryController.text, officerIdController.text);
+                      createOfficerAccount(
+                          context,
+                          emailController.text,
+                          passwordController.text,
+                          nameController.text,
+                          countryController.text,
+                          officerIdController.text);
                     },
                     child: Text('Add'),
                   ),
@@ -78,7 +86,8 @@ class _OfficerRegState extends State<OfficerReg> {
   }
 }
 
-Future<void> createOfficerAccount(String email, String password, String name, String country, String id) async {
+Future<void> createOfficerAccount(BuildContext context, String email,
+    String password, String name, String country, String id) async {
   try {
     // Get current user
     User? adminUser = FirebaseAuth.instance.currentUser;
@@ -110,20 +119,24 @@ Future<void> createOfficerAccount(String email, String password, String name, St
         .collection('users')
         .doc(userCredential.user!.uid)
         .set({
-      'email': email,
-      'role': 'Officer',
-      'id': id,
-      'name': name,
-      'country': country, // Assign officer role
-    });
+          'email': email,
+          'role': 'Officer',
+          'id': id,
+          'name': name,
+          'country': country, // Assign officer role
+        }
+    );
 
     print("Officer account created successfully.");
-    
+
     //Pop up: Successful code here
-    // 
+    CustomDialog.showDialogBox(context,
+        title: "Success", message: "Officer account created successfully.");
   } catch (e) {
     print("Error creating officer account: $e");
 
     // Pop up: Unsuccesfful code here
+    CustomDialog.showDialogBox(context,
+        title: "Error", message: "Failed to create officer account: $e");
   }
 }
