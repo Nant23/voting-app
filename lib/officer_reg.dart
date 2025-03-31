@@ -119,12 +119,13 @@ Future<void> createOfficerAccount(BuildContext context, String email,
         .collection('users')
         .doc(userCredential.user!.uid)
         .set({
-      'email': email,
-      'role': 'Officer',
-      'id': id,
-      'name': name,
-      'country': country, // Assign officer role
-    });
+          'email': email,
+          'role': 'Officer',
+          'id': id,
+          'name': name,
+          'country': country, // Assign officer role
+        }
+    );
 
     print("Officer account created successfully.");
 
