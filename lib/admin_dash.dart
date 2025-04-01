@@ -21,7 +21,7 @@ class _AdminDashState extends State<AdminDash> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Officer')),
+      appBar: AppBar(title: Text('Admin')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
