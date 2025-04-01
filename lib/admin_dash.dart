@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voting_app/voters_reg.dart';
 import 'navigation_bar.dart';
 import 'officer_reg.dart';
 
@@ -53,7 +54,12 @@ class _AdminDashState extends State<AdminDash> {
                     borderRadius: BorderRadius.circular(18)),
                 minimumSize: Size(double.infinity, 50),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => VotersReg()),
+                );
+              },
               child: Text('Voters Register',
                   style: TextStyle(fontSize: 16, color: Colors.white)),
             ),
