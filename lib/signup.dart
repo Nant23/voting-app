@@ -1,10 +1,8 @@
-// import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'user.dart' as u;
 import 'components/my_textfield.dart';
-//import 'components/my_button.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -13,8 +11,6 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   bool showProgress = false;
-
-  //final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
 
   final TextEditingController emailController = TextEditingController();
@@ -24,7 +20,6 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController countryController = TextEditingController();
 
   var options = ['User', 'Admin'];
-  //var _currentItemSelected = "User";
   var role = "User"; // Ensuring role defaults to 'User'
 
   @override
