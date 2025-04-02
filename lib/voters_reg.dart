@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'textfield_wid.dart';
 import 'navigation_bar.dart';
-import 'dialogs.dart';
+//import 'dialogs.dart';
 
 class VotersReg extends StatefulWidget {
   const VotersReg({Key? key}) : super(key: key);
