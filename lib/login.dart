@@ -2,11 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:voting_app/officer_dashboard.dart';
-import 'admin.dart';
+import 'admin_dash.dart';
 import 'user.dart' as users;
 //import 'dialogs.dart' as popup;
-
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,7 +18,6 @@ class _LoginPageState extends State<LoginPage> {
   bool visible = false;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
 
   var options = ['User', 'Admin'];
   //var _currentItemSelected = "User";
@@ -187,74 +184,71 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void route() async {
-  User? user = FirebaseAuth.instance.currentUser;
+    User? user = FirebaseAuth.instance.currentUser;
 
-  if (user == null) {
-    showError("User is not logged in.");
-    return;
-  }
-
-  FirebaseFirestore.instance
-      .collection('users')
-      .doc(user.uid)
-      .get()
-      .then((DocumentSnapshot documentSnapshot) {
-    if (documentSnapshot.exists) {
-      String role = documentSnapshot.get('role');
-
-      if (role == "Admin") {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Admin()),
-        );
-      } else if (role == "User") {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => users.User()),
-        );
-      } else if (role == "Officer") {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Officer()),
-        );
-      } else {
-        showError("Unknown role: $role");
-      }
-    } else {
-      showError("User data not found.");
+    if (user == null) {
+      showError("User is not logged in.");
+      return;
     }
-  }).catchError((error) {
-    showError("Error fetching user data: $error");
-  });
-}
 
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        String role = documentSnapshot.get('role');
+
+        if (role == "Admin") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AdminDash()),
+          );
+        } else if (role == "User") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => users.User()),
+          );
+        } else if (role == "Officer") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Officer()),
+          );
+        } else {
+          showError("Unknown role: $role");
+        }
+      } else {
+        showError("User data not found.");
+      }
+    }).catchError((error) {
+      showError("Error fetching user data: $error");
+    });
+  }
 
   void showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
-  } 
+  }
 
   void signIn(String email, String password) async {
-    
-      try {
-        // UserCredential userCredential =
-        //     await FirebaseAuth.instance.signInWithEmailAndPassword(
-        //   email: email,
-        //   password: password,
-        // );
-        await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-        route();
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          showError('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          showError('Wrong password provided.');
-        } else {
-          showError('An error occurred: ${e.message}');
-        }
+    try {
+      // UserCredential userCredential =
+      //     await FirebaseAuth.instance.signInWithEmailAndPassword(
+      //   email: email,
+      //   password: password,
+      // );
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      route();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        showError('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        showError('Wrong password provided.');
+      } else {
+        showError('An error occurred: ${e.message}');
       }
+    }
   }
 }
-
-
