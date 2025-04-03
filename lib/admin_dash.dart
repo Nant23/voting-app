@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voting_app/voters_reg.dart';
+import 'package:voting_app/remove_user.dart';
 import 'navigation_bar.dart';
 import 'officer_reg.dart';
 
@@ -21,6 +21,7 @@ class _AdminDashState extends State<AdminDash> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFBED2EE),
       appBar: AppBar(title: Text('Admin')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -57,10 +58,10 @@ class _AdminDashState extends State<AdminDash> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => VotersReg()),
+                  MaterialPageRoute(builder: (context) => RemoveUser()),
                 );
               },
-              child: Text('Voters Register',
+              child: Text('Remove Users',
                   style: TextStyle(fontSize: 16, color: Colors.white)),
             ),
             SizedBox(height: 20),
