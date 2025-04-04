@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_functions/cloud_functions.dart';
+
 import 'package:flutter/material.dart';
-import 'textfield_wid.dart';
+import 'package:voting_app/components/my_textfield.dart';
 import 'navigation_bar.dart';
 import 'dialogs.dart';
 
@@ -39,24 +39,51 @@ class _OfficerRegState extends State<OfficerReg> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              textfield_wid(
-                  label: 'Officer ID', controller: officerIdController),
-              textfield_wid(label: 'Name', controller: nameController),
-              textfield_wid(label: 'Email', controller: emailController),
-              textfield_wid(
-                  label: 'Password',
+              MyTextfield(
+                hintText: 'Officer ID',
+                controller: officerIdController,
+                obscureText: false,
+              ),
+              const SizedBox(height: 20),
+              MyTextfield(
+                hintText: 'Name',
+                controller: nameController,
+                obscureText: false,
+              ),
+              const SizedBox(height: 20),
+              MyTextfield(
+                hintText: 'Email',
+                controller: emailController,
+                obscureText: false,
+              ),
+              const SizedBox(height: 20),
+              MyTextfield(
+                  hintText: 'Password',
                   controller: passwordController,
                   obscureText: true),
-              textfield_wid(
-                  label: 'Confirm Password',
+              const SizedBox(height: 20),
+              MyTextfield(
+                  hintText: 'Confirm Password',
                   controller: confirmPassController,
                   obscureText: true),
-              textfield_wid(label: 'Country', controller: countryController),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
+              MyTextfield(
+                hintText: 'Country',
+                controller: countryController,
+                obscureText: false,
+              ),
+              SizedBox(height: 35),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF46639B),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 55,
+                        vertical: 15,
+                      ),
+                    ),
                     onPressed: () {
                       createOfficerAccount(
                           context,
@@ -66,13 +93,10 @@ class _OfficerRegState extends State<OfficerReg> {
                           countryController.text,
                           officerIdController.text);
                     },
-                    child: Text('Add'),
-                  ),
-                  OutlinedButton(
-                    onPressed: () {
-                      deleteOfficer(nameController.text, emailController.text);
-                    },
-                    child: Text('Remove'),
+                    child: Text(
+                      'Add',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
@@ -87,14 +111,6 @@ class _OfficerRegState extends State<OfficerReg> {
     );
   }
 }
-
-
-
-
-
-
-
-
 
 Future<void> createOfficerAccount(BuildContext context, String email,
     String password, String name, String country, String id) async {
@@ -129,14 +145,13 @@ Future<void> createOfficerAccount(BuildContext context, String email,
         .collection('users')
         .doc(userCredential.user!.uid)
         .set({
-          'email': email,
-          'role': 'Officer',
-          'id': id,
-          'uid': userCredential.user!.uid,
-          'name': name,
-          'country': country, // Assign officer role
-        }
-    );
+      'email': email,
+      'role': 'Officer',
+      'id': id,
+      'uid': userCredential.user!.uid,
+      'name': name,
+      'country': country, // Assign officer role
+    });
 
     print("Officer account created successfully.");
 
@@ -149,39 +164,6 @@ Future<void> createOfficerAccount(BuildContext context, String email,
     // Pop up: Unsuccesfful code here
     CustomDialog.showDialogBox(context,
         title: "Error", message: "Failed to create officer account: $e");
-  }
-}
-
-
-
-
-
-Future<void> deleteOfficer(String name, String email) async {
-  try {
-    // Step 1: Query Firestore to find the officer
-    QuerySnapshot query = await FirebaseFirestore.instance
-        .collection('users')
-        .where('role', isEqualTo: 'Officer')
-        .where('email', isEqualTo: email)
-        .where('name', isEqualTo: name)
-        .get();
-
-    if (query.docs.isEmpty) {
-      print("No officer found with given name and email.");
-      return;
-    }
-
-    // Step 2: Get the UID
-    String officerUid = query.docs.first['uid'];
-
-    // Step 3: Call the Cloud Function
-    final HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('deleteOfficerAccount');
-    final result = await callable.call({'uid': officerUid});
-
-    print(officerUid);
-    print(result.data['message']);
-  } catch (e) {
-    print("Error deleting officer account: $e");
   }
 }
 
