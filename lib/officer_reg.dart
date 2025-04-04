@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'textfield_wid.dart';
 import 'navigation_bar.dart';
@@ -69,7 +69,9 @@ class _OfficerRegState extends State<OfficerReg> {
                     child: Text('Add'),
                   ),
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      deleteOfficer(nameController.text, emailController.text);
+                    },
                     child: Text('Remove'),
                   ),
                 ],
@@ -154,55 +156,32 @@ Future<void> createOfficerAccount(BuildContext context, String email,
 
 
 
-Future<void> deleteOfficerAccount(String officerEmail) async {
+Future<void> deleteOfficer(String name, String email) async {
   try {
-    // Get current admin user
-    User? adminUser = FirebaseAuth.instance.currentUser;
-
-    if (adminUser == null) {
-      throw Exception("Admin not logged in.");
-    }
-
-    // Get admin's role from Firestore
-    DocumentSnapshot adminDoc = await FirebaseFirestore.instance
+    // Step 1: Query Firestore to find the officer
+    QuerySnapshot query = await FirebaseFirestore.instance
         .collection('users')
-        .doc(adminUser.uid)
+        .where('role', isEqualTo: 'Officer')
+        .where('email', isEqualTo: email)
+        .where('name', isEqualTo: name)
         .get();
 
-    if (!adminDoc.exists || adminDoc['role'] != 'Admin') {
-      throw Exception("Only admins can delete officers.");
+    if (query.docs.isEmpty) {
+      print("No officer found with given name and email.");
+      return;
     }
 
-    // Find the officer's user document in Firestore
-    QuerySnapshot officerQuery = await FirebaseFirestore.instance
-        .collection('users')
-        .where('email', isEqualTo: officerEmail)
-        .where('role', isEqualTo: 'Officer') // Ensure it's an officer
-        .get();
+    // Step 2: Get the UID
+    String officerUid = query.docs.first['uid'];
 
-    if (officerQuery.docs.isEmpty) {
-      throw Exception("Officer account not found.");
-    }
+    // Step 3: Call the Cloud Function
+    final HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('deleteOfficerAccount');
+    final result = await callable.call({'uid': officerUid});
 
-    // Get the officer's UID
-    String officerUid = officerQuery.docs.first.id;
-
-    // Delete Firestore document
-    await FirebaseFirestore.instance.collection('users').doc(officerUid).delete();
-
-    // Delete from Firebase Authentication
-    await FirebaseAuth.instance
-        .fetchSignInMethodsForEmail(officerEmail)
-        .then((signInMethods) async {
-      if (signInMethods.isNotEmpty) {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: officerEmail, password: "temporary-password"); // Require the password to delete
-        await userCredential.user?.delete();
-      }
-    });
-
-    print("Officer account deleted successfully.");
+    print(officerUid);
+    print(result.data['message']);
   } catch (e) {
     print("Error deleting officer account: $e");
   }
 }
+
