@@ -3,6 +3,9 @@ import 'components/my_textfield.dart';
 import 'navigation_bar.dart';
 import 'dialogs.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+
 class RemoveUser extends StatefulWidget {
   const RemoveUser({super.key});
 
@@ -51,13 +54,7 @@ class _RemoveUserState extends State<RemoveUser> {
               ElevatedButton(
                 onPressed: () {
                   // Add removal functionality
-                  try {
-                    CustomDialog.showDialogBox(context,
-                        title: "Success", message: "Removed successsfully");
-                  } catch (e) {
-                    CustomDialog.showDialogBox(context,
-                        title: "Error", message: "Failed to remove User");
-                  }
+                  deactivateOfficerAccount(context, userIdController.text, emailController.text);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF46639B),
@@ -83,3 +80,41 @@ class _RemoveUserState extends State<RemoveUser> {
     );
   }
 }
+
+Future<void> deactivateOfficerAccount(BuildContext context, String id, String email) async {
+  try {
+    // Query Firestore to find the user with the matching id and email
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('id', isEqualTo: id)
+        .where('email', isEqualTo: email)
+        .get();
+
+    // Check if any matching user exists
+    if (querySnapshot.docs.isEmpty) {
+      throw Exception("No user found with the provided ID and email.");
+    }
+
+    // Assuming there's only one match
+    String userId = querySnapshot.docs.first.id;
+
+    // Update the status field to 'Inactive'
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .update({'status': 'Inactive'});
+
+    print("Officer account deactivated successfully.");
+
+    // Pop up: Success
+    CustomDialog.showDialogBox(context,
+        title: "Success", message: "Officer account deactivated successfully.");
+  } catch (e) {
+    print("Error deactivating officer account: $e");
+
+    // Pop up: Error
+    CustomDialog.showDialogBox(context,
+        title: "Error", message: "Failed to deactivate officer account: $e");
+  }
+}
+

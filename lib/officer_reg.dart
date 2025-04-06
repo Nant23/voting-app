@@ -150,7 +150,8 @@ Future<void> createOfficerAccount(BuildContext context, String email,
       'id': id,
       'uid': userCredential.user!.uid,
       'name': name,
-      'country': country, // Assign officer role
+      'country': country,
+      'status': 'Active', // Assign officer role
     });
 
     print("Officer account created successfully.");
@@ -167,61 +168,3 @@ Future<void> createOfficerAccount(BuildContext context, String email,
   }
 }
 
-Future<void> deleteOfficerAccount(String officerEmail) async {
-  try {
-    // Get current admin user
-    User? adminUser = FirebaseAuth.instance.currentUser;
-
-    if (adminUser == null) {
-      throw Exception("Admin not logged in.");
-    }
-
-    // Get admin's role from Firestore
-    DocumentSnapshot adminDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(adminUser.uid)
-        .get();
-
-    if (!adminDoc.exists || adminDoc['role'] != 'Admin') {
-      throw Exception("Only admins can delete officers.");
-    }
-
-    // Find the officer's user document in Firestore
-    QuerySnapshot officerQuery = await FirebaseFirestore.instance
-        .collection('users')
-        .where('email', isEqualTo: officerEmail)
-        .where('role', isEqualTo: 'Officer') // Ensure it's an officer
-        .get();
-
-    if (officerQuery.docs.isEmpty) {
-      throw Exception("Officer account not found.");
-    }
-
-    // Get the officer's UID
-    String officerUid = officerQuery.docs.first.id;
-
-    // Delete Firestore document
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(officerUid)
-        .delete();
-
-    // Delete from Firebase Authentication
-    await FirebaseAuth.instance
-        .fetchSignInMethodsForEmail(officerEmail)
-        .then((signInMethods) async {
-      if (signInMethods.isNotEmpty) {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(
-                email: officerEmail,
-                password:
-                    "temporary-password"); // Require the password to delete
-        await userCredential.user?.delete();
-      }
-    });
-
-    print("Officer account deleted successfully.");
-  } catch (e) {
-    print("Error deleting officer account: $e");
-  }
-}
