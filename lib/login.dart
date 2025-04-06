@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:voting_app/officer_dashboard.dart';
+import 'package:voting_app/forgot_password/fp_email.dart';
 import 'admin_dash.dart';
 import 'user.dart' as users;
 //import 'dialogs.dart' as popup;
@@ -60,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
 
                 //email textfield
                 Padding(
@@ -123,22 +124,36 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 38),
+                SizedBox(height: 10),
+
+                //forgot password
+                Padding(
+                  padding: const EdgeInsets.only(left: 250.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => FpEmail()),
+                      );
+                    },
+                    child: Text("Forgot password?",
+                        style: TextStyle(color: Colors.blue)),
+                  ),
+                ),
+                SizedBox(height: 28),
 
                 //button
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
                       signIn(emailController.text, passwordController.text);
+                      //popup.Dialog.successDialog(context);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF46639B),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 55,
+                        horizontal: 48,
                         vertical: 15,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
                       ),
                     ),
                     child: Padding(
@@ -197,6 +212,14 @@ class _LoginPageState extends State<LoginPage> {
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
         String role = documentSnapshot.get('role');
+
+        String status = documentSnapshot.get('status');
+
+        if (status == "Inactive") {
+          showError("Your account has been deactivated.");
+          //FirebaseAuth.instance.signOut(); // Optionally sign out the user
+          return;
+        }
 
         if (role == "Admin") {
           Navigator.pushReplacement(

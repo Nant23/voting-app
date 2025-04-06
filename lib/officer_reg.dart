@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
-import 'textfield_wid.dart';
+import 'package:voting_app/components/my_textfield.dart';
 import 'navigation_bar.dart';
 import 'dialogs.dart';
 
@@ -39,24 +39,51 @@ class _OfficerRegState extends State<OfficerReg> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              textfield_wid(
-                  label: 'Officer ID', controller: officerIdController),
-              textfield_wid(label: 'Name', controller: nameController),
-              textfield_wid(label: 'Email', controller: emailController),
-              textfield_wid(
-                  label: 'Password',
+              MyTextfield(
+                hintText: 'Officer ID',
+                controller: officerIdController,
+                obscureText: false,
+              ),
+              const SizedBox(height: 20),
+              MyTextfield(
+                hintText: 'Name',
+                controller: nameController,
+                obscureText: false,
+              ),
+              const SizedBox(height: 20),
+              MyTextfield(
+                hintText: 'Email',
+                controller: emailController,
+                obscureText: false,
+              ),
+              const SizedBox(height: 20),
+              MyTextfield(
+                  hintText: 'Password',
                   controller: passwordController,
                   obscureText: true),
-              textfield_wid(
-                  label: 'Confirm Password',
+              const SizedBox(height: 20),
+              MyTextfield(
+                  hintText: 'Confirm Password',
                   controller: confirmPassController,
                   obscureText: true),
-              textfield_wid(label: 'Country', controller: countryController),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
+              MyTextfield(
+                hintText: 'Country',
+                controller: countryController,
+                obscureText: false,
+              ),
+              SizedBox(height: 35),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF46639B),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 55,
+                        vertical: 15,
+                      ),
+                    ),
                     onPressed: () {
                       createOfficerAccount(
                           context,
@@ -66,11 +93,10 @@ class _OfficerRegState extends State<OfficerReg> {
                           countryController.text,
                           officerIdController.text);
                     },
-                    child: Text('Add'),
-                  ),
-                  OutlinedButton(
-                    onPressed: () {},
-                    child: Text('Remove'),
+                    child: Text(
+                      'Add',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
@@ -85,14 +111,6 @@ class _OfficerRegState extends State<OfficerReg> {
     );
   }
 }
-
-
-
-
-
-
-
-
 
 Future<void> createOfficerAccount(BuildContext context, String email,
     String password, String name, String country, String id) async {
@@ -127,14 +145,14 @@ Future<void> createOfficerAccount(BuildContext context, String email,
         .collection('users')
         .doc(userCredential.user!.uid)
         .set({
-          'email': email,
-          'role': 'Officer',
-          'id': id,
-          'uid': userCredential.user!.uid,
-          'name': name,
-          'country': country, // Assign officer role
-        }
-    );
+      'email': email,
+      'role': 'Officer',
+      'id': id,
+      'uid': userCredential.user!.uid,
+      'name': name,
+      'country': country,
+      'status': 'Active', // Assign officer role
+    });
 
     print("Officer account created successfully.");
 
@@ -150,59 +168,3 @@ Future<void> createOfficerAccount(BuildContext context, String email,
   }
 }
 
-
-
-
-
-Future<void> deleteOfficerAccount(String officerEmail) async {
-  try {
-    // Get current admin user
-    User? adminUser = FirebaseAuth.instance.currentUser;
-
-    if (adminUser == null) {
-      throw Exception("Admin not logged in.");
-    }
-
-    // Get admin's role from Firestore
-    DocumentSnapshot adminDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(adminUser.uid)
-        .get();
-
-    if (!adminDoc.exists || adminDoc['role'] != 'Admin') {
-      throw Exception("Only admins can delete officers.");
-    }
-
-    // Find the officer's user document in Firestore
-    QuerySnapshot officerQuery = await FirebaseFirestore.instance
-        .collection('users')
-        .where('email', isEqualTo: officerEmail)
-        .where('role', isEqualTo: 'Officer') // Ensure it's an officer
-        .get();
-
-    if (officerQuery.docs.isEmpty) {
-      throw Exception("Officer account not found.");
-    }
-
-    // Get the officer's UID
-    String officerUid = officerQuery.docs.first.id;
-
-    // Delete Firestore document
-    await FirebaseFirestore.instance.collection('users').doc(officerUid).delete();
-
-    // Delete from Firebase Authentication
-    await FirebaseAuth.instance
-        .fetchSignInMethodsForEmail(officerEmail)
-        .then((signInMethods) async {
-      if (signInMethods.isNotEmpty) {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: officerEmail, password: "temporary-password"); // Require the password to delete
-        await userCredential.user?.delete();
-      }
-    });
-
-    print("Officer account deleted successfully.");
-  } catch (e) {
-    print("Error deleting officer account: $e");
-  }
-}
