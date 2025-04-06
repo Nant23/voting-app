@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'components/my_textfield.dart';
 import 'dialogs.dart';
+import 'navigation_bar.dart';
 
 class CreateElection extends StatefulWidget {
   @override
@@ -8,6 +9,13 @@ class CreateElection extends StatefulWidget {
 }
 
 class _CreateElectionState extends State<CreateElection> {
+  int _selectedIndex = 0;
+
+  void _onNavItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
   final TextEditingController electionNameController = TextEditingController();
 
   // List to store dynamically added options
@@ -109,6 +117,10 @@ class _CreateElectionState extends State<CreateElection> {
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: NavBar(
+        currentIndex: _selectedIndex,
+        onTap: _onNavItemTapped,
       ),
     );
   }
