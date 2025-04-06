@@ -1,11 +1,29 @@
 import 'package:flutter/material.dart';
 import 'components/my_textfield.dart';
+import 'dialogs.dart';
+import 'navigation_bar.dart';
 
-class CreateElection extends StatelessWidget {
+class CreateElection extends StatefulWidget {
+  @override
+  _CreateElectionState createState() => _CreateElectionState();
+}
+
+class _CreateElectionState extends State<CreateElection> {
+  int _selectedIndex = 0;
+
+  void _onNavItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
   final TextEditingController electionNameController = TextEditingController();
-  final TextEditingController option1Controller = TextEditingController();
-  final TextEditingController option2Controller = TextEditingController();
-  final TextEditingController option3Controller = TextEditingController();
+
+  // List to store dynamically added options
+  List<Map<String, dynamic>> options = [
+    {'controller': TextEditingController(), 'isSelected': false},
+    {'controller': TextEditingController(), 'isSelected': false},
+    {'controller': TextEditingController(), 'isSelected': false},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -20,104 +38,46 @@ class CreateElection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 20),
-                
-              
+
                 MyTextfield(
                   controller: electionNameController,
                   hintText: 'Election Name',
                   obscureText: false,
-                  // hintStyle: const TextStyle(fontSize: 18),
                 ),
 
                 const SizedBox(height: 20),
 
-                // Option 1
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          '1.',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: MyTextfield(
-                        controller: option1Controller,
-                        hintText: 'Option',
-                        obscureText: false,
-                        // hintStyle: const TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ],
+                // Build dynamic option rows
+                Column(
+                  children: options.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    return Column(
+                      children: [
+                        buildOptionRow(index),
+                        const SizedBox(height: 10),
+                      ],
+                    );
+                  }).toList(),
                 ),
-                const SizedBox(height: 10),
 
-                // Option 2
+                // Plus icon button to add new options
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start, // Adjust alignment
                   children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          '2.',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: MyTextfield(
-                        controller: option2Controller,
-                        hintText: 'Option',
-                        obscureText: false,
-                        // hintStyle: const TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-
-                // Option 3
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          '3.',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: MyTextfield(
-                        controller: option3Controller,
-                        hintText: 'Option',
-                        obscureText: false,
-                        //hintStyle: const TextStyle(fontSize: 16),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 6), // Move it slightly left
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          setState(() {
+                            options.add({
+                              'controller': TextEditingController(),
+                              'isSelected': false,
+                            });
+                          });
+                        },
+                        backgroundColor: Colors.white,
+                        child: const Icon(Icons.add, color: Colors.black),
+                        mini: true,
                       ),
                     ),
                   ],
@@ -125,27 +85,31 @@ class CreateElection extends StatelessWidget {
 
                 const SizedBox(height: 30),
 
-                
                 ElevatedButton(
                   onPressed: () {
                     // Logic to create the election
+                    CustomDialog.showDialogBox(
+                      context,
+                      title: "Success",
+                      message: "Election Created",
+                    );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF46639B), 
+                    backgroundColor: const Color(0xFF46639B),
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 60, 
-                      vertical: 20,  
+                      horizontal: 60,
+                      vertical: 20,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12), 
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ), 
+                  ),
                   child: const Text(
                     'Public Election',
                     style: TextStyle(
-                      fontSize: 22,  
-                      color: Colors.white, 
-                      fontWeight: FontWeight.bold, 
+                      fontSize: 22,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -154,6 +118,49 @@ class CreateElection extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: NavBar(
+        currentIndex: _selectedIndex,
+        onTap: _onNavItemTapped,
+      ),
+    );
+  }
+
+  // Build each row dynamically
+  Widget buildOptionRow(int index) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.black, width: 2),
+          ),
+          child: Checkbox(
+            value: options[index]['isSelected'],
+            onChanged: (bool? newValue) {
+              setState(() {
+                options[index]['isSelected'] = newValue ?? false;
+              });
+            },
+            activeColor: Colors.white,
+            checkColor: Colors.black,
+            side: BorderSide.none,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: MyTextfield(
+            controller: options[index]['controller'],
+            hintText: 'Option ${index + 1}',
+            obscureText: false,
+          ),
+        ),
+      ],
     );
   }
 }
+
+//hello
