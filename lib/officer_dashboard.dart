@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'navigation_bar.dart';
 import 'create_election.dart';
+import 'view_result.dart';
 
 class Officer extends StatefulWidget {
   const Officer({super.key});
@@ -89,12 +90,12 @@ class _OfficerState extends State<Officer> {
             padding: const EdgeInsets.symmetric(horizontal: 30), 
             child: ElevatedButton(
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => ResultsPage(),
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewResult(),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF46639B),
