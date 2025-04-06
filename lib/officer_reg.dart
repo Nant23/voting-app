@@ -150,7 +150,8 @@ Future<void> createOfficerAccount(BuildContext context, String email,
       'id': id,
       'uid': userCredential.user!.uid,
       'name': name,
-      'country': country, // Assign officer role
+      'country': country,
+      'status': 'Active', // Assign officer role
     });
 
     print("Officer account created successfully.");

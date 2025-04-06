@@ -199,6 +199,14 @@ class _LoginPageState extends State<LoginPage> {
       if (documentSnapshot.exists) {
         String role = documentSnapshot.get('role');
 
+        String status = documentSnapshot.get('status');
+
+        if (status == "Inactive") {
+          showError("Your account has been deactivated.");
+          //FirebaseAuth.instance.signOut(); // Optionally sign out the user
+          return;
+        }
+
         if (role == "Admin") {
           Navigator.pushReplacement(
             context,
