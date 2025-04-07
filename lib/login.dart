@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:voting_app/officer_dashboard.dart';
-import 'package:voting_app/forgot_password/fp_email.dart';
+import 'package:voting_app/forgot_password/fb_email.dart';
 import 'admin_dash.dart';
 import 'user.dart' as users;
 //import 'dialogs.dart' as popup;
