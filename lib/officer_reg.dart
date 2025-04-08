@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
-import 'textfield_wid.dart';
+import 'package:voting_app/components/my_textfield.dart';
 import 'navigation_bar.dart';
 import 'dialogs.dart';
 
@@ -39,24 +39,51 @@ class _OfficerRegState extends State<OfficerReg> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              textfield_wid(
-                  label: 'Officer ID', controller: officerIdController),
-              textfield_wid(label: 'Name', controller: nameController),
-              textfield_wid(label: 'Email', controller: emailController),
-              textfield_wid(
-                  label: 'Password',
+              MyTextfield(
+                hintText: 'Officer ID',
+                controller: officerIdController,
+                obscureText: false,
+              ),
+              const SizedBox(height: 20),
+              MyTextfield(
+                hintText: 'Name',
+                controller: nameController,
+                obscureText: false,
+              ),
+              const SizedBox(height: 20),
+              MyTextfield(
+                hintText: 'Email',
+                controller: emailController,
+                obscureText: false,
+              ),
+              const SizedBox(height: 20),
+              MyTextfield(
+                  hintText: 'Password',
                   controller: passwordController,
                   obscureText: true),
-              textfield_wid(
-                  label: 'Confirm Password',
+              const SizedBox(height: 20),
+              MyTextfield(
+                  hintText: 'Confirm Password',
                   controller: confirmPassController,
                   obscureText: true),
-              textfield_wid(label: 'Country', controller: countryController),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
+              MyTextfield(
+                hintText: 'Country',
+                controller: countryController,
+                obscureText: false,
+              ),
+              SizedBox(height: 35),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF46639B),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 55,
+                        vertical: 15,
+                      ),
+                    ),
                     onPressed: () {
                       createOfficerAccount(
                           context,
@@ -66,11 +93,10 @@ class _OfficerRegState extends State<OfficerReg> {
                           countryController.text,
                           officerIdController.text);
                     },
-                    child: Text('Add'),
-                  ),
-                  OutlinedButton(
-                    onPressed: () {},
-                    child: Text('Remove'),
+                    child: Text(
+                      'Add',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
@@ -119,13 +145,14 @@ Future<void> createOfficerAccount(BuildContext context, String email,
         .collection('users')
         .doc(userCredential.user!.uid)
         .set({
-          'email': email,
-          'role': 'Officer',
-          'id': id,
-          'name': name,
-          'country': country, // Assign officer role
-        }
-    );
+      'email': email,
+      'role': 'Officer',
+      'id': id,
+      'uid': userCredential.user!.uid,
+      'name': name,
+      'country': country,
+      'status': 'Active', // Assign officer role
+    });
 
     print("Officer account created successfully.");
 
@@ -140,3 +167,4 @@ Future<void> createOfficerAccount(BuildContext context, String email,
         title: "Error", message: "Failed to create officer account: $e");
   }
 }
+
