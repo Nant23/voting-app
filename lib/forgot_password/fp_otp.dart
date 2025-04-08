@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:voting_app/components/my_textfield.dart';
 import 'package:voting_app/dialogs.dart';
 import 'new_pass.dart';
-import 'dart:math';
+// import 'dart:math';
 
-class FpEmail extends StatefulWidget {
-  const FpEmail({super.key});
+class FpOtp extends StatefulWidget {
+  const FpOtp({super.key});
 
   @override
-  State<FpEmail> createState() => _FpEmailState();
+  State<FpOtp> createState() => _FpOtpState();
 }
 
-class _FpEmailState extends State<FpEmail> {
+class _FpOtpState extends State<FpOtp> {
   final TextEditingController emailController = TextEditingController();
 
-  // Generate OTP
-  String generateOTP() {
-    Random random = Random();
-    int otp = random.nextInt(9000) + 1000; // Generates a random 4-digit number
-    return otp.toString();
-  }
+  // // Generate OTP
+  // String generateOTP() {
+  //   Random random = Random();
+  //   int otp = random.nextInt(9000) + 1000;
+  //   return otp.toString();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -78,20 +78,20 @@ class _FpEmailState extends State<FpEmail> {
                 ),
                 const SizedBox(height: 20),
 
-                // Send OTP button
+                // Resend OTP button
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      String otp = generateOTP();
-                      CustomDialog.showDialogBox(
-                        context,
-                        message: otp,
-                        title: "Your 4 digit code",
-                      );
+                      // String otp = generateOTP();
+                      // CustomDialog.showDialogBox(
+                      //   context,
+                      //   message: otp,
+                      //   title: "Your 4 digit code",
+                      // );
                     },
                     child: const Text(
-                      "Send OTP",
+                      "Resend OTP",
                       style: TextStyle(color: Color(0xFFAF6666), fontSize: 16),
                     ),
                   ),
