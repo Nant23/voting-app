@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'navigation_bar.dart';
+import '../navigation_bar.dart';
 import 'create_election.dart';
 import 'view_result.dart';
-import 'profile.dart'; // Import the profile page
+import '../profile.dart'; // Import the profile page
 
 class Officer extends StatefulWidget {
   const Officer({super.key});
