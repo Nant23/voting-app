@@ -127,7 +127,8 @@ class _SignUpState extends State<SignUp> {
         'userName': username,
         'email': email,
         'country': country,
-        'role': role
+        'role': role,
+        'status': 'Active'
       }, SetOptions(merge: true));
       setState(() => showProgress = false);
       Navigator.pushReplacement(

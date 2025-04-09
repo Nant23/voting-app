@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:voting_app/remove_user.dart';
+import 'package:voting_app/admin/remove_user.dart';
 import 'package:voting_app/view_result.dart';
-import 'admin_nav.dart';
-import 'officer_reg.dart';
+import 'package:voting_app/admin_nav.dart';
+import 'package:voting_app/officer/officer_reg.dart';
 
 class AdminDash extends StatefulWidget {
   final int selectedIndex;

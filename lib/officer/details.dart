@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'officer_nav.dart';
-import 'dialogs.dart';
+import 'package:voting_app/dialogs.dart';
 
 class DetailsPage extends StatefulWidget {
   @override

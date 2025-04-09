@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'components/my_textfield.dart';
-import 'admin_nav.dart';
-import 'dialogs.dart';
+import 'package:voting_app/components/my_textfield.dart';
+import 'package:voting_app/admin_nav.dart';
+import 'package:voting_app/dialogs.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 

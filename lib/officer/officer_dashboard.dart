@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'officer_nav.dart';
 import 'create_election.dart';
 import 'view_result.dart';
+import '../profile.dart';
 
 class Officer extends StatefulWidget {
   final int selectedIndex;
@@ -25,41 +26,15 @@ class _OfficerState extends State<Officer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Officer Dashboard'),
-        actions: [
-          PopupMenuButton<String>(
-            icon: Icon(Icons.menu, size: 28), // Menu icon
-            onSelected: (String value) {
-              // Handle menu actions
-              print("Selected: $value");
-            },
-            itemBuilder: (BuildContext context) => [
-              PopupMenuItem<String>(
-                value: 'Profile',
-                child: Text('Profile'),
-              ),
-              PopupMenuItem<String>(
-                value: 'Settings',
-                child: Text('Settings'),
-              ),
-              PopupMenuItem<String>(
-                value: 'Logout',
-                child: Text('Logout'),
-              ),
-            ],
-          ),
-        ],
+        title: const Text('Officer Dashboard'),
       ),
-      backgroundColor: Color(0xFFBED2EE), // Background color
-
+      backgroundColor: const Color(0xFFBED2EE),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center, // Center everything
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Spacer(), // Pushes everything downward
-
+          const Spacer(),
           Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 30), // Add padding for alignment
+            padding: const EdgeInsets.symmetric(horizontal: 30),
             child: ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -71,7 +46,7 @@ class _OfficerState extends State<Officer> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF46639B),
-                minimumSize: Size(double.infinity, 70), // Full width button
+                minimumSize: const Size(double.infinity, 70),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -80,15 +55,13 @@ class _OfficerState extends State<Officer> {
                 "Create Election",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 26, // Bigger font
+                  fontSize: 26,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-
-          const SizedBox(height: 20), // Space between buttons
-
+          const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: ElevatedButton(
@@ -102,7 +75,7 @@ class _OfficerState extends State<Officer> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF46639B),
-                minimumSize: Size(double.infinity, 70), // Full width button
+                minimumSize: const Size(double.infinity, 70),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -111,17 +84,15 @@ class _OfficerState extends State<Officer> {
                 "View Result",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 26, // Bigger font
+                  fontSize: 26,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-
-          Spacer(), // Pushes buttons up a bit for better positioning
+          const Spacer(),
         ],
       ),
-
       bottomNavigationBar: NavbarOff(
         currentIndex: _selectedIndex,
         onTap: (index) {

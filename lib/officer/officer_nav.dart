@@ -28,8 +28,8 @@ class NavbarOff extends StatelessWidget {
         destination = ViewResult(selectedIndex: index);
         break;
       case 3:
-      // destination = ProfilePage();
-      // break;
+        destination = ProfilePage(selectedIndex: index);
+        break;
       default:
         return;
     }

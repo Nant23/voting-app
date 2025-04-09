@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voting_app/Info.dart';
-import 'package:voting_app/admin_dash.dart';
+import 'package:voting_app/admin/admin_dash.dart';
+import 'package:voting_app/profile.dart';
 import 'package:voting_app/voter_requests.dart';
 
 class NavBar extends StatelessWidget {
@@ -26,7 +27,10 @@ class NavBar extends StatelessWidget {
         break;
       case 2:
         destination = InfoPage(selectedIndex: index);
-
+        break;
+      case 3:
+        destination = ProfilePage(selectedIndex: index);
+        break;
       default:
         return; // Exit if index is not valid
     }
