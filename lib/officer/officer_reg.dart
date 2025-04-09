@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:voting_app/components/my_textfield.dart';
-import 'navigation_bar.dart';
-import 'dialogs.dart';
+import '../navigation_bar.dart';
+import '../dialogs.dart';
 
 class OfficerReg extends StatefulWidget {
   const OfficerReg({Key? key}) : super(key: key);

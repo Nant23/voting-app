@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'navigation_bar.dart';
-import 'dialogs.dart';
+import '../navigation_bar.dart';
+import '../dialogs.dart';
 
 class DetailsPage extends StatefulWidget {
   @override
