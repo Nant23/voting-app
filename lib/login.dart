@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:voting_app/officer_dashboard.dart';
+import 'package:voting_app/officer/officer_dashboard.dart';
 import 'package:voting_app/forgot_password/fb_email.dart';
 import 'admin/admin_dash.dart';
 import 'user.dart' as users;
