@@ -1,31 +1,25 @@
 import 'package:flutter/material.dart';
-import '../navigation_bar.dart';
+import 'officer_nav.dart';
 import 'create_election.dart';
 import 'view_result.dart';
-import '../profile.dart'; // Import the profile page
+import '../profile.dart';
 
 class Officer extends StatefulWidget {
-  const Officer({super.key});
+  final int selectedIndex;
+
+  Officer({this.selectedIndex = 0});
 
   @override
   State<Officer> createState() => _OfficerState();
 }
 
 class _OfficerState extends State<Officer> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
-  void _onNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    // Navigate only if the Profile tab is selected
-    if (index == 4) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ProfilePage()),
-      );
-    }
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.selectedIndex;
   }
 
   @override
@@ -35,12 +29,10 @@ class _OfficerState extends State<Officer> {
         title: const Text('Officer Dashboard'),
       ),
       backgroundColor: const Color(0xFFBED2EE),
-
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Spacer(),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: ElevatedButton(
@@ -69,9 +61,7 @@ class _OfficerState extends State<Officer> {
               ),
             ),
           ),
-
           const SizedBox(height: 20),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: ElevatedButton(
@@ -100,14 +90,16 @@ class _OfficerState extends State<Officer> {
               ),
             ),
           ),
-
           const Spacer(),
         ],
       ),
-
-      bottomNavigationBar: NavBar(
+      bottomNavigationBar: NavbarOff(
         currentIndex: _selectedIndex,
-        onTap: _onNavItemTapped,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index; // Update the selected index
+          });
+        },
       ),
     );
   }
