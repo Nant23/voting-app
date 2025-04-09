@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'navigation_bar.dart';
+import 'package:voting_app/admin_nav.dart';
 
 class ProfilePage extends StatefulWidget {
+  final int selectedIndex;
+
+  ProfilePage({this.selectedIndex = 4});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -9,10 +13,10 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   int _selectedIndex = 0;
 
-  void _onNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.selectedIndex;
   }
 
   @override
@@ -82,7 +86,11 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       bottomNavigationBar: NavBar(
         currentIndex: _selectedIndex,
-        onTap: _onNavItemTapped,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
     );
   }

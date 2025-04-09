@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import '../components/my_textfield.dart';
 import '../dialogs.dart';
-import '../navigation_bar.dart';
+import '../officer/officer_nav.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 
 class CreateElection extends StatefulWidget {
   @override
@@ -18,6 +17,7 @@ class _CreateElectionState extends State<CreateElection> {
       _selectedIndex = index;
     });
   }
+
   final TextEditingController electionNameController = TextEditingController();
 
   // List to store dynamically added options
@@ -41,15 +41,15 @@ class _CreateElectionState extends State<CreateElection> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 20),
-        
+
                   MyTextfield(
                     controller: electionNameController,
                     hintText: 'Election Name',
                     obscureText: false,
                   ),
-        
+
                   const SizedBox(height: 20),
-        
+
                   // Build dynamic option rows
                   Column(
                     children: options.asMap().entries.map((entry) {
@@ -62,13 +62,15 @@ class _CreateElectionState extends State<CreateElection> {
                       );
                     }).toList(),
                   ),
-        
+
                   // Plus icon button to add new options
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start, // Adjust alignment
+                    mainAxisAlignment:
+                        MainAxisAlignment.start, // Adjust alignment
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 6), // Move it slightly left
+                        padding: const EdgeInsets.only(
+                            left: 6), // Move it slightly left
                         child: FloatingActionButton(
                           onPressed: () {
                             setState(() {
@@ -85,9 +87,9 @@ class _CreateElectionState extends State<CreateElection> {
                       ),
                     ],
                   ),
-        
+
                   const SizedBox(height: 30),
-        
+
                   ElevatedButton(
                     onPressed: () async {
                       String mainQuestion = electionNameController.text.trim();
@@ -116,16 +118,15 @@ class _CreateElectionState extends State<CreateElection> {
                         return;
                       }
 
-                      await storeQuestionData(context, optionTexts, mainQuestion);
-                      
+                      await storeQuestionData(
+                          context, optionTexts, mainQuestion);
+
                       // CustomDialog.showDialogBox(
                       //   context,
                       //   title: "Success",
                       //   message: "Election Created",
                       // );
-                      
                     },
-
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF46639B),
                       padding: const EdgeInsets.symmetric(
@@ -151,7 +152,7 @@ class _CreateElectionState extends State<CreateElection> {
           ),
         ),
       ),
-      bottomNavigationBar: NavBar(
+      bottomNavigationBar: NavbarOff(
         currentIndex: _selectedIndex,
         onTap: _onNavItemTapped,
       ),
@@ -196,17 +197,17 @@ class _CreateElectionState extends State<CreateElection> {
   }
 }
 
-
-
 //backend
 
-Future<void> storeQuestionData(BuildContext context, List<String> questionsArray, String mainQuestion) async {
+Future<void> storeQuestionData(BuildContext context,
+    List<String> questionsArray, String mainQuestion) async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final CollectionReference questionsRef = firestore.collection('questions');
 
   try {
     // Get the current max ID (auto-increment logic)
-    QuerySnapshot snapshot = await questionsRef.orderBy('id', descending: true).limit(1).get();
+    QuerySnapshot snapshot =
+        await questionsRef.orderBy('id', descending: true).limit(1).get();
     int nextId = 1;
     if (snapshot.docs.isNotEmpty) {
       int lastId = snapshot.docs.first['id'] ?? 0;
@@ -231,9 +232,7 @@ Future<void> storeQuestionData(BuildContext context, List<String> questionsArray
       title: "Success",
       message: "Election Created",
     );
-    
   } catch (e) {
     print("Error saving election: $e");
   }
 }
-

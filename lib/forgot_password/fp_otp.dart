@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:voting_app/components/my_textfield.dart';
-import 'package:voting_app/dialogs.dart';
 import 'new_pass.dart';
 // import 'dart:math';
 
