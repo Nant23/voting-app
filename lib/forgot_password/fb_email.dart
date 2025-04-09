@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voting_app/components/my_textfield.dart';
-import 'package:voting_app/dialogs.dart';
 import 'package:voting_app/forgot_password/fp_otp.dart';
-import 'new_pass.dart';
 // import 'dart:math';
 
 class FpEmail extends StatefulWidget {

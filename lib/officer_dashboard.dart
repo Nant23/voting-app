@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
-import 'navigation_bar.dart';
+import 'officer_nav.dart';
 import 'create_election.dart';
 import 'view_result.dart';
 
 class Officer extends StatefulWidget {
-  const Officer({super.key});
+  final int selectedIndex;
+
+  Officer({this.selectedIndex = 0});
 
   @override
   State<Officer> createState() => _OfficerState();
 }
 
 class _OfficerState extends State<Officer> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
-  void _onNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.selectedIndex;
   }
 
   @override
@@ -56,7 +58,8 @@ class _OfficerState extends State<Officer> {
           Spacer(), // Pushes everything downward
 
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30), // Add padding for alignment
+            padding: const EdgeInsets.symmetric(
+                horizontal: 30), // Add padding for alignment
             child: ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -87,7 +90,7 @@ class _OfficerState extends State<Officer> {
           const SizedBox(height: 20), // Space between buttons
 
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30), 
+            padding: const EdgeInsets.symmetric(horizontal: 30),
             child: ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -119,9 +122,13 @@ class _OfficerState extends State<Officer> {
         ],
       ),
 
-      bottomNavigationBar: NavBar(
+      bottomNavigationBar: NavbarOff(
         currentIndex: _selectedIndex,
-        onTap: _onNavItemTapped,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index; // Update the selected index
+          });
+        },
       ),
     );
   }

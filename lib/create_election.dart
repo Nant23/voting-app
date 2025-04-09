@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'components/my_textfield.dart';
 import 'dialogs.dart';
-import 'navigation_bar.dart';
+import 'officer_nav.dart';
 
 class CreateElection extends StatefulWidget {
+  final int selectedIndex;
+  CreateElection({this.selectedIndex = 1});
+
   @override
   _CreateElectionState createState() => _CreateElectionState();
 }
@@ -11,11 +14,12 @@ class CreateElection extends StatefulWidget {
 class _CreateElectionState extends State<CreateElection> {
   int _selectedIndex = 0;
 
-  void _onNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.selectedIndex;
   }
+
   final TextEditingController electionNameController = TextEditingController();
 
   // List to store dynamically added options
@@ -62,10 +66,12 @@ class _CreateElectionState extends State<CreateElection> {
 
                 // Plus icon button to add new options
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start, // Adjust alignment
+                  mainAxisAlignment:
+                      MainAxisAlignment.start, // Adjust alignment
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 6), // Move it slightly left
+                      padding: const EdgeInsets.only(
+                          left: 6), // Move it slightly left
                       child: FloatingActionButton(
                         onPressed: () {
                           setState(() {
@@ -118,9 +124,13 @@ class _CreateElectionState extends State<CreateElection> {
           ),
         ),
       ),
-      bottomNavigationBar: NavBar(
+      bottomNavigationBar: NavbarOff(
         currentIndex: _selectedIndex,
-        onTap: _onNavItemTapped,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
     );
   }

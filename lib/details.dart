@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'navigation_bar.dart';
+import 'officer_nav.dart';
 import 'dialogs.dart';
 
 class DetailsPage extends StatefulWidget {
@@ -85,9 +85,11 @@ class _DetailsPageState extends State<DetailsPage> {
           ),
         ),
       ),
-      bottomNavigationBar: NavBar(
+      bottomNavigationBar: NavbarOff(
         currentIndex: _selectedIndex,
-        onTap: _onNavItemTapped,
+        onTap: (index) {
+          _onNavItemTapped(index);
+        },
       ),
     );
   }

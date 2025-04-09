@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'navigation_bar.dart';
+import 'officer_nav.dart';
 import 'details.dart';
 
 class ViewResult extends StatefulWidget {
+  final int selectedIndex;
+  ViewResult({this.selectedIndex = 2});
+
   @override
   _ViewResultState createState() => _ViewResultState();
 }
@@ -10,10 +13,10 @@ class ViewResult extends StatefulWidget {
 class _ViewResultState extends State<ViewResult> {
   int _selectedIndex = 0;
 
-  void _onNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.selectedIndex;
   }
 
   final List<Map<String, dynamic>> results = [
@@ -143,9 +146,13 @@ class _ViewResultState extends State<ViewResult> {
           ),
         ),
       ),
-      bottomNavigationBar: NavBar(
+      bottomNavigationBar: NavbarOff(
         currentIndex: _selectedIndex,
-        onTap: _onNavItemTapped,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
     );
   }

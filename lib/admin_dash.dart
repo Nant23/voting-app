@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:voting_app/remove_user.dart';
-import 'navigation_bar.dart';
+import 'package:voting_app/view_result.dart';
+import 'admin_nav.dart';
 import 'officer_reg.dart';
 
 class AdminDash extends StatefulWidget {
+  final int selectedIndex;
+
+  AdminDash({this.selectedIndex = 0}); //default to 0
+
   @override
   _AdminDashState createState() => _AdminDashState();
 }
 
 class _AdminDashState extends State<AdminDash> {
-  //navbar current index
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
-  void _onNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.selectedIndex;
   }
 
   @override
@@ -74,7 +78,12 @@ class _AdminDashState extends State<AdminDash> {
                     borderRadius: BorderRadius.circular(18)),
                 minimumSize: Size(double.infinity, 50),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ViewResult()),
+                );
+              },
               child: Text('View Result',
                   style: TextStyle(fontSize: 16, color: Colors.white)),
             ),
@@ -93,37 +102,17 @@ class _AdminDashState extends State<AdminDash> {
                   style: TextStyle(fontSize: 16, color: Colors.white)),
             ),
             SizedBox(height: 20),
-
-            // In Progress
-            Text('In Progress: -',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-
-            //In Progress Items
-            Container(
-              height: 40,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Color(0xFF919CB6),
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            SizedBox(height: 10),
-            Container(
-              height: 40,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Color(0xFF919CB6),
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
           ],
         ),
       ),
-      //Nav Bar
+      // Nav Bar
       bottomNavigationBar: NavBar(
         currentIndex: _selectedIndex,
-        onTap: _onNavItemTapped,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index; // Update the selected index
+          });
+        },
       ),
     );
   }

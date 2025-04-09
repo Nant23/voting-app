@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:voting_app/components/my_textfield.dart';
-import 'navigation_bar.dart';
+import 'admin_nav.dart';
 import 'dialogs.dart';
 
 class OfficerReg extends StatefulWidget {
@@ -106,7 +106,9 @@ class _OfficerRegState extends State<OfficerReg> {
       ),
       bottomNavigationBar: NavBar(
         currentIndex: _selectedIndex,
-        onTap: _onNavItemTapped,
+        onTap: (index) {
+          _onNavItemTapped(index);
+        },
       ),
     );
   }
@@ -167,4 +169,3 @@ Future<void> createOfficerAccount(BuildContext context, String email,
         title: "Error", message: "Failed to create officer account: $e");
   }
 }
-
