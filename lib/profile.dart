@@ -3,7 +3,8 @@ import 'package:voting_app/admin_nav.dart';
 
 class ProfilePage extends StatefulWidget {
   final int selectedIndex;
-  ProfilePage({this.selectedIndex = 3});
+
+  ProfilePage({this.selectedIndex = 4});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();

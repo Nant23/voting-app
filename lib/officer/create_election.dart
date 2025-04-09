@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../components/my_textfield.dart';
 import '../dialogs.dart';
-import '../officer_nav.dart';
+import '../officer/officer_nav.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateElection extends StatefulWidget {

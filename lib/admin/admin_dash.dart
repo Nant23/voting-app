@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voting_app/admin/remove_user.dart';
-import 'package:voting_app/view_result.dart';
+import 'package:voting_app/officer/view_result.dart';
 import 'package:voting_app/admin_nav.dart';
 import 'package:voting_app/officer/officer_reg.dart';
 

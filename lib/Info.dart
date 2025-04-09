@@ -4,7 +4,7 @@ import 'admin_nav.dart';
 class InfoPage extends StatefulWidget {
   final int selectedIndex;
 
-  InfoPage({this.selectedIndex = 3});
+  InfoPage({this.selectedIndex = 2});
 
   @override
   _InfoPageState createState() => _InfoPageState();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'components/my_textfield.dart';
 import 'dialogs.dart';
-import 'officer_nav.dart';
+import 'package:voting_app/officer/officer_nav.dart';
 
 class CreateElection extends StatefulWidget {
   final int selectedIndex;
