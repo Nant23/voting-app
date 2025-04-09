@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:voting_app/admin_nav.dart';
 
+//Dummy DATA
 class Stats extends StatefulWidget {
   final int selectedIndex;
 
@@ -23,7 +25,7 @@ class _StatsState extends State<Stats> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Statistics'),
-        backgroundColor: const Color(0xFF46639B),
+        backgroundColor: Colors.white,
       ),
       body: SafeArea(
         child: Padding(
@@ -59,6 +61,14 @@ class _StatsState extends State<Stats> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: NavBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
     );
   }
