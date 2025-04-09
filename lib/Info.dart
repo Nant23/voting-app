@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'admin_nav.dart';
+import 'voters_info.dart'; 
+import 'officers_info.dart';
 
 class InfoPage extends StatefulWidget {
   final int selectedIndex;
@@ -32,7 +34,12 @@ class _InfoPageState extends State<InfoPage> {
                 backgroundColor: Color(0xFF46639B),
                 padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => VotersInfoPage()),
+                );
+              },
               child: Text(
                 'Voters Info',
                 style: TextStyle(fontSize: 16, color: Colors.white),
@@ -44,7 +51,13 @@ class _InfoPageState extends State<InfoPage> {
                 backgroundColor: Color(0xFF46639B),
                 padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => OfficersInfoPage()),
+                );
+                // Add navigation to Officers Info page here (if needed)
+              },
               child: Text(
                 'Officers Info',
                 style: TextStyle(fontSize: 16, color: Colors.white),
