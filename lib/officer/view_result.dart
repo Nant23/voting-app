@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'navigation_bar.dart';
+import '../navigation_bar.dart';
 import 'details.dart';
 
 class ViewResult extends StatefulWidget {
