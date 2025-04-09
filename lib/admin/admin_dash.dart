@@ -3,7 +3,6 @@ import 'package:voting_app/admin/remove_user.dart';
 import '../navigation_bar.dart';
 import '../officer/officer_reg.dart';
 
-
 class AdminDash extends StatefulWidget {
   @override
   _AdminDashState createState() => _AdminDashState();
