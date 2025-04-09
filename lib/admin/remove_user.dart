@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import '../components/my_textfield.dart';
-import '../navigation_bar.dart';
-import '../dialogs.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-=======
 import 'package:voting_app/components/my_textfield.dart';
 import 'package:voting_app/admin_nav.dart';
 import 'package:voting_app/dialogs.dart';
->>>>>>> 8e82f09ead2797c775ae35cf7604813cd9a855db
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
