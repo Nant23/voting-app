@@ -85,6 +85,14 @@ class _OfficerRegState extends State<OfficerReg> {
                       ),
                     ),
                     onPressed: () {
+                      if (passwordController.text != confirmPassController.text) {
+                        CustomDialog.showDialogBox(
+                          context,
+                          title: "Password Mismatch",
+                          message: "Password and Confirm Password do not match.",
+                        );
+                        return;
+                      }
                       createOfficerAccount(
                           context,
                           emailController.text,
