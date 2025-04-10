@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voting_app/officer/officer_dashboard.dart';
-import 'package:voting_app/create_election.dart';
+import 'package:voting_app/officer/create_election.dart';
 import 'view_result.dart';
 
 class NavbarOff extends StatelessWidget {

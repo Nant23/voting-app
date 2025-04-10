@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voting_app/admin_nav.dart';
+import 'package:voting_app/admin/admin_nav.dart';
 
 //Dummy DATA
 class Stats extends StatefulWidget {

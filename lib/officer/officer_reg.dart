@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:voting_app/components/my_textfield.dart';
-import 'package:voting_app/admin_nav.dart';
+import 'package:voting_app/admin/admin_nav.dart';
 import 'package:voting_app/dialogs.dart';
 
 class OfficerReg extends StatefulWidget {
