@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:voting_app/admin_nav.dart';
+import 'package:voting_app/admin/admin_nav.dart';
+import 'package:voting_app/login.dart';
 
 class ProfilePage extends StatefulWidget {
   final int selectedIndex;
@@ -62,6 +63,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   OutlinedButton(
                     onPressed: () {
                       // Log out logic
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
                     },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.red,

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'officer_nav.dart';
 import 'create_election.dart';
-import 'view_result.dart';
-import '../profile.dart';
+import 'view_result_off.dart';
 
 class Officer extends StatefulWidget {
   final int selectedIndex;
