@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'admin/admin_nav.dart';
+<<<<<<< HEAD
 import 'voters_info.dart';
+=======
+import 'voters_info.dart'; 
+>>>>>>> a59582b8f28782f8c1c72bf4c1417f5ce1a86eee
 import 'officers_info.dart';
 
 class InfoPage extends StatefulWidget {

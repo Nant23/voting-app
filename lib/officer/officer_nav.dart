@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voting_app/officer/officer_dashboard.dart';
-import 'package:voting_app/create_election.dart';
+import 'package:voting_app/officer/create_election.dart';
 import 'package:voting_app/officer/officer_profile.dart';
 import 'view_result_off.dart';
 

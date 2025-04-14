@@ -5,6 +5,8 @@ import '../officer/officer_nav.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateElection extends StatefulWidget {
+  final int selectedIndex;
+  const CreateElection({this.selectedIndex = 1});
   @override
   _CreateElectionState createState() => _CreateElectionState();
 }
