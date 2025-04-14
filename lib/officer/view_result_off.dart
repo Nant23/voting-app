@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'officer_nav.dart';
-import 'details.dart';
+import 'details_off.dart';
 
 class ViewResult extends StatefulWidget {
   final int selectedIndex;

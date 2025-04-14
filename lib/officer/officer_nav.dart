@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:voting_app/officer/officer_dashboard.dart';
 import 'package:voting_app/officer/create_election.dart';
-import 'view_result.dart';
+import 'package:voting_app/officer/officer_profile.dart';
+import 'view_result_off.dart';
 
 class NavbarOff extends StatelessWidget {
   final int currentIndex;
@@ -27,9 +28,9 @@ class NavbarOff extends StatelessWidget {
       case 2:
         destination = ViewResult(selectedIndex: index);
         break;
-      // case 3:
-      // destination = ProfilePage(selectedIndex: index);
-      // break;
+      case 3:
+        destination = Profile(selectedIndex: index);
+        break;
       default:
         return;
     }
