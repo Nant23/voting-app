@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voting_app/admin_nav.dart';
+import 'package:voting_app/admin/admin_nav.dart';
 
 class ProfilePage extends StatefulWidget {
   final int selectedIndex;

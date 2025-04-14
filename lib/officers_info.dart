@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'admin_nav.dart';
+import 'admin/admin_nav.dart';
 
 class OfficersInfoPage extends StatefulWidget {
   final int selectedIndex;
