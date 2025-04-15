@@ -3,17 +3,20 @@ import 'officer_nav.dart';
 import 'package:voting_app/dialogs.dart';
 
 class DetailsPage extends StatefulWidget {
+  final int selectedIndex;
+  DetailsPage({this.selectedIndex = 2});
+
   @override
   _DetailsPageState createState() => _DetailsPageState();
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
-  void _onNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.selectedIndex;
   }
 
   @override
@@ -86,11 +89,12 @@ class _DetailsPageState extends State<DetailsPage> {
         ),
       ),
       bottomNavigationBar: NavbarOff(
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          _onNavItemTapped(index);
-        },
-      ),
+          currentIndex: _selectedIndex,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          }),
     );
   }
 }
