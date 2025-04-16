@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:voting_app/Info.dart';
 import 'package:voting_app/admin/admin_dash.dart';
-import 'package:voting_app/officer/view_result.dart';
-import 'package:voting_app/profile.dart';
-import 'package:voting_app/stats.dart';
+import 'package:voting_app/admin/view_result_ad.dart';
+import 'package:voting_app/admin/admin_profile.dart';
+import 'package:voting_app/admin/stats.dart';
 import 'package:voting_app/voter_requests.dart';
 
 class NavBar extends StatelessWidget {

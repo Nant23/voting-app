@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'officer_nav.dart';
 import 'create_election.dart';
-import 'view_result.dart';
-import '../profile.dart';
+import 'view_result_off.dart';
 
 class Officer extends StatefulWidget {
   final int selectedIndex;
@@ -22,19 +21,44 @@ class _OfficerState extends State<Officer> {
     _selectedIndex = widget.selectedIndex;
   }
 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Officer Dashboard'),
+        title: Text('Officer Dashboard'),
+        actions: [
+          PopupMenuButton<String>(
+            icon: Icon(Icons.menu, size: 28), // Menu icon
+            onSelected: (String value) {
+              // Handle menu actions
+              print("Selected: $value");
+            },
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem<String>(
+                value: 'Profile',
+                child: Text('Profile'),
+              ),
+              PopupMenuItem<String>(
+                value: 'Settings',
+                child: Text('Settings'),
+              ),
+              PopupMenuItem<String>(
+                value: 'Logout',
+                child: Text('Logout'),
+              ),
+            ],
+          ),
+        ],
       ),
       backgroundColor: const Color(0xFFBED2EE),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center, // Center everything
         children: [
-          const Spacer(),
+          Spacer(), // Pushes everything downward
+
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
+            padding: const EdgeInsets.symmetric(horizontal: 30), // Add padding for alignment
             child: ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -46,7 +70,7 @@ class _OfficerState extends State<Officer> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF46639B),
-                minimumSize: const Size(double.infinity, 70),
+                minimumSize: Size(double.infinity, 70), // Full width button
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -55,15 +79,17 @@ class _OfficerState extends State<Officer> {
                 "Create Election",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 26,
+                  fontSize: 26, // Bigger font
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 20),
+
+          const SizedBox(height: 20), // Space between buttons
+
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
+            padding: const EdgeInsets.symmetric(horizontal: 30), 
             child: ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -75,7 +101,7 @@ class _OfficerState extends State<Officer> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF46639B),
-                minimumSize: const Size(double.infinity, 70),
+                minimumSize: Size(double.infinity, 70), // Full width button
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -84,13 +110,14 @@ class _OfficerState extends State<Officer> {
                 "View Result",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 26,
+                  fontSize: 26, // Bigger font
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-          const Spacer(),
+
+          Spacer(), // Pushes buttons up a bit for better positioning
         ],
       ),
       bottomNavigationBar: NavbarOff(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voting_app/admin_nav.dart';
+import 'package:voting_app/admin/admin_nav.dart';
 
 //Dummy DATA
 class Stats extends StatefulWidget {
@@ -42,22 +42,13 @@ class _StatsState extends State<Stats> {
                 ),
               ),
               const SizedBox(height: 30),
-              _buildStatItem('Total Elections: 15'),
-              _buildStatItem('Total Votes Cast: 2000'),
-              _buildStatItem('Total Users: 1200'),
+              Text('Total Elections: 15'),
+              Text('Total Votes Cast: 2000'),
+              Text('Total Users: 1200'),
               const SizedBox(height: 40),
-              _buildStatItem('Active Elections: 5'),
-              _buildStatItem('Upcoming Elections: 2'),
+              Text('Active Elections: 5'),
+              Text('Upcoming Elections: 2'),
               const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () {
-                  // Add logic to refresh or fetch new data if needed
-                },
-                child: const Text('Refresh Stats'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF46639B),
-                ),
-              ),
             ],
           ),
         ),
@@ -69,24 +60,6 @@ class _StatsState extends State<Stats> {
             _selectedIndex = index;
           });
         },
-      ),
-    );
-  }
-
-  Widget _buildStatItem(String stat) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            stat,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
       ),
     );
   }
