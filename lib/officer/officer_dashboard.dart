@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
-import 'navigation_bar.dart';
+import 'officer_nav.dart';
 import 'create_election.dart';
-import 'view_result.dart';
+import 'view_result_off.dart';
 
 class Officer extends StatefulWidget {
-  const Officer({super.key});
+  final int selectedIndex;
+
+  Officer({this.selectedIndex = 0});
 
   @override
   State<Officer> createState() => _OfficerState();
 }
 
 class _OfficerState extends State<Officer> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
-  void _onNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.selectedIndex;
   }
 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,8 +51,7 @@ class _OfficerState extends State<Officer> {
           ),
         ],
       ),
-      backgroundColor: Color(0xFFBED2EE), // Background color
-
+      backgroundColor: const Color(0xFFBED2EE),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center, // Center everything
         children: [
@@ -118,10 +120,13 @@ class _OfficerState extends State<Officer> {
           Spacer(), // Pushes buttons up a bit for better positioning
         ],
       ),
-
-      bottomNavigationBar: NavBar(
+      bottomNavigationBar: NavbarOff(
         currentIndex: _selectedIndex,
-        onTap: _onNavItemTapped,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index; // Update the selected index
+          });
+        },
       ),
     );
   }

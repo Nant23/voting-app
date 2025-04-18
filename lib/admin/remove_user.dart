@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'components/my_textfield.dart';
-import 'navigation_bar.dart';
-import 'dialogs.dart';
+import 'package:voting_app/components/my_textfield.dart';
+import 'package:voting_app/admin/admin_nav.dart';
+import 'package:voting_app/dialogs.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 
 class RemoveUser extends StatefulWidget {
   const RemoveUser({super.key});
@@ -54,7 +53,8 @@ class _RemoveUserState extends State<RemoveUser> {
               ElevatedButton(
                 onPressed: () {
                   // Add removal functionality
-                  deactivateOfficerAccount(context, userIdController.text, emailController.text);
+                  deactivateOfficerAccount(
+                      context, userIdController.text, emailController.text);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF46639B),
@@ -75,13 +75,16 @@ class _RemoveUserState extends State<RemoveUser> {
       ),
       bottomNavigationBar: NavBar(
         currentIndex: _selectedIndex,
-        onTap: _onNavItemTapped,
+        onTap: (index) {
+          _onNavItemTapped(index);
+        },
       ),
     );
   }
 }
 
-Future<void> deactivateOfficerAccount(BuildContext context, String id, String email) async {
+Future<void> deactivateOfficerAccount(
+    BuildContext context, String id, String email) async {
   try {
     // Query Firestore to find the user with the matching id and email
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -117,4 +120,3 @@ Future<void> deactivateOfficerAccount(BuildContext context, String id, String em
         title: "Error", message: "Failed to deactivate officer account: $e");
   }
 }
-
