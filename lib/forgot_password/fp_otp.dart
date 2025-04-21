@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'new_pass.dart';
-// import 'dart:math';
+import 'dart:math';
+import 'package:voting_app/dialogs.dart';
 
 class FpOtp extends StatefulWidget {
   const FpOtp({super.key});
@@ -11,13 +12,16 @@ class FpOtp extends StatefulWidget {
 
 class _FpOtpState extends State<FpOtp> {
   final TextEditingController emailController = TextEditingController();
+  final List<TextEditingController> _controllers = List.generate(4, (_) => TextEditingController());
 
-  // // Generate OTP
-  // String generateOTP() {
-  //   Random random = Random();
-  //   int otp = random.nextInt(9000) + 1000;
-  //   return otp.toString();
-  // }
+  // Generate OTP
+  String generateOTP() {
+    Random random = Random();
+    int otp = random.nextInt(9000) + 1000;
+    return otp.toString();
+  }
+
+  String optCode = "";
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +62,7 @@ class _FpOtpState extends State<FpOtp> {
                     return SizedBox(
                       width: 50,
                       child: TextField(
+                        controller: _controllers[index],
                         textAlign: TextAlign.center,
                         style: const TextStyle(fontSize: 20),
                         keyboardType: TextInputType.number,
@@ -81,15 +86,18 @@ class _FpOtpState extends State<FpOtp> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      // String otp = generateOTP();
-                      // CustomDialog.showDialogBox(
-                      //   context,
-                      //   message: otp,
-                      //   title: "Your 4 digit code",
-                      // );
+                      String otp = generateOTP();
+                      setState(() {
+                        optCode = otp;
+                      });
+                      CustomDialog.showDialogBox(
+                        context,
+                        message: otp,
+                        title: "Your 4 digit code",
+                      );
                     },
                     child: const Text(
-                      "Resend OTP",
+                      "Send OTP",
                       style: TextStyle(color: Color(0xFFAF6666), fontSize: 16),
                     ),
                   ),
@@ -101,12 +109,22 @@ class _FpOtpState extends State<FpOtp> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
+                      String code = _controllers.map((controller) => controller.text).join();
+                      if (code == optCode ) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NewPass(),
+                          ),
+                        );
+                      } else {
+                        CustomDialog.showDialogBox(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const NewPass(),
-                        ),
+                        message: "Your OTP code isn't correct",
+                        title: "Incorrect code",
                       );
+                      }
+                      
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF46639B),
