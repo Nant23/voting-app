@@ -108,6 +108,8 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
+
+  // User sign up function
   void signUp(String username, String email, String password, String country,
       String role) async {
     try {
@@ -120,6 +122,7 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
+  // This function stores the users details to firestore database
   void postDetailsToFirestore(User? user, String username, String email,
       String country, String role) async {
     if (user != null) {

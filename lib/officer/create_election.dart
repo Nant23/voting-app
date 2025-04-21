@@ -200,7 +200,7 @@ class _CreateElectionState extends State<CreateElection> {
 }
 
 //backend
-
+// This function will store the questions along with options in database
 Future<void> storeQuestionData(BuildContext context,
     List<String> questionsArray, String mainQuestion) async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;

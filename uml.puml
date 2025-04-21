@@ -1,0 +1,420 @@
+@startuml
+set namespaceSeparator ::
+
+class "voting_app::admin::admin_dash.dart::AdminDash" {
+  +int selectedIndex
+  +_AdminDashState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::admin::admin_dash.dart::AdminDash"
+
+class "voting_app::admin::admin_dash.dart::_AdminDashState" {
+  -int _selectedIndex
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::admin::admin_dash.dart::_AdminDashState"
+
+class "voting_app::admin::admin_nav.dart::NavBar" {
+  +int currentIndex
+  +void Function(int) onTap
+  -void _onNavTap()
+  +Widget build()
+}
+
+"voting_app::admin::admin_nav.dart::NavBar" o-- "null::void Function(int)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "voting_app::admin::admin_nav.dart::NavBar"
+
+class "voting_app::admin::admin_profile.dart::ProfilePage" {
+  +int selectedIndex
+  +_ProfilePageState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::admin::admin_profile.dart::ProfilePage"
+
+class "voting_app::admin::admin_profile.dart::_ProfilePageState" {
+  -int _selectedIndex
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::admin::admin_profile.dart::_ProfilePageState"
+
+class "voting_app::admin::admin_tools.dart::AdminTools" {
+  +dynamic createOfficerAccount()
+}
+
+class "voting_app::admin::officer_reg.dart::OfficerReg" {
+  +_OfficerRegState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::admin::officer_reg.dart::OfficerReg"
+
+class "voting_app::admin::officer_reg.dart::_OfficerRegState" {
+  +TextEditingController officerIdController
+  +TextEditingController nameController
+  +TextEditingController passwordController
+  +TextEditingController emailController
+  +TextEditingController countryController
+  +TextEditingController confirmPassController
+  -int _selectedIndex
+  -void _onNavItemTapped()
+  +Widget build()
+}
+
+"voting_app::admin::officer_reg.dart::_OfficerRegState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::admin::officer_reg.dart::_OfficerRegState"
+
+class "voting_app::admin::remove_user.dart::RemoveUser" {
+  +_RemoveUserState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::admin::remove_user.dart::RemoveUser"
+
+class "voting_app::admin::remove_user.dart::_RemoveUserState" {
+  -int _selectedIndex
+  +TextEditingController userIdController
+  +TextEditingController emailController
+  -void _onNavItemTapped()
+  +Widget build()
+}
+
+"voting_app::admin::remove_user.dart::_RemoveUserState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::admin::remove_user.dart::_RemoveUserState"
+
+class "voting_app::admin::stats.dart::Stats" {
+  +int selectedIndex
+  +_StatsState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::admin::stats.dart::Stats"
+
+class "voting_app::admin::stats.dart::_StatsState" {
+  -int _selectedIndex
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::admin::stats.dart::_StatsState"
+
+class "voting_app::admin::view_result_ad.dart::ViewResultAd" {
+  +int selectedIndex
+  +_ViewResultAdState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::admin::view_result_ad.dart::ViewResultAd"
+
+class "voting_app::admin::view_result_ad.dart::_ViewResultAdState" {
+  -int _selectedIndex
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::admin::view_result_ad.dart::_ViewResultAdState"
+
+class "voting_app::components::my_button.dart::MyButton" {
+  +dynamic Function()? onTap
+  +Widget build()
+}
+
+"voting_app::components::my_button.dart::MyButton" o-- "null::dynamic Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "voting_app::components::my_button.dart::MyButton"
+
+class "voting_app::components::my_textfield.dart::MyTextfield" {
+  +TextEditingController controller
+  +String hintText
+  +bool obscureText
+  +Widget build()
+}
+
+"voting_app::components::my_textfield.dart::MyTextfield" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "voting_app::components::my_textfield.dart::MyTextfield"
+
+class "voting_app::dialogs.dart::CustomDialog" {
+  {static} +dynamic showDialogBox()
+}
+
+class "voting_app::firebase_options.dart::DefaultFirebaseOptions" {
+  {static} +FirebaseOptions web
+  {static} +FirebaseOptions android
+  {static} +FirebaseOptions ios
+  {static} +FirebaseOptions macos
+  {static} +FirebaseOptions windows
+  {static} +FirebaseOptions currentPlatform
+}
+
+"voting_app::firebase_options.dart::DefaultFirebaseOptions" o-- "firebase_core_platform_interface::firebase_core_platform_interface.dart::FirebaseOptions"      
+
+class "voting_app::forgot_password::fb_email.dart::FpEmail" {
+  +State<FpEmail> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::forgot_password::fb_email.dart::FpEmail"
+
+class "voting_app::forgot_password::fb_email.dart::_FpEmailState" {
+  +TextEditingController emailController
+  +Widget build()
+}
+
+"voting_app::forgot_password::fb_email.dart::_FpEmailState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::forgot_password::fb_email.dart::_FpEmailState"
+
+class "voting_app::forgot_password::fp_otp.dart::FpOtp" {
+  +State<FpOtp> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::forgot_password::fp_otp.dart::FpOtp"
+
+class "voting_app::forgot_password::fp_otp.dart::_FpOtpState" {
+  +TextEditingController emailController
+  +Widget build()
+}
+
+"voting_app::forgot_password::fp_otp.dart::_FpOtpState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::forgot_password::fp_otp.dart::_FpOtpState"
+
+class "voting_app::forgot_password::new_pass.dart::NewPass" {
+  +State<NewPass> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::forgot_password::new_pass.dart::NewPass"
+
+class "voting_app::forgot_password::new_pass.dart::_NewPassState" {
+  +TextEditingController passwordController
+  +TextEditingController conpasswordController
+  +Widget build()
+}
+
+"voting_app::forgot_password::new_pass.dart::_NewPassState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::forgot_password::new_pass.dart::_NewPassState"
+
+class "voting_app::Info.dart::InfoPage" {
+  +int selectedIndex
+  +_InfoPageState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::Info.dart::InfoPage"
+
+class "voting_app::Info.dart::_InfoPageState" {
+  -int _selectedIndex
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::Info.dart::_InfoPageState"
+
+class "voting_app::login.dart::LoginPage" {
+  +State<LoginPage> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::login.dart::LoginPage"
+
+class "voting_app::login.dart::_LoginPageState" {
+  +bool visible
+  +TextEditingController emailController
+  +TextEditingController passwordController
+  +List<String> options
+  +String role
+  +Widget build()
+  +void route()
+  +void showError()
+  +void signIn()
+}
+
+"voting_app::login.dart::_LoginPageState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::login.dart::_LoginPageState"
+
+class "voting_app::main.dart::MyApp" {
+  +_MyAppState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::main.dart::MyApp"
+
+class "voting_app::main.dart::_MyAppState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::main.dart::_MyAppState"
+
+class "voting_app::officer::create_election.dart::CreateElection" {
+  +int selectedIndex
+  +_CreateElectionState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::officer::create_election.dart::CreateElection"
+
+class "voting_app::officer::create_election.dart::_CreateElectionState" {
+  -int _selectedIndex
+  +TextEditingController electionNameController
+  +List<Map<String, dynamic>> options
+  -void _onNavItemTapped()
+  +Widget build()
+  +Widget buildOptionRow()
+}
+
+"voting_app::officer::create_election.dart::_CreateElectionState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::officer::create_election.dart::_CreateElectionState"
+
+class "voting_app::officer::details_off.dart::DetailsPage" {
+  +int selectedIndex
+  +_DetailsPageState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::officer::details_off.dart::DetailsPage"
+
+class "voting_app::officer::details_off.dart::_DetailsPageState" {
+  -int _selectedIndex
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::officer::details_off.dart::_DetailsPageState"
+
+class "voting_app::officer::officer_dashboard.dart::Officer" {
+  +int selectedIndex
+  +State<Officer> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::officer::officer_dashboard.dart::Officer"
+
+class "voting_app::officer::officer_dashboard.dart::_OfficerState" {
+  -int _selectedIndex
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::officer::officer_dashboard.dart::_OfficerState"
+
+class "voting_app::officer::officer_nav.dart::NavbarOff" {
+  +int currentIndex
+  +void Function(int) onTap
+  -void _onNavTap()
+  +Widget build()
+}
+
+"voting_app::officer::officer_nav.dart::NavbarOff" o-- "null::void Function(int)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "voting_app::officer::officer_nav.dart::NavbarOff"
+
+class "voting_app::officer::officer_profile.dart::Profile" {
+  +int selectedIndex
+  +_ProfileState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::officer::officer_profile.dart::Profile"
+
+class "voting_app::officer::officer_profile.dart::_ProfileState" {
+  -int _selectedIndex
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::officer::officer_profile.dart::_ProfileState"
+
+class "voting_app::officer::view_result_off.dart::ViewResult" {
+  +int selectedIndex
+  +_ViewResultState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::officer::view_result_off.dart::ViewResult"
+
+class "voting_app::officer::view_result_off.dart::_ViewResultState" {
+  -int _selectedIndex
+  +List<Map<String, dynamic>> results
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::officer::view_result_off.dart::_ViewResultState"
+
+class "voting_app::officers_info.dart::OfficersInfoPage" {
+  +int selectedIndex
+  +_OfficersInfoPageState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::officers_info.dart::OfficersInfoPage"
+
+class "voting_app::officers_info.dart::_OfficersInfoPageState" {
+  -int _selectedIndex
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::officers_info.dart::_OfficersInfoPageState"
+
+class "voting_app::signup.dart::SignUp" {
+  +_SignUpState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::signup.dart::SignUp"
+
+class "voting_app::signup.dart::_SignUpState" {
+  +bool showProgress
+  -FirebaseAuth _auth
+  +TextEditingController emailController
+  +TextEditingController passwordController
+  +TextEditingController confirmpassController
+  +TextEditingController usernameController
+  +TextEditingController countryController
+  +List<String> options
+  +String role
+  +Widget build()
+  +void signUp()
+  +void postDetailsToFirestore()
+}
+
+"voting_app::signup.dart::_SignUpState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"voting_app::signup.dart::_SignUpState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::signup.dart::_SignUpState"
+
+class "voting_app::splash.dart::Splash" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "voting_app::splash.dart::Splash"
+
+class "voting_app::user.dart::User" {
+  +State<User> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::user.dart::User"
+
+class "voting_app::user.dart::_UserState" {
+  +Widget build()
+  +dynamic logout()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::user.dart::_UserState"
+
+class "voting_app::voters_info.dart::VotersInfoPage" {
+  +int selectedIndex
+  +_VotersInfoPageState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::voters_info.dart::VotersInfoPage"
+
+class "voting_app::voters_info.dart::_VotersInfoPageState" {
+  -int _selectedIndex
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::voters_info.dart::_VotersInfoPageState"
+
+class "voting_app::voter_requests.dart::VoterRequests" {
+  +int selectedIndex
+  +_VoterRequestsState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "voting_app::voter_requests.dart::VoterRequests"
+
+class "voting_app::voter_requests.dart::_VoterRequestsState" {
+  -int _selectedIndex
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "voting_app::voter_requests.dart::_VoterRequestsState"
+
+
+@enduml
