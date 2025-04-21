@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:voting_app/officer_dashboard.dart';
-import 'admin_dash.dart';
+import 'package:voting_app/officer/officer_dashboard.dart';
+import 'package:voting_app/forgot_password/fb_email.dart';
+import 'package:voting_app/signup.dart';
+import 'admin/admin_dash.dart';
 import 'user.dart' as users;
 //import 'dialogs.dart' as popup;
 
@@ -60,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
 
                 //email textfield
                 Padding(
@@ -123,7 +125,23 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 38),
+                SizedBox(height: 10),
+
+                //forgot password
+                Padding(
+                  padding: const EdgeInsets.only(left: 250.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => FpEmail()),
+                      );
+                    },
+                    child: Text("Forgot password?",
+                        style: TextStyle(color: Colors.blue)),
+                  ),
+                ),
+                SizedBox(height: 28),
 
                 //button
                 Center(
@@ -135,11 +153,8 @@ class _LoginPageState extends State<LoginPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF46639B),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 55,
+                        horizontal: 48,
                         vertical: 15,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
                       ),
                     ),
                     child: Padding(
@@ -164,6 +179,8 @@ class _LoginPageState extends State<LoginPage> {
                     GestureDetector(
                       onTap: () {
                         //Signup nav
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => SignUp()));
                       },
                       child: Text(
                         ' Register Now',
@@ -183,6 +200,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // This function will decide which page the user will be routed to based on their role
   void route() async {
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -198,6 +216,14 @@ class _LoginPageState extends State<LoginPage> {
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
         String role = documentSnapshot.get('role');
+
+        String status = documentSnapshot.get('status');
+
+        if (status == "Inactive") {
+          showError("Your account has been deactivated.");
+          //FirebaseAuth.instance.signOut(); // Optionally sign out the user
+          return;
+        }
 
         if (role == "Admin") {
           Navigator.pushReplacement(
@@ -231,13 +257,9 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // SignIn function
   void signIn(String email, String password) async {
     try {
-      // UserCredential userCredential =
-      //     await FirebaseAuth.instance.signInWithEmailAndPassword(
-      //   email: email,
-      //   password: password,
-      // );
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       route();
