@@ -140,7 +140,7 @@ class _CreateElectionState extends State<CreateElection> {
                       ),
                     ),
                     child: const Text(
-                      'Public Election',
+                      'Publish Election',
                       style: TextStyle(
                         fontSize: 22,
                         color: Colors.white,

@@ -21,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  var options = ['User', 'Admin'];
+  var options = ['User', 'Admin']; 
   //var _currentItemSelected = "User";
   var role = "User"; // Ensuring role defaults to 'User'
 
