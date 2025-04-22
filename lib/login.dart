@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:voting_app/officer_dashboard.dart';
+import 'package:voting_app/officer/officer_dashboard.dart';
 import 'package:voting_app/forgot_password/fb_email.dart';
-import 'admin_dash.dart';
+import 'package:voting_app/signup.dart';
+import 'admin/admin_dash.dart';
 import 'user.dart' as users;
 //import 'dialogs.dart' as popup;
 
@@ -178,6 +179,8 @@ class _LoginPageState extends State<LoginPage> {
                     GestureDetector(
                       onTap: () {
                         //Signup nav
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => SignUp()));
                       },
                       child: Text(
                         ' Register Now',

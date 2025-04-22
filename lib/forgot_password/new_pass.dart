@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:voting_app/admin_dash.dart';
+import 'package:voting_app/admin/admin_dash.dart';
 import 'package:voting_app/components/my_textfield.dart';
 import 'package:voting_app/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:voting_app/dialogs.dart';
 
 class NewPass extends StatefulWidget {
   const NewPass({super.key});
@@ -66,11 +68,18 @@ class _NewPassState extends State<NewPass> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF46639B)),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                      );
+                    onPressed: () async {
+                      if (passwordController.text != conpasswordController.text) {
+                        CustomDialog.showDialogBox(
+                          context,
+                          title: "Password Mismatch",
+                          message: "Password and Confirm Password do not match.",
+                        );
+                        return;
+                      }
+
+                      await changePassword(context, passwordController.text);
+                      
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -90,5 +99,38 @@ class _NewPassState extends State<NewPass> {
         ),
       ),
     );
+  }
+}
+
+
+Future<void> changePassword(BuildContext context, newPassword) async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      await user.updatePassword(newPassword);
+      print("Password changed successfully.");
+      // CustomDialog.showDialogBox(
+      //   context,
+      //   title: "Success",
+      //   message: "Password changed successfully",
+      // );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+
+    } else {
+      print("No user is signed in.");
+    }
+  } on FirebaseAuthException catch (e) {
+    print("Error: ${e.code} - ${e.message}");
+    // Handle specific error codes if needed
+    if (e.code == 'requires-recent-login') {
+      // Re-authentication is required
+      print("Please re-authenticate and try again.");
+    }
+  } catch (e) {
+    print("An error occurred: $e");
   }
 }
