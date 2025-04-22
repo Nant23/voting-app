@@ -12,7 +12,7 @@ class CreateElection extends StatefulWidget {
 }
 
 class _CreateElectionState extends State<CreateElection> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   void _onNavItemTapped(int index) {
     setState(() {
