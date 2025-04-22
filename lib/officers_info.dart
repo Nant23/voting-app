@@ -25,7 +25,7 @@ class _OfficersInfoPageState extends State<OfficersInfoPage> {
       backgroundColor: const Color(0xFFBED2EE),
       body: Center(
         child: Text(
-          'Officers Info Page',
+          'Officers Info Page eh',
           style: TextStyle(fontSize: 20, color: Colors.black54),
         ),
       ),
