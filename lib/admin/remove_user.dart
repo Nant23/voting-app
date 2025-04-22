@@ -83,6 +83,8 @@ class _RemoveUserState extends State<RemoveUser> {
   }
 }
 
+
+// This function will deactivate officer account
 Future<void> deactivateOfficerAccount(
     BuildContext context, String id, String email) async {
   try {

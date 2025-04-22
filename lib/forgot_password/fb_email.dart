@@ -77,7 +77,7 @@ class _FpEmailState extends State<FpEmail> {
                       ),
                     ),
                     child: const Text(
-                      "Send OTP",
+                      "Next",
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
