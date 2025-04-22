@@ -200,6 +200,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // This function will decide which page the user will be routed to based on their role
   void route() async {
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -256,13 +257,9 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // SignIn function
   void signIn(String email, String password) async {
     try {
-      // UserCredential userCredential =
-      //     await FirebaseAuth.instance.signInWithEmailAndPassword(
-      //   email: email,
-      //   password: password,
-      // );
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       route();
