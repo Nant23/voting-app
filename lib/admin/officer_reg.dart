@@ -122,6 +122,8 @@ class _OfficerRegState extends State<OfficerReg> {
   }
 }
 
+
+// This function will create an officer account
 Future<void> createOfficerAccount(BuildContext context, String email,
     String password, String name, String country, String id) async {
   try {

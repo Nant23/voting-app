@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'splash.dart';
+import 'package:dcdg/dcdg.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

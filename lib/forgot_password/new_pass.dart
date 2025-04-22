@@ -102,7 +102,7 @@ class _NewPassState extends State<NewPass> {
   }
 }
 
-
+// This function will changed the current user's password
 Future<void> changePassword(BuildContext context, newPassword) async {
   try {
     final user = FirebaseAuth.instance.currentUser;
