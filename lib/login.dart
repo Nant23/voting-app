@@ -21,6 +21,11 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
   String role = "User";
 
+  var options = ['User', 'Admin']; 
+  //var _currentItemSelected = "User";
+  var role = "User"; // Ensuring role defaults to 'User'
+
+  //final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,6 +186,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // This function will decide which page the user will be routed to based on their role
   void route() async {
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -239,6 +245,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  // SignIn function
   void signIn(String email, String password) async {
     try {
       await FirebaseAuth.instance
