@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'components/my_textfield.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+
+final user = FirebaseAuth.instance.currentUser;
+final uid = user?.uid;
 
 class VotingHomePage extends StatefulWidget {
   @override
@@ -7,6 +13,43 @@ class VotingHomePage extends StatefulWidget {
 }
 
 class _VotingHomePageState extends State<VotingHomePage> {
+
+  
+  // back end part (this function will store the info in firestore)
+  Future<void> _submitToFirestore() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final uid = user.uid;
+
+    final docRef = FirebaseFirestore.instance.collection('voter_registration').doc(uid);
+    final doc = await docRef.get();
+
+    if (doc.exists) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('You have already registered.')),
+      );
+      return;
+    }
+
+    final data = {
+      'id': uid,
+      'Name': _controllers[0].text.trim(),
+      'Age': _controllers[1].text.trim(),
+      'Gender': _controllers[2].text.trim(),
+      'Phone Number': _controllers[3].text.trim(),
+      'Country': _controllers[4].text.trim(),
+      'status': 'unregistered',
+    };
+
+    await docRef.set(data);
+
+    _changePage(2); // show success page
+  }
+
+
+  
+
   int _currentPage = 0;
   final _controllers = List.generate(5, (_) => TextEditingController());
   final _errorMessages = List<String?>.filled(5, null);
@@ -132,7 +175,14 @@ class _VotingHomePageState extends State<VotingHomePage> {
                               0xFF3F527F,
                               showSuccess
                                   ? null
-                                  : () => _changePage(_validateFields() ? 2 : 1)),
+                                  : () async {
+                                      if (_validateFields()) {
+                                        await _submitToFirestore();
+                                        _changePage(2);
+                                      } else {
+                                        _changePage(1);
+                                      }
+                                    }),
                         ]),
                     ),
                   ),
