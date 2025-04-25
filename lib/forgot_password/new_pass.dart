@@ -69,17 +69,18 @@ class _NewPassState extends State<NewPass> {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF46639B)),
                     onPressed: () async {
-                      if (passwordController.text != conpasswordController.text) {
+                      if (passwordController.text !=
+                          conpasswordController.text) {
                         CustomDialog.showDialogBox(
                           context,
                           title: "Password Mismatch",
-                          message: "Password and Confirm Password do not match.",
+                          message:
+                              "Password and Confirm Password do not match.",
                         );
                         return;
                       }
 
                       await changePassword(context, passwordController.text);
-                      
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -119,7 +120,6 @@ Future<void> changePassword(BuildContext context, newPassword) async {
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
       );
-
     } else {
       print("No user is signed in.");
     }
