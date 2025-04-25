@@ -21,7 +21,6 @@ class _OfficerState extends State<Officer> {
     _selectedIndex = widget.selectedIndex;
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +57,8 @@ class _OfficerState extends State<Officer> {
           Spacer(), // Pushes everything downward
 
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30), // Add padding for alignment
+            padding: const EdgeInsets.symmetric(
+                horizontal: 30), // Add padding for alignment
             child: ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -89,7 +89,7 @@ class _OfficerState extends State<Officer> {
           const SizedBox(height: 20), // Space between buttons
 
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30), 
+            padding: const EdgeInsets.symmetric(horizontal: 30),
             child: ElevatedButton(
               onPressed: () {
                 Navigator.push(
