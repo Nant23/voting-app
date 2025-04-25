@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:voting_app/signup.dart';
 import 'login.dart';
 
+//Welcome page
 class Splash extends StatelessWidget {
   const Splash({Key? key}) : super(key: key);
 
