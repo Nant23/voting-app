@@ -7,7 +7,7 @@ import 'package:voting_app/admin/admin_nav.dart';
 import 'package:voting_app/dialogs.dart';
 
 class OfficerReg extends StatefulWidget {
-  const OfficerReg({Key? key}) : super(key: key);
+  const OfficerReg({super.key});
 
   @override
   _OfficerRegState createState() => _OfficerRegState();

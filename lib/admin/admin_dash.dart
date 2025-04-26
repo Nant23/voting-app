@@ -7,7 +7,7 @@ import 'package:voting_app/admin/officer_reg.dart';
 class AdminDash extends StatefulWidget {
   final int selectedIndex;
 
-  AdminDash({this.selectedIndex = 0}); //default to 0
+  const AdminDash({super.key, this.selectedIndex = 0}); //default to 0
 
   @override
   _AdminDashState createState() => _AdminDashState();

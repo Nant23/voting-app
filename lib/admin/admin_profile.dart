@@ -7,7 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ProfilePage extends StatefulWidget {
   final int selectedIndex;
 
-  ProfilePage({this.selectedIndex = 4});
+  const ProfilePage({super.key, this.selectedIndex = 4});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -130,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('$label', style: _labelStyle),
+        Text(label, style: _labelStyle),
         const SizedBox(height: 5),
         Text(value?.toString() ?? 'N/A', style: _valueStyle),
         const SizedBox(height: 10),

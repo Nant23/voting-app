@@ -5,7 +5,7 @@ import 'package:voting_app/admin/admin_nav.dart';
 class Stats extends StatefulWidget {
   final int selectedIndex;
 
-  Stats({this.selectedIndex = 3});
+  const Stats({super.key, this.selectedIndex = 3});
 
   @override
   _StatsState createState() => _StatsState();
