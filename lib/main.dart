@@ -12,6 +12,8 @@ void main() async {
 }
 
 class VotingApp extends StatelessWidget {
+  const VotingApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

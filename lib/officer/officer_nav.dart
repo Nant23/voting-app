@@ -9,10 +9,10 @@ class NavbarOff extends StatelessWidget {
   final void Function(int) onTap;
 
   const NavbarOff({
-    Key? key,
+    super.key,
     required this.currentIndex,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   void _onNavTap(BuildContext context, int index) {
     if (index == currentIndex) return;

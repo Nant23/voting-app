@@ -2,20 +2,19 @@ import 'package:flutter/material.dart';
 import 'components/my_textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:voting_app/voting_screen.dart';
 
 final user = FirebaseAuth.instance.currentUser;
 final uid = user?.uid;
 
 class VotingHomePage extends StatefulWidget {
+  const VotingHomePage({super.key});
+
   @override
   _VotingHomePageState createState() => _VotingHomePageState();
 }
 
 class _VotingHomePageState extends State<VotingHomePage> {
-
-  
-  // back end part (this function will store the info in firestore)
   Future<void> _submitToFirestore() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
@@ -43,12 +42,8 @@ class _VotingHomePageState extends State<VotingHomePage> {
     };
 
     await docRef.set(data);
-
-    _changePage(2); // show success page
+    _changePage(2);
   }
-
-
-  
 
   int _currentPage = 0;
   final _controllers = List.generate(5, (_) => TextEditingController());
@@ -56,7 +51,9 @@ class _VotingHomePageState extends State<VotingHomePage> {
 
   @override
   void dispose() {
-    for (var c in _controllers) c.dispose();
+    for (var c in _controllers) {
+      c.dispose();
+    }
     super.dispose();
   }
 
@@ -116,9 +113,22 @@ class _VotingHomePageState extends State<VotingHomePage> {
                     style: TextStyle(color: Colors.black, fontSize: 12)),
               ]),
               const SizedBox(height: 40),
-              _dashboardButton('Vote', 72, 32, 0xFF4F6596, () => _changePage(1)),
+              _dashboardButton('Register', 72, 32, 0xFF4F6596, () => _changePage(1)),
               const SizedBox(height: 24),
-              _dashboardButton('View result', 56, 24, 0xFF3F527F, () {})
+              _dashboardButton('View result', 56, 24, 0xFF3F527F, () {}),
+              const SizedBox(height: 24),
+              _dashboardButton(
+                'Go to Vote',
+                56,
+                24,
+                0xFF2C4065,
+                () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const VotingScreen()),
+                  );
+                },
+              ),
             ]),
             _bottomBar(selectedIndex: 1),
           ],
@@ -195,30 +205,30 @@ class _VotingHomePageState extends State<VotingHomePage> {
           if (showSuccess) _successOverlay(),
         ]));
 
- Widget _buildTextField(int i) => Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    MyTextfield(
-      controller: _controllers[i],
-      hintText: ['Name', 'Age', 'Gender', 'Phone Number', 'Country'][i],
-      obscureText: false,
-    ),
-    if (_errorMessages[i] != null)
-      Padding(
-        padding: const EdgeInsets.only(top: 4),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              _errorMessages[i]!,
-              style: const TextStyle(color: Colors.red),
+  Widget _buildTextField(int i) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          MyTextfield(
+            controller: _controllers[i],
+            hintText: ['Name', 'Age', 'Gender', 'Phone Number', 'Country'][i],
+            obscureText: false,
+          ),
+          if (_errorMessages[i] != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    _errorMessages[i]!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
-    const SizedBox(height: 12),
-  ],
-);
+          const SizedBox(height: 12),
+        ],
+      );
 
   Widget _successOverlay() => Positioned(
         top: 60,

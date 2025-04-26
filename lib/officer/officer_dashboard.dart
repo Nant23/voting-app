@@ -6,7 +6,7 @@ import 'view_result_off.dart';
 class Officer extends StatefulWidget {
   final int selectedIndex;
 
-  Officer({this.selectedIndex = 0});
+  const Officer({super.key, this.selectedIndex = 0});
 
   @override
   State<Officer> createState() => _OfficerState();
