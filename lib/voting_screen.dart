@@ -10,7 +10,6 @@ class VotingScreen extends StatefulWidget {
 class _VotingScreenState extends State<VotingScreen> {
   String? selectedElection;
   List<String> elections = ['Presidential', 'Parliament', 'Council'];
-  
   List<bool> candidateSelected = [false, false, false];
 
   @override
@@ -22,9 +21,7 @@ class _VotingScreenState extends State<VotingScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Padding(
@@ -34,10 +31,7 @@ class _VotingScreenState extends State<VotingScreen> {
           children: [
             const Text(
               'Please Vote',
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             Container(
@@ -65,7 +59,6 @@ class _VotingScreenState extends State<VotingScreen> {
               ),
             ),
             const SizedBox(height: 30),
-            // Candidates
             Column(
               children: List.generate(3, (index) {
                 return Padding(
@@ -76,7 +69,6 @@ class _VotingScreenState extends State<VotingScreen> {
                         value: candidateSelected[index],
                         onChanged: (bool? value) {
                           setState(() {
-                            // Only allow one selection
                             for (int i = 0; i < candidateSelected.length; i++) {
                               candidateSelected[i] = false;
                             }
@@ -116,8 +108,8 @@ class _VotingScreenState extends State<VotingScreen> {
                         actions: [
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop(); // Close dialog
-                              Navigator.of(context).pop(); // Go back to previous page
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
                             },
                             child: const Text('OK'),
                           ),
