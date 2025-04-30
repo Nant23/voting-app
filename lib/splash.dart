@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:voting_app/signup.dart';
-import 'login.dart';
+import 'package:voting_app/login.dart';
 
+//Welcome page
 class Splash extends StatelessWidget {
   const Splash({Key? key}) : super(key: key);
 
@@ -32,13 +33,11 @@ class Splash extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-
               const Text(
                 "Welcome to Voting App!",
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 60),
-
               // Buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -69,7 +68,6 @@ class Splash extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 20),
-
                   // Sign Up Button
                   OutlinedButton(
                     onPressed: () {
@@ -105,3 +103,4 @@ class Splash extends StatelessWidget {
     );
   }
 }
+
