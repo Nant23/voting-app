@@ -1,8 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
-// Import the splash screen.
-import 'splash.dart'; // Ensure this import is correct
+import 'splash.dart'; 
 import 'voting_page.dart';
 
 void main() async {
