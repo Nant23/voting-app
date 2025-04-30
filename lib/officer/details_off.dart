@@ -4,7 +4,7 @@ import 'package:voting_app/dialogs.dart';
 
 class DetailsPage extends StatefulWidget {
   final int selectedIndex;
-  DetailsPage({this.selectedIndex = 2});
+  const DetailsPage({super.key, this.selectedIndex = 2});
 
   @override
   _DetailsPageState createState() => _DetailsPageState();

@@ -11,14 +11,15 @@ class NavBar extends StatelessWidget {
   final void Function(int) onTap; //callback to update index in parent widget
 
   const NavBar({
-    Key? key,
+    super.key,
     required this.currentIndex,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   void _onNavTap(BuildContext context, int index) {
-    if (index == currentIndex)
+    if (index == currentIndex) {
       return; //do nothing if already on the selected page
+    }
 
     //navigate based on index
     Widget destination;

@@ -5,6 +5,8 @@ import 'user.dart' as u;
 import 'components/my_textfield.dart';
 
 class SignUp extends StatefulWidget {
+  const SignUp({super.key});
+
   @override
   _SignUpState createState() => _SignUpState();
 }

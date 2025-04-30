@@ -3,7 +3,7 @@ import 'admin_nav.dart';
 
 class ViewResultAd extends StatefulWidget {
   final int selectedIndex;
-  ViewResultAd({this.selectedIndex = 0});
+  const ViewResultAd({super.key, this.selectedIndex = 0});
 
   @override
   _ViewResultAdState createState() => _ViewResultAdState();
