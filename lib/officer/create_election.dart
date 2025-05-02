@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateElection extends StatefulWidget {
   final int selectedIndex;
-  const CreateElection({super.key, this.selectedIndex = 1});
+  const CreateElection({this.selectedIndex = 1});
   @override
   _CreateElectionState createState() => _CreateElectionState();
 }
@@ -83,8 +83,8 @@ class _CreateElectionState extends State<CreateElection> {
                             });
                           },
                           backgroundColor: Colors.white,
-                          mini: true,
                           child: const Icon(Icons.add, color: Colors.black),
+                          mini: true,
                         ),
                       ),
                     ],

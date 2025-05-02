@@ -4,7 +4,7 @@ import 'details_off.dart';
 
 class ViewResult extends StatefulWidget {
   final int selectedIndex;
-  const ViewResult({super.key, this.selectedIndex = 2});
+  ViewResult({this.selectedIndex = 2});
 
   @override
   _ViewResultState createState() => _ViewResultState();

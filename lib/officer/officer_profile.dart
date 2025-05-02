@@ -7,7 +7,7 @@ import 'package:voting_app/login.dart';
 class Profile extends StatefulWidget {
   final int selectedIndex;
 
-  const Profile({super.key, this.selectedIndex = 4});
+  Profile({this.selectedIndex = 4});
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -132,7 +132,7 @@ class _ProfileState extends State<Profile> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: _labelStyle),
+        Text('$label', style: _labelStyle),
         const SizedBox(height: 5),
         Text(value?.toString() ?? 'N/A', style: _valueStyle),
         const SizedBox(height: 10),
