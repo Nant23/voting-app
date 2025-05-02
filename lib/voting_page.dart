@@ -107,7 +107,7 @@ class _VotingHomePageState extends State<VotingHomePage> {
   }
 
   Widget _dashboard() => Container(
-        width: 320,
+        width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: const Color(0xFFB3C3D9),
@@ -179,7 +179,7 @@ class _VotingHomePageState extends State<VotingHomePage> {
       );
 
   Widget _registerForm({bool showSuccess = false}) => Container(
-        width: 320,
+        width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: const Color(0xFFB3C3D9),
