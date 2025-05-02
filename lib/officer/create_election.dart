@@ -83,8 +83,8 @@ class _CreateElectionState extends State<CreateElection> {
                             });
                           },
                           backgroundColor: Colors.white,
-                          child: const Icon(Icons.add, color: Colors.black),
                           mini: true,
+                          child: const Icon(Icons.add, color: Colors.black),
                         ),
                       ),
                     ],
@@ -221,10 +221,12 @@ Future<void> storeQuestionData(BuildContext context,
       'id': nextId,
       'question': mainQuestion,
       'status': 'Ongoing',
+      'votedUsers':<String>[],
     };
 
     for (int i = 0; i < questionsArray.length; i++) {
       data['question ${i + 1}'] = questionsArray[i];
+      data['q${i + 1}_votes'] = 0;
     }
 
     await questionsRef.add(data);
