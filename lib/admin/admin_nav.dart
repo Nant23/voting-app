@@ -3,7 +3,7 @@ import 'package:voting_app/Info.dart';
 import 'package:voting_app/admin/admin_dash.dart';
 import 'package:voting_app/admin/admin_profile.dart';
 import 'package:voting_app/admin/stats.dart';
-import 'package:voting_app/voter_requests.dart';
+import 'package:voting_app/admin/voter_requests.dart';
 
 //reusable Bottom Navigation Bar for the admin section
 class NavBar extends StatelessWidget {
