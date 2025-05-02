@@ -1,31 +1,25 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:voting_app/officer/officer_dashboard.dart';
+import 'package:voting_app/officer/officer_dashboard.dart'; // Import Officer
 import 'package:voting_app/forgot_password/fb_email.dart';
 import 'package:voting_app/signup.dart';
-import 'admin/admin_dash.dart';
-import 'user.dart' as users;
-//import 'dialogs.dart' as popup;
+import 'admin/admin_dash.dart'; // Import AdminDash// Import User
+import 'voting_page.dart'; // Import VotingHomePage
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  //bool _isObscure3 = true;
   bool visible = false;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  String role = "User";
 
-  var options = ['User', 'Admin']; 
-  //var _currentItemSelected = "User";
-  var role = "User"; // Ensuring role defaults to 'User'
-
-  //final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,8 +38,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 40),
-
-                // Image
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: Container(
@@ -63,8 +55,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 30),
-
-                //email textfield
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
@@ -82,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: TextField(
                               keyboardType: TextInputType.emailAddress,
                               controller: emailController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Email',
                               ),
@@ -93,9 +83,7 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 15),
-
-                //password
+                const SizedBox(height: 15),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
@@ -114,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                               textInputAction: TextInputAction.done,
                               controller: passwordController,
                               obscureText: true,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Password',
                               ),
@@ -125,9 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 10),
-
-                //forgot password
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.only(left: 250.0),
                   child: GestureDetector(
@@ -137,18 +123,15 @@ class _LoginPageState extends State<LoginPage> {
                         MaterialPageRoute(builder: (context) => FpEmail()),
                       );
                     },
-                    child: Text("Forgot password?",
+                    child: const Text("Forgot password?",
                         style: TextStyle(color: Colors.blue)),
                   ),
                 ),
-                SizedBox(height: 28),
-
-                //button
+                const SizedBox(height: 28),
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
                       signIn(emailController.text, passwordController.text);
-                      //popup.Dialog.successDialog(context);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF46639B),
@@ -166,23 +149,20 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 18),
-
-                //Register Now
+                const SizedBox(height: 18),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Not a member?',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     GestureDetector(
                       onTap: () {
-                        //Signup nav
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => SignUp()));
                       },
-                      child: Text(
+                      child: const Text(
                         ' Register Now',
                         style: TextStyle(
                           color: Color(0xFFAF6666),
@@ -200,7 +180,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // This function will decide which page the user will be routed to based on their role
   void route() async {
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -209,19 +188,19 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
+    try {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
       if (documentSnapshot.exists) {
         String role = documentSnapshot.get('role');
-
         String status = documentSnapshot.get('status');
 
         if (status == "Inactive") {
           showError("Your account has been deactivated.");
-          //FirebaseAuth.instance.signOut(); // Optionally sign out the user
+          await FirebaseAuth.instance.signOut();
           return;
         }
 
@@ -233,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
         } else if (role == "User") {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => users.User()),
+            MaterialPageRoute(builder: (context) => VotingHomePage()), // Navigate to VotingHomePage
           );
         } else if (role == "Officer") {
           Navigator.pushReplacement(
@@ -246,18 +225,19 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         showError("User data not found.");
       }
-    }).catchError((error) {
+    } catch (error) {
       showError("Error fetching user data: $error");
-    });
+    }
   }
 
   void showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
-    );
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red),
+      );
+    }
   }
 
-  // SignIn function
   void signIn(String email, String password) async {
     try {
       await FirebaseAuth.instance

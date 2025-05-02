@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-// import 'admin/admin_nav.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'admin_nav.dart';
 
-class OfficersInfoPage extends StatefulWidget {
+class VotersInfoPage extends StatefulWidget {
   final int selectedIndex;
 
-  const OfficersInfoPage({super.key, this.selectedIndex = 2});
+  const VotersInfoPage({this.selectedIndex = 2, super.key});
 
   @override
-  _OfficersInfoPageState createState() => _OfficersInfoPageState();
+  _VotersInfoPageState createState() => _VotersInfoPageState();
 }
 
-class _OfficersInfoPageState extends State<OfficersInfoPage> {
+class _VotersInfoPageState extends State<VotersInfoPage> {
   late int _selectedIndex;
 
   @override
@@ -23,12 +23,12 @@ class _OfficersInfoPageState extends State<OfficersInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Officers')),
+      appBar: AppBar(title: Text('Registered Voters')),
       backgroundColor: const Color(0xFFBED2EE),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('users')
-            .where('role', isEqualTo: 'Officer')
+            .collection('voter_registration')
+            .where('status', isEqualTo: 'registered')
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -39,17 +39,17 @@ class _OfficersInfoPageState extends State<OfficersInfoPage> {
             return Center(child: CircularProgressIndicator());
           }
 
-          final officers = snapshot.data!.docs;
+          final voters = snapshot.data!.docs;
 
-          if (officers.isEmpty) {
-            return Center(child: Text('No officers found.'));
+          if (voters.isEmpty) {
+            return Center(child: Text('No registered voters found.'));
           }
 
           return ListView.builder(
             padding: EdgeInsets.all(12),
-            itemCount: officers.length,
+            itemCount: voters.length,
             itemBuilder: (context, index) {
-              final data = officers[index].data() as Map<String, dynamic>;
+              final data = voters[index].data() as Map<String, dynamic>;
 
               return Card(
                 elevation: 4,
@@ -63,15 +63,17 @@ class _OfficersInfoPageState extends State<OfficersInfoPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        data['name'] ?? 'No name',
+                        data['Name'] ?? 'No name',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       SizedBox(height: 8),
-                      Text('Email: ${data['email'] ?? 'N/A'}'),
-                      Text('Country: ${data['country'] ?? 'N/A'}'),
+                      Text('Age: ${data['Age'] ?? 'N/A'}'),
+                      Text('Gender: ${data['Gender'] ?? 'N/A'}'),
+                      Text('Phone: ${data['Phone Number'] ?? 'N/A'}'),
+                      Text('Country: ${data['Country'] ?? 'N/A'}'),
                       Text('ID: ${data['id'] ?? 'N/A'}'),
                     ],
                   ),
@@ -79,6 +81,14 @@ class _OfficersInfoPageState extends State<OfficersInfoPage> {
               );
             },
           );
+        },
+      ),
+      bottomNavigationBar: NavBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
         },
       ),
     );
