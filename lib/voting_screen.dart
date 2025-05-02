@@ -1,143 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'electioncard.dart';
 
-class VotingScreen extends StatefulWidget {
-  const VotingScreen({super.key});
+class VoteScreen extends StatefulWidget {
+  const VoteScreen({Key? key}) : super(key: key);
 
   @override
-  _VotingScreenState createState() => _VotingScreenState();
+  State<VoteScreen> createState() => _VoteScreenState();
 }
 
-class _VotingScreenState extends State<VotingScreen> {
-  String? selectedElection;
-  List<String> elections = ['Presidential', 'Parliament', 'Council'];
-  List<bool> candidateSelected = [false, false, false];
+class _VoteScreenState extends State<VoteScreen> {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFBED2EE),
       appBar: AppBar(
-        backgroundColor: const Color(0xFFBED2EE),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+        title: const Text("Vote", style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFF46639B),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'Please Vote',
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: DropdownButton<String>(
-                value: selectedElection,
-                isExpanded: true,
-                hint: const Text('Election ?'),
-                underline: const SizedBox(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedElection = newValue;
-                  });
-                },
-                items: elections.map((String election) {
-                  return DropdownMenuItem<String>(
-                    value: election,
-                    child: Text(election),
-                  );
-                }).toList(),
-              ),
-            ),
-            const SizedBox(height: 30),
-            Column(
-              children: List.generate(3, (index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        value: candidateSelected[index],
-                        onChanged: (bool? value) {
-                          setState(() {
-                            for (int i = 0; i < candidateSelected.length; i++) {
-                              candidateSelected[i] = false;
-                            }
-                            candidateSelected[index] = value ?? false;
-                          });
-                        },
-                      ),
-                      Expanded(
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
-            ),
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  if (candidateSelected.contains(true)) {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Congratulations 🎉'),
-                        content: const Text(
-                          'Congratulations on your vote!\nWishing that your selected candidate wins.',
-                          textAlign: TextAlign.center,
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please select a candidate before confirming.'),
-                      ),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF46639B),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text(
-                  'Confirm Vote',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ),
-            ),
-          ],
-        ),
+      body: FutureBuilder<QuerySnapshot>(
+        future: firestore
+            .collection('questions')
+            .where('status', isEqualTo: 'Ongoing')
+            .get(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(child: Text("No ongoing elections."));
+          }
+
+          final elections = snapshot.data!.docs;
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: elections.length,
+            itemBuilder: (context, index) {
+              final doc = elections[index];
+              return ElectionCard(doc: doc);
+            },
+          );
+        },
       ),
     );
   }

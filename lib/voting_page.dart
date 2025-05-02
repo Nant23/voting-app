@@ -138,7 +138,7 @@ class _VotingHomePageState extends State<VotingHomePage> {
                 _dashboardButton('Vote', 72, 32, 0xFF4F6596, () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const VotingScreen()),
+                    MaterialPageRoute(builder: (context) => const VoteScreen()),
                   );
                 }),
                 const SizedBox(height: 24),
