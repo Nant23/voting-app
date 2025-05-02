@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'admin/admin_nav.dart';
-import 'voters_info.dart';
+import 'admin/voters_info.dart';
 import 'officers_info.dart';
 
 class InfoPage extends StatefulWidget {

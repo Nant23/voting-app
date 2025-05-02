@@ -105,6 +105,21 @@ class _CreateElectionState extends State<CreateElection> {
                         return;
                       }
 
+                      // Check for existing ongoing elections
+                      final ongoing = await FirebaseFirestore.instance
+                          .collection('questions')
+                          .where('status', isEqualTo: 'Ongoing')
+                          .get();
+
+                      if (ongoing.docs.isNotEmpty) {
+                        CustomDialog.showDialogBox(
+                          context,
+                          title: "Election Exists",
+                          message: "There is already an ongoing election.",
+                        );
+                        return;
+                      }
+
                       // Collect non-empty options
                       List<String> optionTexts = options
                           .map<String>((opt) => opt['controller'].text.trim())
@@ -120,15 +135,9 @@ class _CreateElectionState extends State<CreateElection> {
                         return;
                       }
 
-                      await storeQuestionData(
-                          context, optionTexts, mainQuestion);
-
-                      // CustomDialog.showDialogBox(
-                      //   context,
-                      //   title: "Success",
-                      //   message: "Election Created",
-                      // );
+                      await storeQuestionData(context, optionTexts, mainQuestion);
                     },
+
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF46639B),
                       padding: const EdgeInsets.symmetric(
