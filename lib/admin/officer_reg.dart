@@ -14,6 +14,7 @@ class OfficerReg extends StatefulWidget {
 }
 
 class _OfficerRegState extends State<OfficerReg> {
+  //controllers for form fields
   final TextEditingController officerIdController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -21,8 +22,9 @@ class _OfficerRegState extends State<OfficerReg> {
   final TextEditingController countryController = TextEditingController();
   final TextEditingController confirmPassController = TextEditingController();
 
+  //currently selected navigation bar index
   int _selectedIndex = 0;
-
+  //handling navbar ontap
   void _onNavItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -39,34 +41,40 @@ class _OfficerRegState extends State<OfficerReg> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              //ID input field
               MyTextfield(
                 hintText: 'Officer ID',
                 controller: officerIdController,
                 obscureText: false,
               ),
               const SizedBox(height: 20),
+              //Name
               MyTextfield(
                 hintText: 'Name',
                 controller: nameController,
                 obscureText: false,
               ),
               const SizedBox(height: 20),
+              //email
               MyTextfield(
                 hintText: 'Email',
                 controller: emailController,
                 obscureText: false,
               ),
               const SizedBox(height: 20),
+              //password
               MyTextfield(
                   hintText: 'Password',
                   controller: passwordController,
                   obscureText: true),
               const SizedBox(height: 20),
+              //confirm password
               MyTextfield(
                   hintText: 'Confirm Password',
                   controller: confirmPassController,
                   obscureText: true),
               const SizedBox(height: 20),
+              //country
               MyTextfield(
                 hintText: 'Country',
                 controller: countryController,
@@ -85,14 +93,17 @@ class _OfficerRegState extends State<OfficerReg> {
                       ),
                     ),
                     onPressed: () {
-                      if (passwordController.text != confirmPassController.text) {
+                      if (passwordController.text !=
+                          confirmPassController.text) {
                         CustomDialog.showDialogBox(
                           context,
                           title: "Password Mismatch",
-                          message: "Password and Confirm Password do not match.",
+                          message:
+                              "Password and Confirm Password do not match.",
                         );
                         return;
                       }
+                      //call account creation function to be implemented
                       createOfficerAccount(
                           context,
                           emailController.text,

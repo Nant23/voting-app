@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:voting_app/Info.dart';
 import 'package:voting_app/admin/admin_dash.dart';
-import 'package:voting_app/admin/view_result_ad.dart';
 import 'package:voting_app/admin/admin_profile.dart';
 import 'package:voting_app/admin/stats.dart';
 import 'package:voting_app/voter_requests.dart';
 
+//reusable Bottom Navigation Bar for the admin section
 class NavBar extends StatelessWidget {
-  final int currentIndex;
-  final void Function(int) onTap;
+  final int currentIndex; //current active index
+  final void Function(int) onTap; //callback to update index in parent widget
 
   const NavBar({
     Key? key,
@@ -17,8 +17,10 @@ class NavBar extends StatelessWidget {
   }) : super(key: key);
 
   void _onNavTap(BuildContext context, int index) {
-    if (index == currentIndex) return;
+    if (index == currentIndex)
+      return; //do nothing if already on the selected page
 
+    //navigate based on index
     Widget destination;
     switch (index) {
       case 0:
@@ -40,6 +42,7 @@ class NavBar extends StatelessWidget {
         return; // Exit if index is not valid
     }
 
+    //replace current screen with the selected one
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => destination),

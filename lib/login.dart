@@ -9,7 +9,7 @@ import 'user.dart' as users; // Import User
 import 'voting_page.dart'; // Import VotingHomePage
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();

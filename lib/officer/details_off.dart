@@ -89,12 +89,13 @@ class _DetailsPageState extends State<DetailsPage> {
         ),
       ),
       bottomNavigationBar: NavbarOff(
-          currentIndex: _selectedIndex,
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          }),
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index; // Update the selected index
+          });
+        },
+      ),
     );
   }
 }
