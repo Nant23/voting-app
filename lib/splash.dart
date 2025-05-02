@@ -4,7 +4,7 @@ import 'package:voting_app/login.dart';
 
 //Welcome page
 class Splash extends StatelessWidget {
-  const Splash({Key? key}) : super(key: key);
+  const Splash({super.key});
 
   @override
   Widget build(BuildContext context) {
