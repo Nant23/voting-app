@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'officer_nav.dart';
 import 'create_election.dart';
 import 'view_result_off.dart';
@@ -117,6 +118,28 @@ class _OfficerState extends State<Officer> {
             ),
           ),
 
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: ElevatedButton(
+              onPressed: () => closeElection(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF46639B),
+                minimumSize: Size(double.infinity, 70), // Full width button
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Text(
+                "close election",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 26, // Bigger font
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+
           Spacer(), // Pushes buttons up a bit for better positioning
         ],
       ),
@@ -128,6 +151,39 @@ class _OfficerState extends State<Officer> {
           });
         },
       ),
+    );
+  }
+}
+
+//Closing election by finding its document first
+Future<void> closeElection(BuildContext context) async {
+  try {
+    //Query the Firestore for the ongoing election
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('questions')
+        .where('status', isEqualTo: 'Ongoing')
+        .limit(1) //Get only one ongoing election
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      String documentId = querySnapshot.docs.first.id;
+
+      await FirebaseFirestore.instance
+          .collection('questions')
+          .doc(documentId)
+          .update({'status': 'Closed'});
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Election closed successfully.')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('No ongoing election found.')),
+      );
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to close election: $e')),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'officer_nav.dart';
 import 'details_off.dart';
 
@@ -12,18 +13,23 @@ class ViewResult extends StatefulWidget {
 
 class _ViewResultState extends State<ViewResult> {
   int _selectedIndex = 0;
+  late Future<List<Map<String, dynamic>>> resultsFuture;
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.selectedIndex;
+    resultsFuture = fetchDummyResults();
   }
 
-  final List<Map<String, dynamic>> results = [
-    {'option': 'Option 1', 'votes': 45},
-    {'option': 'Option 2', 'votes': 30},
-    {'option': 'Option 3', 'votes': 25},
-  ];
+  Future<List<Map<String, dynamic>>> fetchDummyResults() async {
+    await Future.delayed(const Duration(seconds: 1)); // Simulate delay
+    return [
+      {'option': 'Candidate A', 'votes': 52},
+      {'option': 'Candidate B', 'votes': 34},
+      {'option': 'Candidate C', 'votes': 14},
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,97 +53,109 @@ class _ViewResultState extends State<ViewResult> {
                 ),
                 const SizedBox(height: 30),
                 Expanded(
-                  child: ListView.separated(
-                    itemCount: results.length + 1,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 20),
-                    itemBuilder: (context, index) {
-                      if (index < results.length) {
-                        return Card(
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12.0,
-                              horizontal: 16.0,
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 20,
-                                  height: 20,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      color: const Color(0xFFD9D9D9),
-                                    ),
-                                  ),
+                  child: FutureBuilder<List<Map<String, dynamic>>>(
+                    future: resultsFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      final results = snapshot.data ?? [];
+
+                      return ListView.separated(
+                        itemCount: results.length + 1,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 20),
+                        itemBuilder: (context, index) {
+                          if (index < results.length) {
+                            final result = results[index];
+                            return Card(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12.0,
+                                  horizontal: 16.0,
                                 ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Container(
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFD9D9D9),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: const Text(
-                                      '', // Removed dummy text
-                                      style: TextStyle(
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      decoration: BoxDecoration(
                                         color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
+                                        border: Border.all(
+                                          color: const Color(0xFFD9D9D9),
+                                        ),
                                       ),
                                     ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Container(
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFD9D9D9),
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          '${result['option']} - ${result['votes']} votes',
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    const Icon(
+                                      Icons.person,
+                                      size: 28,
+                                      color: Colors.black,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          } else {
+                            return Align(
+                              alignment: Alignment.centerLeft,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DetailsPage(),
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF46639B),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 28,
+                                    vertical: 16,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
-                                const SizedBox(width: 16),
-                                const Icon(
-                                  Icons.person,
-                                  size: 28,
-                                  color: Colors.black,
+                                child: const Text(
+                                  'View Details',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      } else {
-                        return Align(
-                          alignment: Alignment.centerLeft,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      DetailsPage(), // Replace with another screen if needed
-                                ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF46639B),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 28,
-                                vertical: 16,
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            child: const Text(
-                              'View Details',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
+                            );
+                          }
+                        },
+                      );
                     },
                   ),
                 ),
