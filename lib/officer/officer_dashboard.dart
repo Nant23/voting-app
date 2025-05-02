@@ -58,7 +58,8 @@ class _OfficerState extends State<Officer> {
 
           // Create Election Button
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 30), // Add padding for alignment
             child: ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -89,34 +90,6 @@ class _OfficerState extends State<Officer> {
           const SizedBox(height: 20),
 
           // Close Ongoing Election Button
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: ElevatedButton(
-              onPressed: () {
-                // TODO: Implement close election functionality
-                print("Close Ongoing Election pressed");
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF46639B),
-                minimumSize: Size(double.infinity, 70),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text(
-                "Close Ongoing Election",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // View Result Button
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: ElevatedButton(
