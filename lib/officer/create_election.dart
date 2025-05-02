@@ -83,8 +83,8 @@ class _CreateElectionState extends State<CreateElection> {
                             });
                           },
                           backgroundColor: Colors.white,
-                          child: const Icon(Icons.add, color: Colors.black),
                           mini: true,
+                          child: const Icon(Icons.add, color: Colors.black),
                         ),
                       ),
                     ],
@@ -105,6 +105,21 @@ class _CreateElectionState extends State<CreateElection> {
                         return;
                       }
 
+                      // Check for existing ongoing elections
+                      final ongoing = await FirebaseFirestore.instance
+                          .collection('questions')
+                          .where('status', isEqualTo: 'Ongoing')
+                          .get();
+
+                      if (ongoing.docs.isNotEmpty) {
+                        CustomDialog.showDialogBox(
+                          context,
+                          title: "Election Exists",
+                          message: "There is already an ongoing election.",
+                        );
+                        return;
+                      }
+
                       // Collect non-empty options
                       List<String> optionTexts = options
                           .map<String>((opt) => opt['controller'].text.trim())
@@ -120,15 +135,9 @@ class _CreateElectionState extends State<CreateElection> {
                         return;
                       }
 
-                      await storeQuestionData(
-                          context, optionTexts, mainQuestion);
-
-                      // CustomDialog.showDialogBox(
-                      //   context,
-                      //   title: "Success",
-                      //   message: "Election Created",
-                      // );
+                      await storeQuestionData(context, optionTexts, mainQuestion);
                     },
+
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF46639B),
                       padding: const EdgeInsets.symmetric(
@@ -221,10 +230,12 @@ Future<void> storeQuestionData(BuildContext context,
       'id': nextId,
       'question': mainQuestion,
       'status': 'Ongoing',
+      'votedUsers':<String>[],
     };
 
     for (int i = 0; i < questionsArray.length; i++) {
       data['question ${i + 1}'] = questionsArray[i];
+      data['q${i + 1}_votes'] = 0;
     }
 
     await questionsRef.add(data);

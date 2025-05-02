@@ -1,9 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
-// Import the splash screen.
-import 'splash.dart'; // Ensure this import is correct
-import 'voting_page.dart';
+import 'splash.dart'; 
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,6 +11,8 @@ void main() async {
 }
 
 class VotingApp extends StatelessWidget {
+  const VotingApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

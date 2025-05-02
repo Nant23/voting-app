@@ -6,11 +6,11 @@ class MyTextfield extends StatelessWidget {
   final bool obscureText;
 
   const MyTextfield({
-    Key? key,
+    super.key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
