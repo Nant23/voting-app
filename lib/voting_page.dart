@@ -3,6 +3,7 @@ import 'components/my_textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'voting_screen.dart'; 
+import 'dialogs.dart';
 
 class VotingHomePage extends StatefulWidget {
   const VotingHomePage({super.key});
@@ -135,11 +136,23 @@ class _VotingHomePageState extends State<VotingHomePage> {
                   ],
                 ),
                 const SizedBox(height: 40),
-                _dashboardButton('Vote', 72, 32, 0xFF4F6596, () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const VoteScreen()),
-                  );
+                _dashboardButton('Vote', 72, 32, 0xFF4F6596, () async{
+                  final currentUser = FirebaseAuth.instance.currentUser;
+
+                  bool isRegistered = await isUserRegistered(currentUser!.uid);
+                    if (isRegistered) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const VoteScreen()),
+                      );
+                    } else {
+                      CustomDialog.showDialogBox(
+                        context,
+                        title: "Not registered",
+                        message: "Your must be a verified user to vote",
+                      );
+                    }
+                  
                 }),
                 const SizedBox(height: 24),
                 _dashboardButton('View result', 56, 24, 0xFF3F527F, () {
@@ -314,4 +327,24 @@ class _VotingHomePageState extends State<VotingHomePage> {
           );
         }),
       );
+}
+
+Future<bool> isUserRegistered(String uid) async {
+  try {
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection('voter_registration')
+        .doc(uid)
+        .get();
+
+    if (!doc.exists) {
+      return false;
+    }
+
+    var data = doc.data() as Map<String, dynamic>;
+
+    return data['status'] == 'registered';
+  } catch (e) {
+    print('Error checking registration status: $e');
+    return false;
+  }
 }

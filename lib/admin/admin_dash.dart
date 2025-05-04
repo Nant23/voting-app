@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:voting_app/admin/admin_statistics.dart';
 import 'package:voting_app/admin/remove_user.dart';
 import 'package:voting_app/admin/view_result_ad.dart';
 import 'package:voting_app/admin/admin_nav.dart';
@@ -99,10 +98,10 @@ class _AdminDashState extends State<AdminDash> {
                 minimumSize: Size(double.infinity, 50),
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AdminStatistics()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => AdminStatistics()),
+                // );
               },
               child: Text('Report',
                   style: TextStyle(fontSize: 16, color: Colors.white)),
