@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:voting_app/Info.dart';
 import 'package:voting_app/admin/admin_dash.dart';
 import 'package:voting_app/admin/admin_profile.dart';
-import 'package:voting_app/admin/stats.dart';
+import 'package:voting_app/admin/admin_statistics.dart';
+//import 'package:voting_app/admin/stats.dart';
 import 'package:voting_app/admin/voter_requests.dart';
 
 //reusable Bottom Navigation Bar for the admin section
@@ -33,7 +34,7 @@ class NavBar extends StatelessWidget {
         destination = InfoPage(selectedIndex: index);
         break;
       case 3:
-        destination = Stats(selectedIndex: index);
+        destination = AdminStatistics(selectedIndex: index);
         break;
       case 4:
         destination = ProfilePage(selectedIndex: index);
