@@ -77,7 +77,8 @@ class _OfficerState extends State<Officer> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: Text('Confirm Action'),
-                      content: Text('Are you sure you want to close the ongoing election?'),
+                      content: Text(
+                          'Are you sure you want to close the ongoing election?'),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(false),
@@ -92,7 +93,7 @@ class _OfficerState extends State<Officer> {
                   },
                 );
 
-                if (confirm == true) { 
+                if (confirm == true) {
                   closeElection(context);
                 }
               },

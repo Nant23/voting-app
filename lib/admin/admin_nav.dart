@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voting_app/Info.dart';
+import 'package:voting_app/admin/Info.dart';
 import 'package:voting_app/admin/admin_dash.dart';
 import 'package:voting_app/admin/admin_ongoing_stat.dart';
 import 'package:voting_app/admin/admin_profile.dart';
