@@ -109,7 +109,11 @@ class _ProfileState extends State<Profile> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,
                           ),
-                          child: const Text('Delete Account'),
+                          child: const Text('Delete Account',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ],
                     )

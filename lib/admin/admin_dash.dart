@@ -85,7 +85,7 @@ class _AdminDashState extends State<AdminDash> {
                   MaterialPageRoute(builder: (context) => ViewResultAd()),
                 );
               },
-              child: Text('View Result',
+              child: Text('Past Election',
                   style: TextStyle(fontSize: 16, color: Colors.white)),
             ),
             SizedBox(height: 20),
