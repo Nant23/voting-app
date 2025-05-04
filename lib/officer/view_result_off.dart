@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'officer_nav.dart';
 import 'details_off.dart';
 
@@ -18,12 +19,6 @@ class _ViewResultState extends State<ViewResult> {
     super.initState();
     _selectedIndex = widget.selectedIndex;
   }
-
-  final List<Map<String, dynamic>> results = [
-    {'option': 'Option 1', 'votes': 45},
-    {'option': 'Option 2', 'votes': 30},
-    {'option': 'Option 3', 'votes': 25},
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -47,97 +42,163 @@ class _ViewResultState extends State<ViewResult> {
                 ),
                 const SizedBox(height: 30),
                 Expanded(
-                  child: ListView.separated(
-                    itemCount: results.length + 1,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 20),
-                    itemBuilder: (context, index) {
-                      if (index < results.length) {
-                        return Card(
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12.0,
-                              horizontal: 16.0,
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 20,
-                                  height: 20,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      color: const Color(0xFFD9D9D9),
-                                    ),
-                                  ),
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('questions')
+                        .limit(1)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                        return const Center(
+                            child: Text('No vote data available.'));
+                      }
+
+                      DocumentSnapshot doc = snapshot.data!.docs.first;
+                      Map<String, dynamic> data =
+                          doc.data() as Map<String, dynamic>;
+
+                      final results = data.entries
+                          .where((entry) => entry.key.endsWith('_votes'))
+                          .map((entry) {
+                        final questionKey = entry.key.replaceAll('_votes', '');
+                        final questionTextKey =
+                            'question ${questionKey.substring(1)}';
+                        final optionName = data[questionTextKey] ?? 'Unknown';
+                        return {
+                          'option': optionName,
+                          'votes': entry.value ?? 0,
+                        };
+                      }).toList();
+
+                      final maxVotes = results.fold<int>(
+                        0,
+                        (max, item) =>
+                            item['votes'] > max ? item['votes'] : max,
+                      );
+
+                      return ListView.separated(
+                        itemCount: results.length + 1,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 20),
+                        itemBuilder: (context, index) {
+                          if (index < results.length) {
+                            final result = results[index];
+                            final double voteRatio =
+                                maxVotes > 0 ? result['votes'] / maxVotes : 0;
+                            final percentage =
+                                (voteRatio * 100).toStringAsFixed(1);
+
+                            return Card(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12.0,
+                                  horizontal: 16.0,
                                 ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Container(
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFD9D9D9),
-                                      borderRadius: BorderRadius.circular(15),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 20,
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                              color: const Color(0xFFD9D9D9),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 16),
+                                        Expanded(
+                                          child: Text(
+                                            '${result['option']} - ${result['votes']} votes',
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 16),
+                                        const Icon(
+                                          Icons.person,
+                                          size: 28,
+                                          color: Colors.black,
+                                        ),
+                                      ],
                                     ),
-                                    alignment: Alignment.center,
-                                    child: const Text(
-                                      '', // Removed dummy text
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
+                                    const SizedBox(height: 10),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: LinearProgressIndicator(
+                                        value: voteRatio,
+                                        backgroundColor:
+                                            const Color(0xFFE0E0E0),
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          Color(0xFF46639B),
+                                        ),
+                                        minHeight: 10,
                                       ),
                                     ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      '$percentage%',
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF2C3E50),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          } else {
+                            return Align(
+                              alignment: Alignment.centerLeft,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          DetailsPage(documentId: doc.id),
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF46639B),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 28,
+                                    vertical: 16,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
-                                const SizedBox(width: 16),
-                                const Icon(
-                                  Icons.person,
-                                  size: 28,
-                                  color: Colors.black,
+                                child: const Text(
+                                  'View Details',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      } else {
-                        return Align(
-                          alignment: Alignment.centerLeft,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      DetailsPage(), // Replace with another screen if needed
-                                ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF46639B),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 28,
-                                vertical: 16,
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            child: const Text(
-                              'View Details',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        );
-                      }
+                            );
+                          }
+                        },
+                      );
                     },
                   ),
                 ),
