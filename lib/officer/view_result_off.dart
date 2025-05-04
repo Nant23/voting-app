@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'officer_nav.dart';
 import 'details_off.dart';
 
@@ -13,22 +13,11 @@ class ViewResult extends StatefulWidget {
 
 class _ViewResultState extends State<ViewResult> {
   int _selectedIndex = 0;
-  late Future<List<Map<String, dynamic>>> resultsFuture;
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.selectedIndex;
-    resultsFuture = fetchDummyResults();
-  }
-
-  Future<List<Map<String, dynamic>>> fetchDummyResults() async {
-    await Future.delayed(const Duration(seconds: 1)); // Simulate delay
-    return [
-      {'option': 'Candidate A', 'votes': 52},
-      {'option': 'Candidate B', 'votes': 34},
-      {'option': 'Candidate C', 'votes': 14},
-    ];
   }
 
   @override
@@ -52,15 +41,40 @@ class _ViewResultState extends State<ViewResult> {
                   ),
                 ),
                 const SizedBox(height: 30),
+
+                //backend.. votes
                 Expanded(
-                  child: FutureBuilder<List<Map<String, dynamic>>>(
-                    future: resultsFuture,
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('questions')
+                        .limit(1)
+                        .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       }
 
-                      final results = snapshot.data ?? [];
+                      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                        return const Center(
+                            child: Text('No vote data available.'));
+                      }
+
+                      DocumentSnapshot doc = snapshot.data!.docs.first;
+                      Map<String, dynamic> data =
+                          doc.data() as Map<String, dynamic>;
+
+                      final results = data.entries
+                          .where((entry) => entry.key.endsWith('_votes'))
+                          .map((entry) {
+                        final optionName = entry.key
+                            .replaceAll('_votes', '')
+                            .toUpperCase()
+                            .replaceAll('Q', 'Option ');
+                        return {
+                          'option': optionName,
+                          'votes': entry.value ?? 0
+                        };
+                      }).toList();
 
                       return ListView.separated(
                         itemCount: results.length + 1,
@@ -112,6 +126,8 @@ class _ViewResultState extends State<ViewResult> {
                                       ),
                                     ),
                                     const SizedBox(width: 16),
+
+                                    //Icon
                                     const Icon(
                                       Icons.person,
                                       size: 28,
