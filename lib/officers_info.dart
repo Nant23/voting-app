@@ -12,13 +12,13 @@ class OfficersInfoPage extends StatefulWidget {
 }
 
 class _OfficersInfoPageState extends State<OfficersInfoPage> {
-  late int _selectedIndex;
+  // late int _selectedIndex;
 
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.selectedIndex;
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _selectedIndex = widget.selectedIndex;
+  // }
 
   @override
   Widget build(BuildContext context) {
