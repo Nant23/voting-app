@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'officer_nav.dart';
 import 'create_election.dart';
 import 'view_result_off.dart';
@@ -94,49 +95,7 @@ class _OfficerState extends State<Officer> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: ElevatedButton(
-              onPressed: () async {
-                final firestore = FirebaseFirestore.instance;
-
-                try {
-                  // Get the ongoing election
-                  final snapshot = await firestore
-                      .collection('questions')
-                      .where('status', isEqualTo: 'Ongoing')
-                      .limit(1)
-                      .get();
-
-                  if (snapshot.docs.isEmpty) {
-                    CustomDialog.showDialogBox(
-                      context,
-                      title: "No Election",
-                      message: "There is no ongoing election to close.",
-                    );
-                    return;
-                  }
-
-                  final docId = snapshot.docs.first.id;
-
-                  // Update the status to 'Closed'
-                  await firestore.collection('questions').doc(docId).update({
-                    'status': 'Closed',
-                  });
-
-                  CustomDialog.showDialogBox(
-                    context,
-                    title: "Success",
-                    message: "Election closed successfully.",
-                  );
-                } catch (e) {
-                  print("Error closing election: $e");
-                  CustomDialog.showDialogBox(
-                    context,
-                    title: "Error",
-                    message: "Failed to close election. Please try again.",
-                  );
-                }
-              },
-
-
+              onPressed: () => closeElection(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF46639B),
                 minimumSize: Size(double.infinity, 70),
@@ -198,6 +157,39 @@ class _OfficerState extends State<Officer> {
           });
         },
       ),
+    );
+  }
+}
+
+//Closing election by finding its document first
+Future<void> closeElection(BuildContext context) async {
+  try {
+    //Query the Firestore for the ongoing election
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('questions')
+        .where('status', isEqualTo: 'Ongoing')
+        .limit(1) //Get only one ongoing election
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      String documentId = querySnapshot.docs.first.id;
+
+      await FirebaseFirestore.instance
+          .collection('questions')
+          .doc(documentId)
+          .update({'status': 'Closed'});
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Election closed successfully.')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('No ongoing election found.')),
+      );
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to close election: $e')),
     );
   }
 }
