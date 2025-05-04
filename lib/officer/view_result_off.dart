@@ -171,7 +171,8 @@ class _ViewResultState extends State<ViewResult> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => DetailsPage(),
+                                      builder: (context) =>
+                                          DetailsPage(documentId: doc.id),
                                     ),
                                   );
                                 },
