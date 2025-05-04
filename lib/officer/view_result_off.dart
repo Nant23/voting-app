@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'officer_nav.dart';
 import 'details_off.dart';
 
@@ -13,22 +13,11 @@ class ViewResult extends StatefulWidget {
 
 class _ViewResultState extends State<ViewResult> {
   int _selectedIndex = 0;
-  late Future<List<Map<String, dynamic>>> resultsFuture;
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.selectedIndex;
-    resultsFuture = fetchDummyResults();
-  }
-
-  Future<List<Map<String, dynamic>>> fetchDummyResults() async {
-    await Future.delayed(const Duration(seconds: 1)); // Simulate delay
-    return [
-      {'option': 'Candidate A', 'votes': 52},
-      {'option': 'Candidate B', 'votes': 34},
-      {'option': 'Candidate C', 'votes': 14},
-    ];
   }
 
   @override
@@ -53,14 +42,43 @@ class _ViewResultState extends State<ViewResult> {
                 ),
                 const SizedBox(height: 30),
                 Expanded(
-                  child: FutureBuilder<List<Map<String, dynamic>>>(
-                    future: resultsFuture,
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('questions')
+                        .limit(1)
+                        .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       }
 
-                      final results = snapshot.data ?? [];
+                      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                        return const Center(
+                            child: Text('No vote data available.'));
+                      }
+
+                      DocumentSnapshot doc = snapshot.data!.docs.first;
+                      Map<String, dynamic> data =
+                          doc.data() as Map<String, dynamic>;
+
+                      final results = data.entries
+                          .where((entry) => entry.key.endsWith('_votes'))
+                          .map((entry) {
+                        final questionKey = entry.key.replaceAll('_votes', '');
+                        final questionTextKey =
+                            'question ${questionKey.substring(1)}';
+                        final optionName = data[questionTextKey] ?? 'Unknown';
+                        return {
+                          'option': optionName,
+                          'votes': entry.value ?? 0,
+                        };
+                      }).toList();
+
+                      final maxVotes = results.fold<int>(
+                        0,
+                        (max, item) =>
+                            item['votes'] > max ? item['votes'] : max,
+                      );
 
                       return ListView.separated(
                         itemCount: results.length + 1,
@@ -69,6 +87,11 @@ class _ViewResultState extends State<ViewResult> {
                         itemBuilder: (context, index) {
                           if (index < results.length) {
                             final result = results[index];
+                            final double voteRatio =
+                                maxVotes > 0 ? result['votes'] / maxVotes : 0;
+                            final percentage =
+                                (voteRatio * 100).toStringAsFixed(1);
+
                             return Card(
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
@@ -79,43 +102,62 @@ class _ViewResultState extends State<ViewResult> {
                                   vertical: 12.0,
                                   horizontal: 16.0,
                                 ),
-                                child: Row(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      width: 20,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                          color: const Color(0xFFD9D9D9),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: Container(
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFD9D9D9),
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          '${result['option']} - ${result['votes']} votes',
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 20,
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                              color: const Color(0xFFD9D9D9),
+                                            ),
                                           ),
                                         ),
+                                        const SizedBox(width: 16),
+                                        Expanded(
+                                          child: Text(
+                                            '${result['option']} - ${result['votes']} votes',
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 16),
+                                        const Icon(
+                                          Icons.person,
+                                          size: 28,
+                                          color: Colors.black,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: LinearProgressIndicator(
+                                        value: voteRatio,
+                                        backgroundColor:
+                                            const Color(0xFFE0E0E0),
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          Color(0xFF46639B),
+                                        ),
+                                        minHeight: 10,
                                       ),
                                     ),
-                                    const SizedBox(width: 16),
-                                    const Icon(
-                                      Icons.person,
-                                      size: 28,
-                                      color: Colors.black,
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      '$percentage%',
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF2C3E50),
+                                      ),
                                     ),
                                   ],
                                 ),
