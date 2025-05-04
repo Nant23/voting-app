@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'admin/admin_nav.dart';
+import 'admin_nav.dart';
 
 class VotersInfoPage extends StatefulWidget {
   final int selectedIndex;

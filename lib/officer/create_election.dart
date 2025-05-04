@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import '../components/my_textfield.dart';
 import '../dialogs.dart';
@@ -6,7 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateElection extends StatefulWidget {
   final int selectedIndex;
-  const CreateElection({this.selectedIndex = 1});
+  const CreateElection({super.key, this.selectedIndex = 1});
+
   @override
   _CreateElectionState createState() => _CreateElectionState();
 }
@@ -32,6 +35,7 @@ class _CreateElectionState extends State<CreateElection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Create Election')),
       backgroundColor: const Color(0xFFBED2EE),
       body: SingleChildScrollView(
         child: SafeArea(
@@ -105,6 +109,21 @@ class _CreateElectionState extends State<CreateElection> {
                         return;
                       }
 
+                      // Check for existing ongoing elections
+                      final ongoing = await FirebaseFirestore.instance
+                          .collection('questions')
+                          .where('status', isEqualTo: 'Ongoing')
+                          .get();
+
+                      if (ongoing.docs.isNotEmpty) {
+                        CustomDialog.showDialogBox(
+                          context,
+                          title: "Election Exists",
+                          message: "There is already an ongoing election.",
+                        );
+                        return;
+                      }
+
                       // Collect non-empty options
                       List<String> optionTexts = options
                           .map<String>((opt) => opt['controller'].text.trim())
@@ -120,15 +139,9 @@ class _CreateElectionState extends State<CreateElection> {
                         return;
                       }
 
-                      await storeQuestionData(
-                          context, optionTexts, mainQuestion);
-
-                      // CustomDialog.showDialogBox(
-                      //   context,
-                      //   title: "Success",
-                      //   message: "Election Created",
-                      // );
+                      await storeQuestionData(context, optionTexts, mainQuestion);
                     },
+
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF46639B),
                       padding: const EdgeInsets.symmetric(
@@ -140,7 +153,7 @@ class _CreateElectionState extends State<CreateElection> {
                       ),
                     ),
                     child: const Text(
-                      'Publish Election',
+                      'Publish',
                       style: TextStyle(
                         fontSize: 22,
                         color: Colors.white,
@@ -221,6 +234,7 @@ Future<void> storeQuestionData(BuildContext context,
       'id': nextId,
       'question': mainQuestion,
       'status': 'Ongoing',
+      'publish_status': 'Unpublished',
       'votedUsers':<String>[],
     };
 

@@ -4,8 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:voting_app/officer/officer_dashboard.dart'; // Import Officer
 import 'package:voting_app/forgot_password/fb_email.dart';
 import 'package:voting_app/signup.dart';
-import 'admin/admin_dash.dart'; // Import AdminDash
-import 'user.dart' as users; // Import User
+import 'admin/admin_dash.dart'; // Import AdminDash// Import User
 import 'voting_page.dart'; // Import VotingHomePage
 
 class LoginPage extends StatefulWidget {
