@@ -14,7 +14,6 @@ class AdminStatistics extends StatefulWidget {
 }
 
 class _AdminStatisticsState extends State<AdminStatistics> {
-
   late int _selectedIndex;
 
   @override
@@ -22,12 +21,12 @@ class _AdminStatisticsState extends State<AdminStatistics> {
     super.initState();
     _selectedIndex = widget.selectedIndex;
   }
+
   String chartType = 'Bar chart'; // default
 
   Future<List<Map<String, dynamic>>> fetchAllVotes() async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('questions')
-        .get();
+    final querySnapshot =
+        await FirebaseFirestore.instance.collection('questions').get();
 
     final ongoing = <Map<String, dynamic>>[];
     final closed = <Map<String, dynamic>>[];
@@ -109,13 +108,15 @@ class _AdminStatisticsState extends State<AdminStatistics> {
                     final votes = item['votes'] as Map<String, int>;
                     final status = item['status'] as String;
 
-                    final barGroups = votes.entries.toList().asMap().entries.map((entry) {
+                    final barGroups =
+                        votes.entries.toList().asMap().entries.map((entry) {
                       final i = entry.key;
                       final vote = entry.value;
                       return BarChartGroupData(
                         x: i,
                         barRods: [
-                          BarChartRodData(toY: vote.value.toDouble(), color: Colors.blue),
+                          BarChartRodData(
+                              toY: vote.value.toDouble(), color: Colors.blue),
                         ],
                         showingTooltipIndicators: [0],
                       );
@@ -129,15 +130,16 @@ class _AdminStatisticsState extends State<AdminStatistics> {
                           if (status == 'Ongoing')
                             const Padding(
                               padding: EdgeInsets.only(bottom: 8.0),
-                              child: Text('Ongoing', style: 
-                                TextStyle(
-                                  fontSize: 16, 
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green,
-                                  )
-                                ),
+                              child: Text('Ongoing',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                  )),
                             ),
-                          Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text(title,
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
                           const SizedBox(height: 12),
                           Container(
                             height: 400,
@@ -153,7 +155,8 @@ class _AdminStatisticsState extends State<AdminStatistics> {
                                 ),
                                 if (status == 'Ongoing')
                                   BoxShadow(
-                                    color: const Color.fromARGB(255, 43, 149, 43),
+                                    color:
+                                        const Color.fromARGB(255, 43, 149, 43),
                                     blurRadius: 12,
                                     spreadRadius: 2,
                                   ),
@@ -171,8 +174,12 @@ class _AdminStatisticsState extends State<AdminStatistics> {
                                             showTitles: true,
                                             getTitlesWidget: (value, meta) {
                                               final index = value.toInt();
-                                              final labels = votes.keys.toList();
-                                              final label = (index < labels.length) ? labels[index] : '';
+                                              final labels =
+                                                  votes.keys.toList();
+                                              final label =
+                                                  (index < labels.length)
+                                                      ? labels[index]
+                                                      : '';
 
                                               return SideTitleWidget(
                                                 meta: meta,
@@ -181,8 +188,10 @@ class _AdminStatisticsState extends State<AdminStatistics> {
                                                   angle: -0.5,
                                                   child: Text(
                                                     label,
-                                                    style: const TextStyle(fontSize: 10),
-                                                    overflow: TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                        fontSize: 10),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     maxLines: 2,
                                                   ),
                                                 ),
@@ -191,10 +200,15 @@ class _AdminStatisticsState extends State<AdminStatistics> {
                                           ),
                                         ),
                                         leftTitles: AxisTitles(
-                                          sideTitles: SideTitles(showTitles: false),
+                                          sideTitles:
+                                              SideTitles(showTitles: false),
                                         ),
-                                        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                        topTitles: AxisTitles(
+                                            sideTitles:
+                                                SideTitles(showTitles: false)),
+                                        rightTitles: AxisTitles(
+                                            sideTitles:
+                                                SideTitles(showTitles: false)),
                                       ),
                                       gridData: FlGridData(show: true),
                                       borderData: FlBorderData(show: false),
@@ -207,8 +221,13 @@ class _AdminStatisticsState extends State<AdminStatistics> {
                                         return PieChartSectionData(
                                           value: entry.value.toDouble(),
                                           title: entry.key,
-                                          color: Colors.primaries[votes.keys.toList().indexOf(entry.key) % Colors.primaries.length],
-                                          titleStyle: const TextStyle(fontSize: 12, color: Colors.white),
+                                          color: Colors.primaries[votes.keys
+                                                  .toList()
+                                                  .indexOf(entry.key) %
+                                              Colors.primaries.length],
+                                          titleStyle: const TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white),
                                         );
                                       }).toList(),
                                     ),
