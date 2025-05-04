@@ -66,13 +66,13 @@ class _ViewResultState extends State<ViewResult> {
                       final results = data.entries
                           .where((entry) => entry.key.endsWith('_votes'))
                           .map((entry) {
-                        final optionName = entry.key
-                            .replaceAll('_votes', '')
-                            .toUpperCase()
-                            .replaceAll('Q', 'Option ');
+                        final questionKey = entry.key.replaceAll('_votes', '');
+                        final questionTextKey =
+                            'question ${questionKey.substring(1)}'; // e.g., q1 -> question 1
+                        final optionName = data[questionTextKey] ?? 'Unknown';
                         return {
                           'option': optionName,
-                          'votes': entry.value ?? 0
+                          'votes': entry.value ?? 0,
                         };
                       }).toList();
 
