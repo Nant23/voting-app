@@ -1,10 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'officer_nav.dart';
 import 'package:voting_app/dialogs.dart';
+import 'package:voting_app/single_stats.dart';
 
 class DetailsPage extends StatefulWidget {
   final int selectedIndex;
-  const DetailsPage({super.key, this.selectedIndex = 2});
+  final String documentId;
+
+  const DetailsPage({
+    super.key,
+    this.selectedIndex = 2,
+    required this.documentId,
+  });
 
   @override
   _DetailsPageState createState() => _DetailsPageState();
@@ -38,31 +46,18 @@ class _DetailsPageState extends State<DetailsPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Gender:',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
+
+              // Embedded detailed chart for the selected question
+              SizedBox(
+                height: 500, // Adjust the height as needed
+                child: SingleStats(documentId: widget.documentId),
               ),
-              const SizedBox(height: 80), // Placeholder space instead of image
-              const Text(
-                'Age:',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 80), // Placeholder space instead of image
+
               const SizedBox(height: 30),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    CustomDialog.showDialogBox(
-                      context,
-                      title: "Success",
-                      message: "Result Published",
-                    );
+                    publishResult(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF46639B),
@@ -92,10 +87,38 @@ class _DetailsPageState extends State<DetailsPage> {
         currentIndex: _selectedIndex,
         onTap: (index) {
           setState(() {
-            _selectedIndex = index; // Update the selected index
+            _selectedIndex = index;
           });
         },
       ),
+    );
+  }
+}
+
+Future<void> publishResult(BuildContext context) async {
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('questions')
+        .where('publish_status', isEqualTo: 'Unpublished')
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      String documentId = querySnapshot.docs.first.id;
+
+      await FirebaseFirestore.instance
+          .collection('questions')
+          .doc(documentId)
+          .update({'publish_status': 'Published'});
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Result published successfully.')),
+      );
+    }
+  } catch (e) {
+    CustomDialog.showDialogBox(
+      context,
+      title: "Error",
+      message: "Failed to publish result: $e",
     );
   }
 }
