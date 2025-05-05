@@ -154,8 +154,10 @@ class _SingleStatsState extends State<SingleStats> {
                                                     : '';
 
                                             return SideTitleWidget(
-                                              meta: meta,
+                        
+                                              //meta: meta,
                                               space: 8.0,
+                                              axisSide: meta.axisSide,
                                               child: Transform.rotate(
                                                 angle: -0.5,
                                                 child: Text(

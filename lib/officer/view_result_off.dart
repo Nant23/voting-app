@@ -45,6 +45,7 @@ class _ViewResultState extends State<ViewResult> {
                   child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('questions')
+                        .where('status', isEqualTo: 'Ongoing')
                         .limit(1)
                         .snapshots(),
                     builder: (context, snapshot) {
