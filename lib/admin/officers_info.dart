@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'admin/admin_nav.dart';
+// import 'admin/admin_nav.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OfficersInfoPage extends StatefulWidget {
   final int selectedIndex;
 
-  const OfficersInfoPage({this.selectedIndex = 2});
+  const OfficersInfoPage({super.key, this.selectedIndex = 2});
 
   @override
   _OfficersInfoPageState createState() => _OfficersInfoPageState();

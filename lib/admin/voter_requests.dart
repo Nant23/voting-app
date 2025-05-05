@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'admin/admin_nav.dart';
+import 'admin_nav.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class VoterRequests extends StatefulWidget {
   final int selectedIndex;
 
-  VoterRequests({this.selectedIndex = 1}); // Default to 1
+  const VoterRequests({super.key, this.selectedIndex = 1}); // Default to 1
 
   @override
   _VoterRequestsState createState() => _VoterRequestsState();
