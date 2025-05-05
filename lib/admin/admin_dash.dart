@@ -81,10 +81,10 @@ class _AdminDashState extends State<AdminDash> {
                       borderRadius: BorderRadius.circular(18)),
                   minimumSize: Size(double.infinity, 50),
                 ),
-                onPressed: () {
+                onPressed: () { 
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ViewResultAd()),
+                    MaterialPageRoute(builder: (context) => AdminStatistics()),
                   );
                 },
                 child: Text('Past Election',
@@ -100,10 +100,11 @@ class _AdminDashState extends State<AdminDash> {
                       borderRadius: BorderRadius.circular(18)),
                   minimumSize: Size(double.infinity, 50),
                 ),
+                
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AdminStatistics()),
+                    MaterialPageRoute(builder: (context) => ViewResultAd()),
                   );
                 },
                 child: Text('Report',
