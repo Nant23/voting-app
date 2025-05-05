@@ -82,8 +82,9 @@ class _AdminDashState extends State<AdminDash> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ViewResultAd()),
+                  MaterialPageRoute(builder: (context) => AdminStatistics()),
                 );
+                
               },
               child: Text('Past Election',
                   style: TextStyle(fontSize: 16, color: Colors.white)),
@@ -101,7 +102,7 @@ class _AdminDashState extends State<AdminDash> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AdminStatistics()),
+                  MaterialPageRoute(builder: (context) => ViewResultAd()),
                 );
               },
               child: Text('Report',

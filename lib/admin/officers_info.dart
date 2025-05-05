@@ -29,6 +29,7 @@ class _OfficersInfoPageState extends State<OfficersInfoPage> {
         stream: FirebaseFirestore.instance
             .collection('users')
             .where('role', isEqualTo: 'Officer')
+            .where('status', isEqualTo: 'Active')
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
