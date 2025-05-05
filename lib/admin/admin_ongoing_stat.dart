@@ -205,7 +205,7 @@ class _AdminOngoingStatState extends State<AdminOngoingStat> {
                                       final labels = ageData.keys.toList();
                                       final label = (index < labels.length) ? labels[index] : '';
                                       return SideTitleWidget(
-                                        meta: meta,
+                                        axisSide: meta.axisSide,
                                         space: 8.0,
                                         child: Transform.rotate(
                                           angle: -0.4,

@@ -182,7 +182,7 @@ class _AdminStatisticsState extends State<AdminStatistics> {
                                                       : '';
 
                                               return SideTitleWidget(
-                                                meta: meta,
+                                                axisSide: meta.axisSide,
                                                 space: 8.0,
                                                 child: Transform.rotate(
                                                   angle: -0.5,
