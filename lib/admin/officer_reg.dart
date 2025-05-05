@@ -93,25 +93,36 @@ class _OfficerRegState extends State<OfficerReg> {
                       ),
                     ),
                     onPressed: () {
-                      if (passwordController.text !=
-                          confirmPassController.text) {
+                      if (passwordController.text != confirmPassController.text) {
                         CustomDialog.showDialogBox(
                           context,
                           title: "Password Mismatch",
-                          message:
-                              "Password and Confirm Password do not match.",
+                          message: "Password and Confirm Password do not match.",
                         );
                         return;
                       }
-                      //call account creation function to be implemented
+
                       createOfficerAccount(
-                          context,
-                          emailController.text,
-                          passwordController.text,
-                          nameController.text,
-                          countryController.text,
-                          officerIdController.text);
+                        context,
+                        emailController.text,
+                        passwordController.text,
+                        nameController.text,
+                        countryController.text,
+                        officerIdController.text,
+                        () {
+                          // Clear all controllers
+                          setState(() {
+                            officerIdController.clear();
+                            nameController.clear();
+                            emailController.clear();
+                            passwordController.clear();
+                            confirmPassController.clear();
+                            countryController.clear();
+                          });
+                        },
+                      );
                     },
+
                     child: Text(
                       'Add',
                       style: TextStyle(color: Colors.white),
@@ -134,19 +145,22 @@ class _OfficerRegState extends State<OfficerReg> {
 }
 
 
-// This function will create an officer account
-Future<void> createOfficerAccount(BuildContext context, String email,
-    String password, String name, String country, String id) async {
+Future<void> createOfficerAccount(
+  BuildContext context,
+  String email,
+  String password,
+  String name,
+  String country,
+  String id,
+  VoidCallback onSuccessClearFields,
+) async {
   try {
-    // Get current user
     User? adminUser = FirebaseAuth.instance.currentUser;
 
-    // Check if admin is logged in
     if (adminUser == null) {
       throw Exception("Admin not logged in.");
     }
 
-    // Get admin's role from Firestore
     DocumentSnapshot adminDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(adminUser.uid)
@@ -156,14 +170,12 @@ Future<void> createOfficerAccount(BuildContext context, String email,
       throw Exception("Only admins can create officers.");
     }
 
-    // Create user in Firebase Authentication
     UserCredential userCredential =
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
 
-    // Store user info in Firestore
     await FirebaseFirestore.instance
         .collection('users')
         .doc(userCredential.user!.uid)
@@ -174,21 +186,19 @@ Future<void> createOfficerAccount(BuildContext context, String email,
       'uid': userCredential.user!.uid,
       'name': name,
       'country': country,
-      'status': 'Active', // Assign officer role
+      'status': 'Active',
     });
 
-    print("Officer account created successfully.");
-
-    //Pop up: Successful code here
     CustomDialog.showDialogBox(context,
         title: "Success", message: "Officer account created successfully.");
-  } catch (e) {
-    print("Error creating officer account: $e");
 
-    // Pop up: Unsuccesfful code here
+    // Clear text fields
+    onSuccessClearFields();
+  } catch (e) {
     CustomDialog.showDialogBox(context,
         title: "Error", message: "Failed to create officer account: $e");
   }
 }
+
 
 //bonjure
