@@ -215,23 +215,28 @@ class _AdminStatisticsState extends State<AdminStatistics> {
                                       barGroups: barGroups,
                                     ),
                                   )
-                                : PieChart(
-                                    PieChartData(
-                                      sections: votes.entries.map((entry) {
-                                        return PieChartSectionData(
-                                          value: entry.value.toDouble(),
-                                          title: entry.key,
-                                          color: Colors.primaries[votes.keys
-                                                  .toList()
-                                                  .indexOf(entry.key) %
-                                              Colors.primaries.length],
-                                          titleStyle: const TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
+                                : LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      final radius = constraints.maxWidth * 0.4; // Adjust this multiplier as needed
+
+                                      return PieChart(
+                                        PieChartData(
+                                          centerSpaceRadius: 0, // Full pie
+                                          sections: votes.entries.map((entry) {
+                                            return PieChartSectionData(
+                                              value: entry.value.toDouble(),
+                                              title: entry.key,
+                                              color: Colors.primaries[
+                                                  votes.keys.toList().indexOf(entry.key) % Colors.primaries.length],
+                                              titleStyle: const TextStyle(fontSize: 12, color: Colors.white),
+                                              radius: radius,
+                                            );
+                                          }).toList(),
+                                        ),
+                                      );
+                                    },
+                                  )
+
                           ),
                         ],
                       ),
