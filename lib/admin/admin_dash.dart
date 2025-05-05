@@ -28,88 +28,91 @@ class _AdminDashState extends State<AdminDash> {
     return Scaffold(
       backgroundColor: const Color(0xFFBED2EE),
       appBar: AppBar(title: Text('Admin')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Officer Registration Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF46639B),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18)),
-                minimumSize: Size(double.infinity, 50),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center, // Center vertically
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Officer Registration Button
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF46639B),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18)),
+                  minimumSize: Size(double.infinity, 50),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => OfficerReg()),
+                  );
+                },
+                child: Text('Officers Register',
+                    style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => OfficerReg()),
-                );
-              },
-              child: Text('Officers Register',
-                  style: TextStyle(fontSize: 16, color: Colors.white)),
-            ),
-            SizedBox(height: 20),
+              SizedBox(height: 20),
 
-            // Voters Registration Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF46639B),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18)),
-                minimumSize: Size(double.infinity, 50),
+              // Voters Registration Button
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF46639B),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18)),
+                  minimumSize: Size(double.infinity, 50),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RemoveUser()),
+                  );
+                },
+                child: Text('Remove Users',
+                    style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RemoveUser()),
-                );
-              },
-              child: Text('Remove Users',
-                  style: TextStyle(fontSize: 16, color: Colors.white)),
-            ),
-            SizedBox(height: 20),
+              SizedBox(height: 20),
 
-            // View Result Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF46639B),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18)),
-                minimumSize: Size(double.infinity, 50),
+              // View Result Button
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF46639B),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18)),
+                  minimumSize: Size(double.infinity, 50),
+                ),
+                onPressed: () { 
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AdminStatistics()),
+                  );
+                },
+                child: Text('Past Election',
+                    style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AdminStatistics()),
-                );
+              SizedBox(height: 20),
+
+              // Election Button
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF46639B),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18)),
+                  minimumSize: Size(double.infinity, 50),
+                ),
                 
-              },
-              child: Text('Past Election',
-                  style: TextStyle(fontSize: 16, color: Colors.white)),
-            ),
-            SizedBox(height: 20),
-
-            // Election Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF46639B),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18)),
-                minimumSize: Size(double.infinity, 50),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ViewResultAd()),
+                  );
+                },
+                child: Text('Report',
+                    style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ViewResultAd()),
-                );
-              },
-              child: Text('Report',
-                  style: TextStyle(fontSize: 16, color: Colors.white)),
-            ),
-            SizedBox(height: 20),
-          ],
+              SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
       // Nav Bar
