@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'components/my_textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'voting_screen.dart'; 
+import 'voting_screen.dart';
 import 'dialogs.dart';
 
 class VotingHomePage extends StatefulWidget {
@@ -99,11 +99,17 @@ class _VotingHomePageState extends State<VotingHomePage> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(body: Center(child: _buildPage()));
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(child: _buildPage()),
+      bottomNavigationBar: _bottomBar(selectedIndex: _currentPage),
+    );
+  }
 
   Widget _buildPage() {
     if (_currentPage == 0) return _dashboard();
+    if (_currentPage == 2) return _results();
+    if (_currentPage == 3) return _profile();
     return _registerForm(showSuccess: _showSuccessMessage);
   }
 
@@ -136,23 +142,23 @@ class _VotingHomePageState extends State<VotingHomePage> {
                   ],
                 ),
                 const SizedBox(height: 40),
-                _dashboardButton('Vote', 72, 32, 0xFF4F6596, () async{
+                _dashboardButton('Vote', 72, 32, 0xFF4F6596, () async {
                   final currentUser = FirebaseAuth.instance.currentUser;
 
                   bool isRegistered = await isUserRegistered(currentUser!.uid);
-                    if (isRegistered) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const VoteScreen()),
-                      );
-                    } else {
-                      CustomDialog.showDialogBox(
-                        context,
-                        title: "Not registered",
-                        message: "Your must be a verified user to vote",
-                      );
-                    }
-                  
+                  if (isRegistered) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const VoteScreen()),
+                    );
+                  } else {
+                    CustomDialog.showDialogBox(
+                      context,
+                      title: "Not registered",
+                      message: "You must be a verified user to vote",
+                    );
+                  }
                 }),
                 const SizedBox(height: 24),
                 _dashboardButton('View result', 56, 24, 0xFF3F527F, () {
@@ -166,7 +172,6 @@ class _VotingHomePageState extends State<VotingHomePage> {
                 }),
               ],
             ),
-            _bottomBar(selectedIndex: 0),
           ],
         ),
       );
@@ -220,7 +225,7 @@ class _VotingHomePageState extends State<VotingHomePage> {
                         _controllers.length,
                         (i) => _buildTextField(i),
                       )
-                        ..addAll([
+                        ..addAll([ 
                           const SizedBox(height: 24),
                           _dashboardButton(
                             'Register',
@@ -242,7 +247,6 @@ class _VotingHomePageState extends State<VotingHomePage> {
               ),
             ),
             const SizedBox(height: 12),
-            _bottomBar(selectedIndex: 1),
           ]),
           if (showSuccess) _successOverlay(),
         ]),
@@ -264,6 +268,7 @@ class _VotingHomePageState extends State<VotingHomePage> {
                 children: [
                   Text(
                     _errorMessages[i]!,
+
                     style: const TextStyle(color: Colors.red),
                   ),
                 ],
@@ -301,8 +306,7 @@ class _VotingHomePageState extends State<VotingHomePage> {
                 ),
                 GestureDetector(
                   onTap: () => _changePage(0),
-                  child:
-                      const Icon(Icons.close, color: Colors.black, size: 20),
+                  child: const Icon(Icons.close, color: Colors.black, size: 20),
                 ),
               ],
             ),
@@ -310,23 +314,86 @@ class _VotingHomePageState extends State<VotingHomePage> {
         ),
       );
 
-  Widget _bottomBar({required int selectedIndex}) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(4, (index) {
-          final icons = [
-            Icons.home,
-            Icons.how_to_vote,
-            Icons.list,
-            Icons.person
-          ];
-          return IconButton(
-            icon: Icon(icons[index]),
-            color:
-                selectedIndex == index ? const Color(0xFF9BB3CC) : Colors.black,
-            onPressed: () => _changePage(index == 0 ? 0 : 1),
-          );
-        }),
+  Widget _bottomBar({required int selectedIndex}) => BottomNavigationBar(
+        currentIndex: selectedIndex,
+        onTap: _changePage,
+        selectedItemColor: Color(0xFF46639B),
+        unselectedItemColor: Colors.black,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.app_registration), label: 'Register'),
+          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Result'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
       );
+
+  Widget _results() => Scaffold(
+    body: Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: const Color(0xFFB3C3D9),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, size: 28),
+              color: Colors.black,
+              onPressed: () => _changePage(0),
+            ),
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'Results',
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Feature coming soon!',
+            style: TextStyle(fontSize: 18),
+          ),
+        ],
+      ),
+    ),
+  );
+
+  Widget _profile() => Scaffold(
+    body: Container(
+      width: MediaQuery.of(context).size.width,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: const Color(0xFFB3C3D9),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, size: 28),
+              color: Colors.black,
+              onPressed: () => _changePage(0),
+            ),
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'Profile',
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Profile info coming soon!',
+            style: TextStyle(fontSize: 18),
+          ),
+        ],
+      ),
+    ),
+  );
+
 }
 
 Future<bool> isUserRegistered(String uid) async {
@@ -336,12 +403,9 @@ Future<bool> isUserRegistered(String uid) async {
         .doc(uid)
         .get();
 
-    if (!doc.exists) {
-      return false;
-    }
+    if (!doc.exists) return false;
 
     var data = doc.data() as Map<String, dynamic>;
-
     return data['status'] == 'registered';
   } catch (e) {
     print('Error checking registration status: $e');
