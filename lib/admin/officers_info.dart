@@ -12,13 +12,13 @@ class OfficersInfoPage extends StatefulWidget {
 }
 
 class _OfficersInfoPageState extends State<OfficersInfoPage> {
-  late int _selectedIndex;
+  // late int _selectedIndex;
 
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.selectedIndex;
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _selectedIndex = widget.selectedIndex;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +29,7 @@ class _OfficersInfoPageState extends State<OfficersInfoPage> {
         stream: FirebaseFirestore.instance
             .collection('users')
             .where('role', isEqualTo: 'Officer')
+            .where('status', isEqualTo: 'Active')
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
