@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'voting_screen.dart';
-import 'dialogs.dart';
-import 'utilities.dart';
-import 'voting_home_page.dart';  // Make sure this import path is correct
+import 'package:voting_app/voter/voting_screen.dart';
+//import 'voting_screen.dart';
+import '../dialogs.dart';
+import '../utilities.dart';
+import 'voters_nav_bar.dart';  // Make sure this import path is correct
 
 class HomeDashboard extends StatelessWidget {
   const HomeDashboard({super.key});
@@ -61,7 +62,7 @@ class HomeDashboard extends StatelessWidget {
                 _dashboardButton('View result', 56, 24, 0xFF3F527F, () {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                      builder: (context) => const VotingHomePage(initialPage: 2),
+                      builder: (context) => const VoterNavBar(initialPage: 2),
                     ),
                   );
                 }),

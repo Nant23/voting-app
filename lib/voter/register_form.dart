@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'components/my_textfield.dart';
-import 'voting_home_page.dart';
-import 'utilities.dart';
+import '../components/my_textfield.dart';
+// import 'voters_nav_bar.dart';
+// import '../utilities.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
