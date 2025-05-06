@@ -5,7 +5,7 @@ import 'package:voting_app/officer/officer_dashboard.dart'; // Import Officer
 import 'package:voting_app/forgot_password/fb_email.dart';
 import 'package:voting_app/signup.dart';
 import 'admin/admin_dash.dart';
-import 'voters/voting_page.dart';
+import 'voter/voters_nav_bar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -214,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    VotingHomePage()), // Navigate to VotingHomePage
+                    VoterNavBar()), // Navigate to VotingHomePage
           );
         } else if (role == "Officer") {
           Navigator.pushReplacement(
