@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../dialogs.dart';
+import '../../dialogs.dart';
 
 class ElectionCard extends StatefulWidget {
   final DocumentSnapshot doc;
@@ -18,9 +18,8 @@ class _ElectionCardState extends State<ElectionCard> {
   Widget build(BuildContext context) {
     final data = widget.doc.data() as Map<String, dynamic>;
     final question = data['question'];
-    final optionEntries = data.entries
-        .where((e) => e.key.startsWith('question '))
-        .toList();
+    final optionEntries =
+        data.entries.where((e) => e.key.startsWith('question ')).toList();
 
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -83,7 +82,8 @@ class _ElectionCardState extends State<ElectionCard> {
     }
 
     final voteField = 'q${optionKey.split(" ").last}_votes';
-    final docRef = FirebaseFirestore.instance.collection('questions').doc(docId);
+    final docRef =
+        FirebaseFirestore.instance.collection('questions').doc(docId);
 
     try {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -123,5 +123,4 @@ class _ElectionCardState extends State<ElectionCard> {
       );
     }
   }
-
 }

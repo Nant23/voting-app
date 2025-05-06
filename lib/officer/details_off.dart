@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'officer_nav.dart';
 import 'package:voting_app/dialogs.dart';
-import 'package:voting_app/officer/single_stats.dart';
+import 'package:voting_app/single_stats.dart';
 
 class DetailsPage extends StatefulWidget {
   final int selectedIndex;
