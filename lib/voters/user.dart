@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'login.dart';
-import '../officer/officer_nav.dart'; // Assuming you're using this NavBar widget
+import 'package:voting_app/voters/voters_result.dart';
+import '../login.dart';
+import '../../officer/officer_nav.dart';
 
 class User extends StatefulWidget {
   const User({super.key});
@@ -17,6 +19,19 @@ class _UserState extends State<User> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Future<void> logout(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+      (route) => false,
+    );
   }
 
   @override
@@ -61,8 +76,8 @@ class _UserState extends State<User> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF46639B),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 60, vertical: 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 60, vertical: 20),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -78,13 +93,38 @@ class _UserState extends State<User> {
               ),
               const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () {
-                  // TODO: Navigate to View Results screen
+                onPressed: () async {
+                  try {
+                    final querySnapshot = await FirebaseFirestore.instance
+                        .collection('results')
+                        .limit(1)
+                        .get();
+
+                    if (querySnapshot.docs.isNotEmpty) {
+                      final doc = querySnapshot.docs.first;
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) =>
+                      //         VotersResult(documentId: doc.id),
+                      //   ),
+                      // );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('No results found')),
+                      );
+                    }
+                  } catch (e) {
+                    print('Error fetching results: $e');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Failed to load results')),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF46639B),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 40, vertical: 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -106,19 +146,6 @@ class _UserState extends State<User> {
         currentIndex: _selectedIndex,
         onTap: _onNavItemTapped,
       ),
-    );
-  }
-
-  Future<void> logout(BuildContext context) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
-    );
-    await FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => const LoginPage()),
-      (route) => false,
     );
   }
 }
