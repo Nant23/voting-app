@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'components/my_textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'voting_screen.dart'; 
+import 'voting_screen.dart';
 import 'dialogs.dart';
 
 class VotingHomePage extends StatefulWidget {
@@ -99,77 +99,80 @@ class _VotingHomePageState extends State<VotingHomePage> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(body: Center(child: _buildPage()));
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(child: _buildPage()),
+      bottomNavigationBar: _bottomBar(selectedIndex: _currentPage),
+    );
+  }
 
   Widget _buildPage() {
     if (_currentPage == 0) return _dashboard();
+    if (_currentPage == 2) return _results();
+    if (_currentPage == 3) return _profile();
     return _registerForm(showSuccess: _showSuccessMessage);
   }
 
-  Widget _dashboard() => Container(
-        width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: const Color(0xFFB3C3D9),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+Widget _dashboard() => Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height, // Ensure it fills the screen
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: const Color(0xFFB3C3D9),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 40), // Padding from top
+          Row(
+            children: [
+              const CircleAvatar(
+                backgroundColor: Colors.black,
+                radius: 20,
+                child: Icon(Icons.person, color: Colors.white),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Hi, ${FirebaseAuth.instance.currentUser?.displayName ?? "User"}',
+                style: const TextStyle(color: Colors.black, fontSize: 18),
+              ),
+            ],
+          ),
+          const Spacer(), // Pushes the buttons to center vertically
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  children: [
-                    const CircleAvatar(
-                      backgroundColor: Colors.black,
-                      radius: 20,
-                      child: Icon(Icons.person, color: Colors.white),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Hi, ${FirebaseAuth.instance.currentUser?.displayName ?? "User"}',
-                      style:
-                          const TextStyle(color: Colors.black, fontSize: 12),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 40),
-                _dashboardButton('Vote', 72, 32, 0xFF4F6596, () async{
+                _dashboardButton('Vote', 72, 32, 0xFF4F6596, () async {
                   final currentUser = FirebaseAuth.instance.currentUser;
-
                   bool isRegistered = await isUserRegistered(currentUser!.uid);
-                    if (isRegistered) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const VoteScreen()),
-                      );
-                    } else {
-                      CustomDialog.showDialogBox(
-                        context,
-                        title: "Not registered",
-                        message: "Your must be a verified user to vote",
-                      );
-                    }
-                  
+                  if (isRegistered) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const VoteScreen()),
+                    );
+                  } else {
+                    CustomDialog.showDialogBox(
+                      context,
+                      title: "Not registered",
+                      message: "You must be a verified user to vote",
+                    );
+                  }
                 }),
                 const SizedBox(height: 24),
                 _dashboardButton('View result', 56, 24, 0xFF3F527F, () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Feature coming soon!'),
-                      behavior: SnackBarBehavior.floating,
-                      margin: EdgeInsets.only(bottom: 20, left: 16, right: 16),
-                    ),
-                  );
+                  _changePage(2);
                 }),
               ],
             ),
-            _bottomBar(selectedIndex: 0),
-          ],
-        ),
-      );
+          ),
+          const Spacer(), // Pushes the buttons up just enough to center overall
+        ],
+      ),
+    );
+
+
 
   Widget _dashboardButton(String text, double height, double fontSize,
           int color, VoidCallback? onTap) =>
@@ -183,11 +186,14 @@ class _VotingHomePageState extends State<VotingHomePage> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           ),
-          child: Text(text,
-              style: TextStyle(
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white)),
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ),
         ),
       );
 
@@ -198,54 +204,56 @@ class _VotingHomePageState extends State<VotingHomePage> {
           color: const Color(0xFFB3C3D9),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Stack(children: [
-          Column(children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                icon: const Icon(Icons.arrow_back, size: 28),
-                color: Colors.black,
-                onPressed: () => _changePage(0),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Expanded(
-              child: AbsorbPointer(
-                absorbing: showSuccess,
-                child: Opacity(
-                  opacity: showSuccess ? 0.6 : 1,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: List.generate(
-                        _controllers.length,
-                        (i) => _buildTextField(i),
-                      )
-                        ..addAll([
-                          const SizedBox(height: 24),
-                          _dashboardButton(
-                            'Register',
-                            56,
-                            32,
-                            0xFF3F527F,
-                            showSuccess
-                                ? null
-                                : () async {
-                                    if (_validateFields()) {
-                                      await _submitToFirestore();
-                                    }
-                                  },
-                          ),
-                        ]),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back, size: 28),
+                    color: Colors.black,
+                    onPressed: () => _changePage(0),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Expanded(
+                  child: AbsorbPointer(
+                    absorbing: showSuccess,
+                    child: Opacity(
+                      opacity: showSuccess ? 0.6 : 1,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: List.generate(
+                            _controllers.length,
+                            (i) => _buildTextField(i),
+                          )
+                            ..addAll([
+                              const SizedBox(height: 24),
+                              _dashboardButton(
+                                'Register',
+                                56,
+                                32,
+                                0xFF3F527F,
+                                showSuccess
+                                    ? null
+                                    : () async {
+                                        if (_validateFields()) {
+                                          await _submitToFirestore();
+                                        }
+                                      },
+                              ),
+                            ]),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-            const SizedBox(height: 12),
-            _bottomBar(selectedIndex: 1),
-          ]),
-          if (showSuccess) _successOverlay(),
-        ]),
+            if (showSuccess) _successOverlay(),
+          ],
+        ),
       );
 
   Widget _buildTextField(int i) => Column(
@@ -301,8 +309,7 @@ class _VotingHomePageState extends State<VotingHomePage> {
                 ),
                 GestureDetector(
                   onTap: () => _changePage(0),
-                  child:
-                      const Icon(Icons.close, color: Colors.black, size: 20),
+                  child: const Icon(Icons.close, color: Colors.black, size: 20),
                 ),
               ],
             ),
@@ -310,22 +317,64 @@ class _VotingHomePageState extends State<VotingHomePage> {
         ),
       );
 
-  Widget _bottomBar({required int selectedIndex}) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(4, (index) {
-          final icons = [
-            Icons.home,
-            Icons.how_to_vote,
-            Icons.list,
-            Icons.person
-          ];
-          return IconButton(
-            icon: Icon(icons[index]),
-            color:
-                selectedIndex == index ? const Color(0xFF9BB3CC) : Colors.black,
-            onPressed: () => _changePage(index == 0 ? 0 : 1),
-          );
-        }),
+  Widget _bottomBar({required int selectedIndex}) => BottomNavigationBar(
+        currentIndex: selectedIndex,
+        onTap: _changePage,
+        selectedItemColor: const Color(0xFF46639B),
+        unselectedItemColor: Colors.black,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.app_registration), label: 'Register'),
+          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Result'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
+      );
+
+  Widget _results() => Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: const Color(0xFFB3C3D9),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          children: const [
+            SizedBox(height: 24),
+            Text(
+              'Results',
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Feature coming soon!',
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
+      );
+
+  Widget _profile() => Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: const Color(0xFFB3C3D9),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          children: const [
+            SizedBox(height: 24),
+            Text(
+              'Profile',
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Profile info coming soon!',
+              style: TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
       );
 }
 
@@ -336,12 +385,8 @@ Future<bool> isUserRegistered(String uid) async {
         .doc(uid)
         .get();
 
-    if (!doc.exists) {
-      return false;
-    }
-
+    if (!doc.exists) return false;
     var data = doc.data() as Map<String, dynamic>;
-
     return data['status'] == 'registered';
   } catch (e) {
     print('Error checking registration status: $e');
