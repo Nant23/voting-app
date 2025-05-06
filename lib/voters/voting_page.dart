@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:voting_app/components/my_textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

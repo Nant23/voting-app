@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:voting_app/voters/voters_result.dart';
 import '../login.dart';
 import '../../officer/officer_nav.dart';
 
@@ -101,7 +100,7 @@ class _UserState extends State<User> {
                         .get();
 
                     if (querySnapshot.docs.isNotEmpty) {
-                      final doc = querySnapshot.docs.first;
+                      //final doc = querySnapshot.docs.first;
                       // Navigator.push(
                       //   context,
                       //   MaterialPageRoute(
