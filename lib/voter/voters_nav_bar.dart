@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:voting_app/voter/voters_profile.dart';
 import 'home_dashboard.dart';
 import 'register_form.dart';
 import 'results_page.dart';
-import 'profile_page.dart';
 
-class VotingHomePage extends StatefulWidget {
+class VoterNavBar extends StatefulWidget {
   final int initialPage;
   
-  const VotingHomePage({
+  const VoterNavBar({
     super.key,
     this.initialPage = 0,
   });
 
   @override
-  State<VotingHomePage> createState() => _VotingHomePageState();
+  State<VoterNavBar> createState() => _VoterNavBarState();
 }
 
-class _VotingHomePageState extends State<VotingHomePage> {
+class _VoterNavBarState extends State<VoterNavBar> {
   late int _currentPage;
   final List<Widget> _pages = [
     const HomeDashboard(),
     const RegisterForm(),
     const ResultsPage(),
-    const ProfilePage(),
+    Profile(),
   ];
 
   @override
