@@ -104,9 +104,6 @@ packages:
       sha256: "2f5709ae4d3d59dd8f7cd309b4e023046b57d8a6c82130785d2b0e5868084e76"
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
-    version: "1.18.0"
-=======
     version: "1.19.1"
   convert:
     dependency: transitive
@@ -124,7 +121,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.6"
->>>>>>> e7089d3 (Fix corrupted pubspec.lock and regenerate it)
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -148,9 +144,6 @@ packages:
       sha256: "6a95e56b2449df2273fd8c45a662d6947ce1ebb7aafe80e550a3f68297f3cacc"
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
-    version: "1.3.1"
-=======
     version: "1.3.2"
   file:
     dependency: transitive
@@ -160,7 +153,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
->>>>>>> e7089d3 (Fix corrupted pubspec.lock and regenerate it)
   firebase_auth:
     dependency: "direct main"
     description:
@@ -303,9 +295,6 @@ packages:
       sha256: e3641ec5d63ebf0d9b41bd43201a66e3fc79a65db5f61fc181f04cd27aab950c
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
-    version: "1.15.0"
-=======
     version: "1.16.0"
   package_config:
     dependency: transitive
@@ -315,7 +304,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
->>>>>>> e7089d3 (Fix corrupted pubspec.lock and regenerate it)
   path:
     dependency: transitive
     description:
@@ -408,9 +396,6 @@ packages:
       sha256: "0968250880a6c5fe7edc067ed0a13d4bae1577fe2771dcf3010d52c4a9d3ca14"
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
-    version: "14.2.4"
-=======
     version: "14.3.1"
   watcher:
     dependency: transitive
@@ -420,7 +405,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
->>>>>>> e7089d3 (Fix corrupted pubspec.lock and regenerate it)
   web:
     dependency: transitive
     description:
@@ -430,9 +414,5 @@ packages:
     source: hosted
     version: "1.1.1"
 sdks:
-<<<<<<< HEAD
-  dart: ">=3.5.0 <4.0.0"
-=======
   dart: ">=3.7.0-0 <4.0.0"
->>>>>>> e7089d3 (Fix corrupted pubspec.lock and regenerate it)
   flutter: ">=3.22.0"
