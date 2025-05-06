@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'officer_nav.dart';
 import 'create_election.dart';
 import 'view_result_off.dart';
-import 'package:voting_app/dialogs.dart';
+//import 'package:voting_app/dialogs.dart';
 
 class Officer extends StatefulWidget {
   final int selectedIndex;
