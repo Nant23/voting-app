@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'components/my_textfield.dart';
+import 'package:voting_app/components/my_textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'voting_screen.dart';
-import 'dialogs.dart';
+import 'package:voting_app/dialogs.dart';
+import 'package:voting_app/voters/voters_result.dart';
 
 class VotingHomePage extends StatefulWidget {
   const VotingHomePage({super.key});
@@ -108,71 +109,72 @@ class _VotingHomePageState extends State<VotingHomePage> {
 
   Widget _buildPage() {
     if (_currentPage == 0) return _dashboard();
-    if (_currentPage == 2) return _results();
+    if (_currentPage == 2) return _results(context);
     if (_currentPage == 3) return _profile();
     return _registerForm(showSuccess: _showSuccessMessage);
   }
 
-Widget _dashboard() => Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height, // Ensure it fills the screen
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: const Color(0xFFB3C3D9),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 40), // Padding from top
-          Row(
-            children: [
-              const CircleAvatar(
-                backgroundColor: Colors.black,
-                radius: 20,
-                child: Icon(Icons.person, color: Colors.white),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                'Hi, ${FirebaseAuth.instance.currentUser?.displayName ?? "User"}',
-                style: const TextStyle(color: Colors.black, fontSize: 18),
-              ),
-            ],
-          ),
-          const Spacer(), // Pushes the buttons to center vertically
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+  Widget _dashboard() => Container(
+        width: MediaQuery.of(context).size.width,
+        height:
+            MediaQuery.of(context).size.height, // Ensure it fills the screen
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: const Color(0xFFB3C3D9),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 40), // Padding from top
+            Row(
               children: [
-                _dashboardButton('Vote', 72, 32, 0xFF4F6596, () async {
-                  final currentUser = FirebaseAuth.instance.currentUser;
-                  bool isRegistered = await isUserRegistered(currentUser!.uid);
-                  if (isRegistered) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const VoteScreen()),
-                    );
-                  } else {
-                    CustomDialog.showDialogBox(
-                      context,
-                      title: "Not registered",
-                      message: "You must be a verified user to vote",
-                    );
-                  }
-                }),
-                const SizedBox(height: 24),
-                _dashboardButton('View result', 56, 24, 0xFF3F527F, () {
-                  _changePage(2);
-                }),
+                const CircleAvatar(
+                  backgroundColor: Colors.black,
+                  radius: 20,
+                  child: Icon(Icons.person, color: Colors.white),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'Hi, ${FirebaseAuth.instance.currentUser?.displayName ?? "User"}',
+                  style: const TextStyle(color: Colors.black, fontSize: 18),
+                ),
               ],
             ),
-          ),
-          const Spacer(), // Pushes the buttons up just enough to center overall
-        ],
-      ),
-    );
-
-
+            const Spacer(), // Pushes the buttons to center vertically
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _dashboardButton('Vote', 72, 32, 0xFF4F6596, () async {
+                    final currentUser = FirebaseAuth.instance.currentUser;
+                    bool isRegistered =
+                        await isUserRegistered(currentUser!.uid);
+                    if (isRegistered) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const VoteScreen()),
+                      );
+                    } else {
+                      CustomDialog.showDialogBox(
+                        context,
+                        title: "Not registered",
+                        message: "You must be a verified user to vote",
+                      );
+                    }
+                  }),
+                  const SizedBox(height: 24),
+                  _dashboardButton('View result', 56, 24, 0xFF3F527F, () {
+                    _changePage(2);
+                  }),
+                ],
+              ),
+            ),
+            const Spacer(), // Pushes the buttons up just enough to center overall
+          ],
+        ),
+      );
 
   Widget _dashboardButton(String text, double height, double fontSize,
           int color, VoidCallback? onTap) =>
@@ -227,8 +229,7 @@ Widget _dashboard() => Container(
                           children: List.generate(
                             _controllers.length,
                             (i) => _buildTextField(i),
-                          )
-                            ..addAll([
+                          )..addAll([
                               const SizedBox(height: 24),
                               _dashboardButton(
                                 'Register',
@@ -330,29 +331,63 @@ Widget _dashboard() => Container(
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       );
+  Widget _results(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () async {
+          try {
+            final querySnapshot = await FirebaseFirestore.instance
+                .collection('results')
+                .limit(1)
+                .get();
 
-  Widget _results() => Container(
-        width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: const Color(0xFFB3C3D9),
-          borderRadius: BorderRadius.circular(8),
+            if (querySnapshot.docs.isNotEmpty) {
+              final doc = querySnapshot.docs.first;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => VotersResult(documentId: doc.id),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('No results found')),
+              );
+            }
+          } catch (e) {
+            print('Error fetching results: $e');
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Failed to load results')),
+            );
+          }
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: const Color(0xFFB3C3D9),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              SizedBox(height: 8),
+              Text(
+                'Results',
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Tap to view latest voting results',
+                style: TextStyle(fontSize: 18),
+              ),
+            ],
+          ),
         ),
-        child: Column(
-          children: const [
-            SizedBox(height: 24),
-            Text(
-              'Results',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Feature coming soon!',
-              style: TextStyle(fontSize: 18),
-            ),
-          ],
-        ),
-      );
+      ),
+    );
+  }
 
   Widget _profile() => Container(
         width: MediaQuery.of(context).size.width,
