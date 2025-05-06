@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'voters/user.dart' as u;
+import 'package:voting_app/voter/voters_nav_bar.dart';
 import 'components/my_textfield.dart';
 
 class SignUp extends StatefulWidget {
@@ -136,7 +136,7 @@ class _SignUpState extends State<SignUp> {
       }, SetOptions(merge: true));
       setState(() => showProgress = false);
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => u.User()));
+          context, MaterialPageRoute(builder: (context) => VoterNavBar()));
     }
   }
 }
