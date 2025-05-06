@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:voting_app/officer/officer_dashboard.dart'; // Import Officer
 import 'package:voting_app/forgot_password/fb_email.dart';
 import 'package:voting_app/signup.dart';
-import 'admin/admin_dash.dart'; // Import AdminDash// Import User
-import 'voting_home_page.dart'; // Import VotingHomePage
+import 'admin/admin_dash.dart';
+import 'voters/voting_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -212,7 +212,9 @@ class _LoginPageState extends State<LoginPage> {
         } else if (role == "User") {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => VotingHomePage()), // Navigate to VotingHomePage
+            MaterialPageRoute(
+                builder: (context) =>
+                    VotingHomePage()), // Navigate to VotingHomePage
           );
         } else if (role == "Officer") {
           Navigator.pushReplacement(
