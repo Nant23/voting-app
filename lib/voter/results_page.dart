@@ -3,12 +3,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:voting_app/single_stats.dart';
 
 class ResultsPage extends StatelessWidget {
-  const ResultsPage({super.key});
+  const ResultsPage({super.key}); // Constructor with key
 
-  Future<List<String>> fetchQuestionIds() async {
-    final snapshot =
-        await FirebaseFirestore.instance.collection('questions').get();
-    return snapshot.docs.map((doc) => doc.id).toList();
+  Stream<List<String>> getQuestionIds() {
+    return FirebaseFirestore.instance
+        .collection('questions')
+        .where('status', isEqualTo: 'Ongoing') // Filtering by status
+        .where('publish_status',
+            isEqualTo: 'Published') // Filtering by publish_status
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.id).toList());
+  }
+
+  Stream<List<String>> getPastQuestionIds() {
+    return FirebaseFirestore.instance
+        .collection('questions')
+        .where('status', isEqualTo: 'Closed') // Filtering by status
+        .where('publish_status',
+            isEqualTo: 'Published') // Filtering by publish_status
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.id).toList());
   }
 
   @override
@@ -22,37 +36,92 @@ class ResultsPage extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(16),
         color: const Color(0xFFB3C3D9),
-        child: FutureBuilder<List<String>>(
-          future: fetchQuestionIds(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(child: Text('No results available.'));
-            }
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Ongoing Election',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 20),
+              //Ongoing
+              StreamBuilder<List<String>>(
+                stream: getQuestionIds(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Text('Results hasn`t been published.');
+                  }
 
-            final ids = snapshot.data!;
-            return ListView.separated(
-              itemCount: ids.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 24),
-              itemBuilder: (context, index) {
-                return Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE6EDF5),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: SizedBox(
-                    height:
-                        400, // Adjust based on how much space SingleStats needs
-                    child: SingleStats(documentId: ids[index]),
-                  ),
-                );
-              },
-            );
-          },
+                  final ids = snapshot.data!;
+                  return Column(
+                    children: ids.map((id) {
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 24),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE6EDF5),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        height: 400,
+                        child: SingleStats(documentId: id),
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+
+              //Past Election
+              const Text(
+                'Past Elections',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              //to get realtime updates
+              StreamBuilder<List<String>>(
+                stream: getPastQuestionIds(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Text('No results available.');
+                  }
+
+                  final ids = snapshot.data!;
+                  return Column(
+                    children: ids.map((id) {
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 24),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE6EDF5),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        height: 400,
+                        child: SingleStats(documentId: id),
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
