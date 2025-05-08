@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:voting_app/voter/voting_screen.dart';
-//import 'voting_screen.dart';
+import 'voter_filtered_results.dart';
 import '../dialogs.dart';
 import '../utilities.dart';
-import 'voters_nav_bar.dart';  // Make sure this import path is correct
+//import 'voters_nav_bar.dart';
 
 class HomeDashboard extends StatelessWidget {
   const HomeDashboard({super.key});
@@ -60,11 +60,10 @@ class HomeDashboard extends StatelessWidget {
                 }),
                 const SizedBox(height: 24),
                 _dashboardButton('View result', 56, 24, 0xFF3F527F, () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const VoterNavBar(initialPage: 2),
-                    ),
-                  );
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const VoterStatistics()),
+                    );
                 }),
               ],
             ),
