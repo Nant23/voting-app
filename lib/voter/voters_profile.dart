@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,13 +8,19 @@ import 'package:voting_app/login.dart';
 class Profile extends StatefulWidget {
   final int selectedIndex;
 
-  Profile({this.selectedIndex = 4});
+  const Profile({super.key, this.selectedIndex = 4});
 
   @override
   _ProfileState createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+  
   Map<String, dynamic>? userData;
 
   Future<void> fetchUserData() async {
@@ -127,7 +135,7 @@ class _ProfileState extends State<Profile> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('$label', style: _labelStyle),
+        Text(label, style: _labelStyle),
         const SizedBox(height: 5),
         Text(value?.toString() ?? 'N/A', style: _valueStyle),
         const SizedBox(height: 10),

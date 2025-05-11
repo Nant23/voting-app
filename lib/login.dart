@@ -72,6 +72,10 @@ class _LoginPageState extends State<LoginPage> {
                             child: TextField(
                               keyboardType: TextInputType.emailAddress,
                               controller: emailController,
+                              onSubmitted: (_) {
+                                signIn(emailController.text,
+                                    passwordController.text);
+                              },
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Email',
@@ -102,6 +106,10 @@ class _LoginPageState extends State<LoginPage> {
                               textInputAction: TextInputAction.done,
                               controller: passwordController,
                               obscureText: true,
+                              onSubmitted: (_) {
+                                signIn(emailController.text,
+                                    passwordController.text);
+                              },
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Password',
