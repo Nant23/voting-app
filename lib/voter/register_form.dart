@@ -92,129 +92,129 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: const Color(0xFFB3C3D9),
-        borderRadius: BorderRadius.circular(8),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Register', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0,
       ),
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back, size: 28),
-                  color: Colors.black,
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Expanded(
-                child: AbsorbPointer(
-                  absorbing: _showSuccessMessage,
-                  child: Opacity(
-                    opacity: _showSuccessMessage ? 0.6 : 1,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: List.generate(
-                          _controllers.length,
-                          (i) => _buildTextField(i),
-                        )
-                          ..addAll([
-                            const SizedBox(height: 24),
-                            _dashboardButton(
-                              'Register',
-                              56,
-                              32,
-                              0xFF3F527F,
-                              _showSuccessMessage
-                                  ? null
-                                  : () async {
-                                      if (_validateFields()) {
-                                        await _submitToFirestore();
-                                      }
-                                    },
-                            ),
-                          ]),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: const Color(0xFFB3C3D9),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                const SizedBox(height: 12),
+                Expanded(
+                  child: AbsorbPointer(
+                    absorbing: _showSuccessMessage,
+                    child: Opacity(
+                      opacity: _showSuccessMessage ? 0.6 : 1,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: List.generate(
+                            _controllers.length,
+                            (i) => _buildTextField(i),
+                          )
+                            ..addAll([
+                              const SizedBox(height: 24),
+                              _dashboardButton(
+                                'Register',
+                                56,
+                                32,
+                                0xFF46639B,
+                                _showSuccessMessage
+                                    ? null
+                                    : () async {
+                                        if (_validateFields()) {
+                                          await _submitToFirestore();
+                                        }
+                                      },
+                              ),
+                            ]),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          if (_showSuccessMessage) _successOverlay(),
-        ],
+              ],
+            ),
+            if (_showSuccessMessage) _successOverlay(),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildTextField(int i) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      MyTextfield(
-        controller: _controllers[i],
-        hintText: ['Name', 'Age', 'Gender', 'Phone Number', 'Country'][i],
-        obscureText: false,
-      ),
-      if (_errorMessages[i] != null)
-        Padding(
-          padding: const EdgeInsets.only(top: 4),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                _errorMessages[i]!,
-                style: const TextStyle(color: Colors.red),
-              ),
-            ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          MyTextfield(
+            controller: _controllers[i],
+            hintText: ['Name', 'Age', 'Gender', 'Phone Number', 'Country'][i],
+            obscureText: false,
           ),
-        ),
-      const SizedBox(height: 12),
-    ],
-  );
+          if (_errorMessages[i] != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    _errorMessages[i]!,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ],
+              ),
+            ),
+          const SizedBox(height: 12),
+        ],
+      );
 
   Widget _successOverlay() => Positioned(
-    top: 60,
-    left: 0,
-    right: 0,
-    child: Center(
-      child: Container(
-        width: 192,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color(0xFF7F8AA3),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Expanded(
-              child: Text(
-                'Successfully\nRegistered',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                  height: 1.2,
+        top: 60,
+        left: 0,
+        right: 0,
+        child: Center(
+          child: Container(
+            width: 192,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFF7F8AA3),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Expanded(
+                  child: Text(
+                    'Successfully\nRegistered',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                      height: 1.2,
+                    ),
+                  ),
                 ),
-              ),
+                GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: const Icon(Icons.close, color: Colors.black, size: 20),
+                ),
+              ],
             ),
-            GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
-              child: const Icon(Icons.close, color: Colors.black, size: 20),
-            ),
-          ],
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   Widget _dashboardButton(String text, double height, double fontSize,
-      int color, VoidCallback? onTap) =>
+          int color, VoidCallback? onTap) =>
       SizedBox(
         width: double.infinity,
         height: height,
@@ -222,7 +222,8 @@ class _RegisterFormState extends State<RegisterForm> {
           onPressed: onTap,
           style: ElevatedButton.styleFrom(
             backgroundColor: Color(color),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           ),
           child: Text(
             text,
