@@ -249,15 +249,22 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void signIn(String email, String password) async {
+    if (email.isEmpty && password.isEmpty) {
+      showError('Please enter both email and password.');
+      return;
+    } else if (email.isEmpty) {
+      showError('Please enter the email');
+    } else if (password.isEmpty) {
+      showError('Please enter the password');
+    }
+
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       route();
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        showError('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        showError('Wrong password provided.');
+      if (e.code == 'invalid-credential') {
+        showError('Invalid credentials. Please enter correct credentials.');
       } else {
         showError('An error occurred: ${e.message}');
       }
