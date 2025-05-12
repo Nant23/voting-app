@@ -38,7 +38,7 @@ class ResultsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Results'),
-        backgroundColor: const Color(0xFF4F6596),
+        backgroundColor: Colors.white,
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,

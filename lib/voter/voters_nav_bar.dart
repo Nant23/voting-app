@@ -22,7 +22,7 @@ class _VoterNavBarState extends State<VoterNavBar> {
     const HomeDashboard(),
     const RegisterForm(),
     const ResultsPage(),
-    Profile(),
+    const Profile(),
   ];
 
   @override
