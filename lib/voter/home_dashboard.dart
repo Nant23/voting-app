@@ -15,7 +15,7 @@ class HomeDashboard extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Voters Dashboard'),
       ),
-      backgroundColor: const Color(0xFFB3C3D9),
+      backgroundColor: Color(0xFFB3C3D9),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
