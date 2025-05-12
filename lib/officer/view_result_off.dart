@@ -23,6 +23,9 @@ class _ViewResultState extends State<ViewResult> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Election Results'),
+      ),
       backgroundColor: const Color(0xFFBED2EE),
       body: SafeArea(
         child: Center(

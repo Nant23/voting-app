@@ -25,12 +25,20 @@ class ResultsPage extends StatelessWidget {
         .map((snapshot) => snapshot.docs.map((doc) => doc.id).toList());
   }
 
+  Stream<bool> getElectionStatus() {
+    return FirebaseFirestore.instance
+        .collection('questions')
+        .where('status', isEqualTo: 'Ongoing')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.isNotEmpty);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Results'),
-        backgroundColor: const Color(0xFF4F6596),
+        backgroundColor: Colors.white,
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -49,35 +57,49 @@ class ResultsPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              //Ongoing
-              StreamBuilder<List<String>>(
-                stream: getQuestionIds(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Text('Results hasn`t been published.');
-                  }
 
-                  final ids = snapshot.data!;
-                  return Column(
-                    children: ids.map((id) {
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 24),
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFE6EDF5),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        height: 400,
-                        child: SingleStats(documentId: id),
-                      );
-                    }).toList(),
-                  );
+              //Ongoing
+              StreamBuilder<bool>(
+                stream: getElectionStatus(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData || !snapshot.data!) {
+                    return const Center(child: Text('No ongoing election'));
+                  } else {
+                    return StreamBuilder<List<String>>(
+                        stream: getQuestionIds(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(
+                                child: Text('Error: ${snapshot.error}'));
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return const Text('Results hasn`t been published.');
+                          }
+
+                          final ids = snapshot.data!;
+                          return Column(
+                            children: ids.map((id) {
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 24),
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFE6EDF5),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                height: 400,
+                                child: SingleStats(documentId: id),
+                              );
+                            }).toList(),
+                          );
+                        });
+                  }
                 },
               ),
+
               const SizedBox(height: 20),
 
               //Past Election
@@ -93,6 +115,7 @@ class ResultsPage extends StatelessWidget {
 
               //to get realtime updates
               StreamBuilder<List<String>>(
+                //for closed elections
                 stream: getPastQuestionIds(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
