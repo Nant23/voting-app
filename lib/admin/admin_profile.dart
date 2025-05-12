@@ -79,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       'Country',
                       userData?['country'],
                     ),
-                    _buildInfoLabel('id', userData?['id']),
+
                     _buildInfoLabel('User Type', userData?['role']),
                     const SizedBox(height: 40),
                     Row(
