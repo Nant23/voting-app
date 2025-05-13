@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:voting_app/admin/admin_nav.dart';
-import 'package:voting_app/login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:voting_app/login.dart';
 
-class ProfilePage extends StatefulWidget {
+class Profile extends StatefulWidget {
   final int selectedIndex;
 
-  ProfilePage({this.selectedIndex = 4});
+  const Profile({super.key, this.selectedIndex = 4});
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _ProfileState createState() => _ProfileState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
-  int _selectedIndex = 0;
+class _ProfileState extends State<Profile> {
   Map<String, dynamic>? userData;
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.selectedIndex;
     fetchUserData();
   }
 
@@ -41,13 +38,9 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Profile',
-          style: TextStyle(color: Colors.black),
-        ),
+        title: const Text('Profile'),
         backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
-        elevation: 1,
+        elevation: 0,
       ),
       backgroundColor: const Color(0xFFBED2EE),
       body: SafeArea(
@@ -110,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(height: 20),
                     _buildInfoLabel('Country', userData?['country']),
-                    // _buildInfoLabel('ID', userData?['id']),
+                    _buildInfoLabel('ID', userData?['id']),
                     _buildInfoLabel('User Type', userData?['role']),
                     const SizedBox(height: 40),
                     Row(
@@ -149,14 +142,15 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
         ),
       ),
-      bottomNavigationBar: NavBar(
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-      ),
+      // Uncomment and implement if you use a custom navbar
+      // bottomNavigationBar: NavbarOff(
+      //   currentIndex: _selectedIndex,
+      //   onTap: (index) {
+      //     setState(() {
+      //       _selectedIndex = index;
+      //     });
+      //   },
+      // ),
     );
   }
 

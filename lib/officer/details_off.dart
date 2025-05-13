@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'officer_nav.dart';
 import 'package:voting_app/dialogs.dart';
-import 'package:voting_app/officer/single_stats.dart';
+import 'package:voting_app/single_stats.dart';
 
 class DetailsPage extends StatefulWidget {
   final int selectedIndex;
@@ -30,6 +30,15 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Details',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 1,
+      ),
       backgroundColor: const Color(0xFFBED2EE),
       body: SafeArea(
         child: Padding(

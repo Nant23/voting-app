@@ -2,9 +2,50 @@ import 'package:flutter/material.dart';
 import 'package:voting_app/signup.dart';
 import 'package:voting_app/login.dart';
 
-//Welcome page
-class Splash extends StatelessWidget {
+class Splash extends StatefulWidget {
   const Splash({super.key});
+
+  @override
+  State<Splash> createState() => _SplashState();
+}
+
+class _SplashState extends State<Splash> with TickerProviderStateMixin {
+  late AnimationController _imageController;
+  late Animation<Offset> _imageAnimation;
+
+  late AnimationController _textController;
+  late Animation<double> _textFadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _imageController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+    _imageAnimation =
+        Tween<Offset>(begin: const Offset(0, 1), end: Offset.zero).animate(
+      CurvedAnimation(parent: _imageController, curve: Curves.easeOut),
+    );
+
+    _textController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _textFadeAnimation =
+        CurvedAnimation(parent: _textController, curve: Curves.easeIn);
+
+    _imageController.forward();
+    _textController.forward();
+  }
+
+  @override
+  void dispose() {
+    _imageController.dispose();
+    _textController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,27 +56,34 @@ class Splash extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 45),
-              // Image
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: Container(
-                  height: 426,
-                  width: 426,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    image: const DecorationImage(
-                      image: NetworkImage(
-                        "https://res.cloudinary.com/dmtsrrnid/image/upload/v1742726238/voting_image_pqwrks.jpg",
+              // Animated Image
+              SlideTransition(
+                position: _imageAnimation,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: Container(
+                    height: 426,
+                    width: 426,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      image: const DecorationImage(
+                        image: NetworkImage(
+                          "https://res.cloudinary.com/dmtsrrnid/image/upload/v1742726238/voting_image_pqwrks.jpg",
+                        ),
+                        fit: BoxFit.cover,
                       ),
-                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 40),
-              const Text(
-                "Welcome to Voting App!",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              // Animated Welcome Text
+              FadeTransition(
+                opacity: _textFadeAnimation,
+                child: const Text(
+                  "Welcome to Neppoll!",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                ),
               ),
               const SizedBox(height: 60),
               // Buttons
@@ -47,9 +95,7 @@ class Splash extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => LoginPage(),
-                        ),
+                        _fadeRoute(const LoginPage()),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -73,9 +119,7 @@ class Splash extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => SignUp(),
-                        ),
+                        _fadeRoute(const SignUp()),
                       );
                     },
                     style: OutlinedButton.styleFrom(
@@ -102,5 +146,17 @@ class Splash extends StatelessWidget {
       ),
     );
   }
-}
 
+  // Fade transition route
+  Route _fadeRoute(Widget page) {
+    return PageRouteBuilder(
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final opacityTween =
+            Tween<double>(begin: 0.0, end: 1.0).animate(animation);
+        return FadeTransition(opacity: opacityTween, child: child);
+      },
+    );
+  }
+}

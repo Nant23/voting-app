@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:voting_app/officer/officer_dashboard.dart'; // Import Officer
 import 'package:voting_app/forgot_password/fb_email.dart';
 import 'package:voting_app/signup.dart';
-import 'admin/admin_dash.dart'; // Import AdminDash// Import User
-import 'voting_page.dart'; // Import VotingHomePage
+import 'admin/admin_dash.dart';
+import 'voter/voters_nav_bar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -72,6 +72,10 @@ class _LoginPageState extends State<LoginPage> {
                             child: TextField(
                               keyboardType: TextInputType.emailAddress,
                               controller: emailController,
+                              onSubmitted: (_) {
+                                signIn(emailController.text,
+                                    passwordController.text);
+                              },
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Email',
@@ -102,6 +106,10 @@ class _LoginPageState extends State<LoginPage> {
                               textInputAction: TextInputAction.done,
                               controller: passwordController,
                               obscureText: true,
+                              onSubmitted: (_) {
+                                signIn(emailController.text,
+                                    passwordController.text);
+                              },
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Password',
@@ -212,7 +220,9 @@ class _LoginPageState extends State<LoginPage> {
         } else if (role == "User") {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => VotingHomePage()), // Navigate to VotingHomePage
+            MaterialPageRoute(
+                builder: (context) =>
+                    VoterNavBar()), // Navigate to VotingHomePage
           );
         } else if (role == "Officer") {
           Navigator.pushReplacement(
@@ -239,15 +249,22 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void signIn(String email, String password) async {
+    if (email.isEmpty && password.isEmpty) {
+      showError('Please enter both email and password.');
+      return;
+    } else if (email.isEmpty) {
+      showError('Please enter the email');
+    } else if (password.isEmpty) {
+      showError('Please enter the password');
+    }
+
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       route();
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        showError('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        showError('Wrong password provided.');
+      if (e.code == 'invalid-credential') {
+        showError('Invalid credentials. Please enter correct credentials.');
       } else {
         showError('An error occurred: ${e.message}');
       }
