@@ -65,8 +65,30 @@ class _DetailsPageState extends State<DetailsPage> {
               const SizedBox(height: 30),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    publishResult(context);
+                  onPressed: () async {
+                    bool confirm = await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Confirm Publish'),
+                        content: const Text('Are you sure you want to publish the result?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: const Text('No'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: const Text('Yes'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  if (confirm == true) {
+                    await publishResult(context);
+                  }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF46639B),
