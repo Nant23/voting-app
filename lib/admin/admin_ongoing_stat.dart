@@ -158,7 +158,17 @@ class _AdminOngoingStatState extends State<AdminOngoingStat> {
                   );
                 } else {
                   final ageData = getAgeDistribution(demographics);
-                  final barGroups = ageData.entries.toList().asMap().entries.map((entry) {
+                  // Define the desired age range order
+                  final sortedAgeRanges = ['<18', '18-25', '26-35', '36-50', '50+'];
+                  
+                  // Sort the ageData according to the desired order
+                  final sortedEntries = sortedAgeRanges
+                      .where((key) => ageData.containsKey(key))
+                      .map((key) => MapEntry(key, ageData[key]!))
+                      .toList();
+
+                  // Create bar groups based on sorted age ranges
+                  final barGroups = sortedEntries.asMap().entries.map((entry) {
                     final index = entry.key;
                     //final label = entry.value.key;
                     final count = entry.value.value;
@@ -202,8 +212,8 @@ class _AdminOngoingStatState extends State<AdminOngoingStat> {
                                     showTitles: true,
                                     getTitlesWidget: (value, meta) {
                                       final index = value.toInt();
-                                      final labels = ageData.keys.toList();
-                                      final label = (index < labels.length) ? labels[index] : '';
+                                      //final labels = ageData.keys.toList();
+                                      final label = (index < sortedEntries.length) ? sortedEntries[index].key : '';
                                       return SideTitleWidget(
                                         axisSide: meta.axisSide,
                                         space: 8.0,

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:voting_app/components/my_textfield.dart';
 import 'package:voting_app/admin/admin_nav.dart';
@@ -93,15 +93,41 @@ class _OfficerRegState extends State<OfficerReg> {
                       ),
                     ),
                     onPressed: () {
-                      if (passwordController.text != confirmPassController.text) {
+                      final id = officerIdController.text.trim();
+                      final name = nameController.text.trim();
+                      final email = emailController.text.trim();
+                      final password = passwordController.text;
+                      final confirmPass = confirmPassController.text;
+                      final country = countryController.text.trim();
+
+                      // Validation for empty fields
+                      if (id.isEmpty ||
+                          name.isEmpty ||
+                          email.isEmpty ||
+                          password.isEmpty ||
+                          confirmPass.isEmpty ||
+                          country.isEmpty) {
                         CustomDialog.showDialogBox(
                           context,
-                          title: "Password Mismatch",
-                          message: "Password and Confirm Password do not match.",
+                          title: "Missing Fields",
+                          message: "Please fill in all the fields.",
                         );
                         return;
                       }
 
+                      //check password and confirm password
+                      if (passwordController.text !=
+                          confirmPassController.text) {
+                        CustomDialog.showDialogBox(
+                          context,
+                          title: "Password Mismatch",
+                          message:
+                              "Password and Confirm Password do not match.",
+                        );
+                        return;
+                      }
+
+                      //if everything`s good then create officer
                       createOfficerAccount(
                         context,
                         emailController.text,
@@ -122,7 +148,6 @@ class _OfficerRegState extends State<OfficerReg> {
                         },
                       );
                     },
-
                     child: Text(
                       'Add',
                       style: TextStyle(color: Colors.white),
@@ -144,7 +169,6 @@ class _OfficerRegState extends State<OfficerReg> {
   }
 }
 
-
 Future<void> createOfficerAccount(
   BuildContext context,
   String email,
@@ -161,6 +185,7 @@ Future<void> createOfficerAccount(
       throw Exception("Admin not logged in.");
     }
 
+    //ensure only admins can register officers
     DocumentSnapshot adminDoc = await FirebaseFirestore.instance
         .collection('users')
         .doc(adminUser.uid)
@@ -170,35 +195,49 @@ Future<void> createOfficerAccount(
       throw Exception("Only admins can create officers.");
     }
 
-    UserCredential userCredential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
+    //creating a secondary Firebase app to isolate officer registration
+    FirebaseApp tempApp = await Firebase.initializeApp(
+      name: 'tempApp',
+      options: Firebase.app().options,
     );
 
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userCredential.user!.uid)
-        .set({
+    FirebaseAuth tempAuth = FirebaseAuth.instanceFor(app: tempApp);
+
+    //create officer account with temp auth
+    UserCredential userCredential = await tempAuth
+        .createUserWithEmailAndPassword(email: email, password: password);
+
+    String officerUid = userCredential.user!.uid;
+
+    //add officer data to Firestore
+    await FirebaseFirestore.instance.collection('users').doc(officerUid).set({
       'email': email,
       'role': 'Officer',
       'id': id,
-      'uid': userCredential.user!.uid,
+      'uid': officerUid,
       'name': name,
       'country': country,
       'status': 'Active',
+      'createdAt': FieldValue.serverTimestamp(),
     });
 
-    CustomDialog.showDialogBox(context,
-        title: "Success", message: "Officer account created successfully.");
+    //clean up: delete the secondary app
+    await tempApp.delete();
 
-    // Clear text fields
+    //Show success message
+    CustomDialog.showDialogBox(
+      context,
+      title: "Success",
+      message: "Officer account created successfully.",
+    );
+
+    //Clear input fields
     onSuccessClearFields();
   } catch (e) {
-    CustomDialog.showDialogBox(context,
-        title: "Error", message: "Failed to create officer account: $e");
+    CustomDialog.showDialogBox(
+      context,
+      title: "Error",
+      message: "Failed to create officer account: $e",
+    );
   }
 }
-
-
-//bonjure

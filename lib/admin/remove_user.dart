@@ -109,16 +109,16 @@ Future<void> deactivateOfficerAccount(
         .doc(userId)
         .update({'status': 'Inactive'});
 
-    print("Officer account deactivated successfully.");
+    print("Officer account removed successfully.");
 
     // Pop up: Success
     CustomDialog.showDialogBox(context,
-        title: "Success", message: "Officer account deactivated successfully.");
+        title: "Success", message: "Officer account removed successfully.");
   } catch (e) {
     print("Error deactivating officer account: $e");
 
     // Pop up: Error
     CustomDialog.showDialogBox(context,
-        title: "Error", message: "Failed to deactivate officer account: $e");
+        title: "Error", message: "Failed to remove officer account: $e");
   }
 }

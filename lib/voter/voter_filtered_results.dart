@@ -12,15 +12,15 @@ class VoterStatistics extends StatefulWidget {
 class _VoterStatisticsState extends State<VoterStatistics> {
   String selectedView = 'Gender';
 
-  Future<List<Map<String, dynamic>>> fetchPublishedQuestionsWithDemographics() async {
+  Future<List<Map<String, dynamic>>>
+      fetchPublishedQuestionsWithDemographics() async {
     final questionSnapshot = await FirebaseFirestore.instance
         .collection('questions')
         .where('publish_status', isEqualTo: 'Published')
         .get();
 
-    final voterSnapshot = await FirebaseFirestore.instance
-        .collection('voter_registration')
-        .get();
+    final voterSnapshot =
+        await FirebaseFirestore.instance.collection('voter_registration').get();
 
     final voterMap = {
       for (var doc in voterSnapshot.docs)
@@ -119,7 +119,8 @@ class _VoterStatisticsState extends State<VoterStatistics> {
                   itemBuilder: (context, index) {
                     final questionData = questionDataList[index];
                     final question = questionData['question'];
-                    final demographics = questionData['demographics'] as List<Map<String, dynamic>>;
+                    final demographics = questionData['demographics']
+                        as List<Map<String, dynamic>>;
 
                     if (selectedView == 'Gender') {
                       final genderData = getGenderDistribution(demographics);
@@ -131,7 +132,8 @@ class _VoterStatisticsState extends State<VoterStatistics> {
                           title: '${(percentage * 100).toStringAsFixed(1)}%',
                           color: e.key == 'male' ? Colors.blue : Colors.pink,
                           radius: 80,
-                          titleStyle: const TextStyle(fontSize: 14, color: Colors.white),
+                          titleStyle: const TextStyle(
+                              fontSize: 14, color: Colors.white),
                         );
                       }).toList();
 
@@ -141,13 +143,30 @@ class _VoterStatisticsState extends State<VoterStatistics> {
                       );
                     } else {
                       final ageData = getAgeDistribution(demographics);
-                      final barGroups = ageData.entries.toList().asMap().entries.map((entry) {
+
+                      // 🔧 Sort age groups by logical order
+                      final ageOrder = [
+                        '<18',
+                        '18-25',
+                        '26-35',
+                        '36-50',
+                        '50+'
+                      ];
+                      final sortedAgeEntries = ageOrder
+                          .where((key) => ageData.containsKey(key))
+                          .map((key) => MapEntry(key, ageData[key]!))
+                          .toList();
+
+                      final barGroups =
+                          sortedAgeEntries.asMap().entries.map((entry) {
                         final index = entry.key;
+                        final label = entry.value.key;
                         final count = entry.value.value;
                         return BarChartGroupData(
                           x: index,
                           barRods: [
-                            BarChartRodData(toY: count.toDouble(), color: Colors.green),
+                            BarChartRodData(
+                                toY: count.toDouble(), color: Colors.green),
                           ],
                           showingTooltipIndicators: [0],
                         );
@@ -160,7 +179,10 @@ class _VoterStatisticsState extends State<VoterStatistics> {
                             alignment: BarChartAlignment.spaceAround,
                             maxY: ageData.values.isEmpty
                                 ? 5
-                                : ageData.values.reduce((a, b) => a > b ? a : b).toDouble() + 5,
+                                : ageData.values
+                                        .reduce((a, b) => a > b ? a : b)
+                                        .toDouble() +
+                                    5,
                             barTouchData: BarTouchData(enabled: true),
                             titlesData: FlTitlesData(
                               bottomTitles: AxisTitles(
@@ -168,8 +190,12 @@ class _VoterStatisticsState extends State<VoterStatistics> {
                                   showTitles: true,
                                   getTitlesWidget: (value, meta) {
                                     final index = value.toInt();
-                                    final labels = ageData.keys.toList();
-                                    final label = (index < labels.length) ? labels[index] : '';
+                                    final labels = sortedAgeEntries
+                                        .map((e) => e.key)
+                                        .toList();
+                                    final label = (index < labels.length)
+                                        ? labels[index]
+                                        : '';
                                     return SideTitleWidget(
                                       axisSide: meta.axisSide,
                                       space: 8.0,
@@ -186,9 +212,12 @@ class _VoterStatisticsState extends State<VoterStatistics> {
                                   },
                                 ),
                               ),
-                              leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                              rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                              leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false)),
+                              topTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false)),
+                              rightTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false)),
                             ),
                             gridData: FlGridData(show: true),
                             borderData: FlBorderData(show: false),

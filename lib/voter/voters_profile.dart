@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,13 +13,13 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  Map<String, dynamic>? userData;
+
   @override
   void initState() {
     super.initState();
     fetchUserData();
   }
-  
-  Map<String, dynamic>? userData;
 
   Future<void> fetchUserData() async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -39,6 +37,11 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Profile'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
       backgroundColor: const Color(0xFFBED2EE),
       body: SafeArea(
         child: Padding(
@@ -48,17 +51,42 @@ class _ProfileState extends State<Profile> {
               : ListView(
                   children: [
                     const SizedBox(height: 20),
-                    const Center(
-                      child: Icon(
-                        Icons.account_circle,
-                        size: 140,
-                        color: Colors.black87,
+                    Center(
+                      child: Column(
+                        children: [
+                          const Icon(
+                            Icons.account_circle,
+                            size: 140,
+                            color: Colors.black87,
+                          ),
+                          const SizedBox(height: 10),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              // TODO: Navigate to edit profile screen
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Edit Profile clicked"),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.edit, size: 18),
+                            label: const Text("Edit Profile"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blueGrey,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 20),
                     Center(
                       child: Text(
-                        userData?['name'] ?? 'User Name',
+                        userData?['userName'] ?? 'User Name',
                         style: const TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -67,20 +95,17 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    //Email
                     Center(
                       child: Text(
                         userData?['email'] ?? 'email',
-                        style: TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18),
                       ),
                     ),
                     const SizedBox(height: 20),
-                    //other informations
-                    _buildInfoLabel(
-                      'Country',
-                      userData?['country'],
-                    ),
-                    _buildInfoLabel('id', userData?['id']),
+                    _buildInfoLabel('Country', userData?['country']),
+                    const SizedBox(height: 15),
+                    //_buildInfoLabel('ID', userData?['id']),
+                    //const SizedBox(height: 15),
                     _buildInfoLabel('User Type', userData?['role']),
                     const SizedBox(height: 40),
                     Row(
@@ -103,15 +128,14 @@ class _ProfileState extends State<Profile> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            // Delete account logic here
+                            // TODO: Implement delete account logic
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,
                           ),
-                          child: const Text('Delete Account',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                          child: const Text(
+                            'Delete Account',
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                       ],
@@ -120,6 +144,7 @@ class _ProfileState extends State<Profile> {
                 ),
         ),
       ),
+      // Uncomment and implement if you use a custom navbar
       // bottomNavigationBar: NavbarOff(
       //   currentIndex: _selectedIndex,
       //   onTap: (index) {
@@ -132,14 +157,23 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget _buildInfoLabel(String label, dynamic value) {
-    return Column(
+<<<<<<< HEAD
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: _labelStyle),
-        const SizedBox(height: 5),
+        const SizedBox(width: 10),
         Text(value?.toString() ?? 'N/A', style: _valueStyle),
-        const SizedBox(height: 10),
+        const SizedBox(width: 10),
       ],
+=======
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Text(
+        '$label: ${value?.toString() ?? 'N/A'}',
+        style: _valueStyle,
+      ),
+>>>>>>> main
     );
   }
 }
