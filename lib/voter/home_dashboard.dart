@@ -13,9 +13,9 @@ class HomeDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Voters Dashboard'),
+        title: Text('Hi, ${FirebaseAuth.instance.currentUser?.displayName ?? "User"}!'),
       ),
-      backgroundColor: const Color(0xFFB3C3D9),
+      backgroundColor: const Color(0xFFBED2EE),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -24,20 +24,6 @@ class HomeDashboard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 40),
-            Row(
-              children: [
-                const CircleAvatar(
-                  backgroundColor: Colors.black,
-                  radius: 20,
-                  child: Icon(Icons.person, color: Colors.white),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  'Hi, ${FirebaseAuth.instance.currentUser?.displayName ?? "User"}',
-                  style: const TextStyle(color: Colors.black, fontSize: 18),
-                ),
-              ],
-            ),
             const Spacer(),
             Center(
               child: Column(
