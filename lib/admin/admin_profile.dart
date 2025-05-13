@@ -40,6 +40,15 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Profile',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 1,
+      ),
       backgroundColor: const Color(0xFFBED2EE),
       body: SafeArea(
         child: Padding(
@@ -49,11 +58,36 @@ class _ProfilePageState extends State<ProfilePage> {
               : ListView(
                   children: [
                     const SizedBox(height: 20),
-                    const Center(
-                      child: Icon(
-                        Icons.account_circle,
-                        size: 140,
-                        color: Colors.black87,
+                    Center(
+                      child: Column(
+                        children: [
+                          const Icon(
+                            Icons.account_circle,
+                            size: 140,
+                            color: Colors.black87,
+                          ),
+                          const SizedBox(height: 10),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              // TODO: Navigate to edit profile screen
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Edit Profile clicked"),
+                                ),
+                              );
+                            },
+                            icon: const Icon(Icons.edit, size: 18),
+                            label: const Text("Edit Profile"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blueGrey,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -68,17 +102,16 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    //Email
                     Center(
-                      child: Text(userData?['email'] ?? 'email',
-                          style: TextStyle(fontSize: 18)),
+                      child: Text(
+                        userData?['email'] ?? 'email',
+                        style: const TextStyle(fontSize: 18),
+                      ),
                     ),
                     const SizedBox(height: 20),
-                    //other informations
-                    _buildInfoLabel(
-                      'Country',
-                      userData?['country'],
-                    ),
+
+                    _buildInfoLabel('Country', userData?['country']),
+                    _buildInfoLabel('ID', userData?['id']),
 
                     _buildInfoLabel('User Type', userData?['role']),
                     const SizedBox(height: 40),
@@ -102,12 +135,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            // Delete account logic here
+                            // TODO: Implement delete account logic
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,
                           ),
-                          child: const Text('Delete Account'),
+                          child: const Text(
+                            'Delete Account',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ],
                     )
