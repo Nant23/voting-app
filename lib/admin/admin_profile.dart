@@ -109,8 +109,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    _buildInfoLabel('Country', userData?['country']),
-                    _buildInfoLabel('ID', userData?['id']),
+                    //other informations
+                    _buildInfoLabel(
+                      'Country',
+                      userData?['country'],
+                    ),
+                    _buildInfoLabel('id', userData?['id']),
                     _buildInfoLabel('User Type', userData?['role']),
                     const SizedBox(height: 40),
                     Row(

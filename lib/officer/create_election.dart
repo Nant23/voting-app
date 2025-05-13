@@ -109,7 +109,6 @@ class _CreateElectionState extends State<CreateElection> {
                         return;
                       }
 
-                      // Check for existing ongoing elections
                       final ongoing = await FirebaseFirestore.instance
                           .collection('questions')
                           .where('status', isEqualTo: 'Ongoing')
@@ -124,7 +123,6 @@ class _CreateElectionState extends State<CreateElection> {
                         return;
                       }
 
-                      // Collect non-empty options
                       List<String> optionTexts = options
                           .map<String>((opt) => opt['controller'].text.trim())
                           .where((text) => text.isNotEmpty)
@@ -139,8 +137,28 @@ class _CreateElectionState extends State<CreateElection> {
                         return;
                       }
 
-                      await storeQuestionData(context, optionTexts, mainQuestion);
+                      bool success = await storeQuestionData(context, optionTexts, mainQuestion);
+
+                      if (success) {
+                        // Clear the text fields
+                        electionNameController.clear();
+                        for (var option in options) {
+                          option['controller'].clear();
+                          option['isSelected'] = false;
+                        }
+
+                        // Optional: reset to 3 default options if needed
+                        // setState(() {
+                        //   options = List.generate(3, (_) => {
+                        //     'controller': TextEditingController(),
+                        //     'isSelected': false,
+                        //   });
+                        // });
+                        
+                        setState(() {}); // Refresh the UI
+                      }
                     },
+
 
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF46639B),
@@ -214,13 +232,12 @@ class _CreateElectionState extends State<CreateElection> {
 
 //backend
 // This function will store the questions along with options in database
-Future<void> storeQuestionData(BuildContext context,
-    List<String> questionsArray, String mainQuestion) async {
+Future<bool> storeQuestionData(
+  BuildContext context, List<String> questionsArray, String mainQuestion) async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final CollectionReference questionsRef = firestore.collection('questions');
 
   try {
-    // Get the current max ID (auto-increment logic)
     QuerySnapshot snapshot =
         await questionsRef.orderBy('id', descending: true).limit(1).get();
     int nextId = 1;
@@ -229,13 +246,12 @@ Future<void> storeQuestionData(BuildContext context,
       nextId = lastId + 1;
     }
 
-    // Create the question data
     Map<String, dynamic> data = {
       'id': nextId,
       'question': mainQuestion,
       'status': 'Ongoing',
       'publish_status': 'Unpublished',
-      'votedUsers':<String>[],
+      'votedUsers': <String>[],
     };
 
     for (int i = 0; i < questionsArray.length; i++) {
@@ -245,12 +261,15 @@ Future<void> storeQuestionData(BuildContext context,
 
     await questionsRef.add(data);
     print("Election saved successfully.");
+
     CustomDialog.showDialogBox(
       context,
       title: "Success",
       message: "Election Created",
     );
+    return true;
   } catch (e) {
     print("Error saving election: $e");
+    return false;
   }
 }
