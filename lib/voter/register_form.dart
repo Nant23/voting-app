@@ -77,6 +77,7 @@ class _RegisterFormState extends State<RegisterForm> {
       'Gender': _controllers[2].text.trim(),
       'Phone Number': _controllers[3].text.trim(),
       'Country': _controllers[4].text.trim(),
+      'Email': user.email,
       'status': 'unregistered',
     };
 
@@ -194,7 +195,7 @@ class _RegisterFormState extends State<RegisterForm> {
               children: [
                 const Expanded(
                   child: Text(
-                    'Successfully\nRegistered',
+                    'Registration has been sent',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w700,

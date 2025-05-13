@@ -5,13 +5,13 @@ import 'package:voting_app/admin/remove_user.dart';
 import 'package:voting_app/admin/admin_nav.dart';
 import 'package:voting_app/admin/officer_reg.dart';
 
-class AdminDash extends StatefulWidget {
+class AdminDash extends StatefulWidget { 
   final int selectedIndex;
 
-  AdminDash({this.selectedIndex = 0}); //default to 0
+  const AdminDash({super.key, this.selectedIndex = 0}); //default to 0
 
   @override
-  _AdminDashState createState() => _AdminDashState();
+  State<AdminDash> createState() => _AdminDashState();
 }
 
 class _AdminDashState extends State<AdminDash> {

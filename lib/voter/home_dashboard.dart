@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:voting_app/voter/voting_screen.dart';
@@ -6,14 +7,40 @@ import '../dialogs.dart';
 import '../utilities.dart';
 //import 'voters_nav_bar.dart';
 
-class HomeDashboard extends StatelessWidget {
+class HomeDashboard extends StatefulWidget {
   const HomeDashboard({super.key});
+
+  @override
+  _HomeDashboardState createState() => _HomeDashboardState();
+}
+
+class _HomeDashboardState extends State<HomeDashboard> {
+  String userName = 'User';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserName();
+  }
+
+  Future<void> fetchUserName() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>;
+        setState(() {
+          userName = data['userName'] ?? 'User';
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hi, ${FirebaseAuth.instance.currentUser?.displayName ?? "User"}!'),
+        title: Text('Hi, $userName!'),
       ),
       backgroundColor: const Color(0xFFBED2EE),
       body: Container(
@@ -85,3 +112,4 @@ class HomeDashboard extends StatelessWidget {
         ),
       );
 }
+
