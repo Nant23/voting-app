@@ -93,6 +93,29 @@ class _OfficerRegState extends State<OfficerReg> {
                       ),
                     ),
                     onPressed: () {
+                      final id = officerIdController.text.trim();
+                      final name = nameController.text.trim();
+                      final email = emailController.text.trim();
+                      final password = passwordController.text;
+                      final confirmPass = confirmPassController.text;
+                      final country = countryController.text.trim();
+
+                      // Validation for empty fields
+                      if (id.isEmpty ||
+                          name.isEmpty ||
+                          email.isEmpty ||
+                          password.isEmpty ||
+                          confirmPass.isEmpty ||
+                          country.isEmpty) {
+                        CustomDialog.showDialogBox(
+                          context,
+                          title: "Missing Fields",
+                          message: "Please fill in all the fields.",
+                        );
+                        return;
+                      }
+
+                      //check password and confirm password
                       if (passwordController.text !=
                           confirmPassController.text) {
                         CustomDialog.showDialogBox(
@@ -104,6 +127,7 @@ class _OfficerRegState extends State<OfficerReg> {
                         return;
                       }
 
+                      //if everything`s good then create officer
                       createOfficerAccount(
                         context,
                         emailController.text,
