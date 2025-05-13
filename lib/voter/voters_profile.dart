@@ -86,7 +86,7 @@ class _ProfileState extends State<Profile> {
                     const SizedBox(height: 20),
                     Center(
                       child: Text(
-                        userData?['name'] ?? 'User Name',
+                        userData?['userName'] ?? 'User Name',
                         style: const TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
