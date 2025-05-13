@@ -162,6 +162,7 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget _buildInfoLabel(String label, dynamic value) {
+<<<<<<< HEAD
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -170,6 +171,14 @@ class _ProfileState extends State<Profile> {
         Text(value?.toString() ?? 'N/A', style: _valueStyle),
         const SizedBox(height: 10),
       ],
+=======
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Text(
+        '$label: ${value?.toString() ?? 'N/A'}',
+        style: _valueStyle,
+      ),
+>>>>>>> main
     );
   }
 }
