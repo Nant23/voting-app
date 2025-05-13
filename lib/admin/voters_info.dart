@@ -70,6 +70,7 @@ class _VotersInfoPageState extends State<VotersInfoPage> {
                         ),
                       ),
                       SizedBox(height: 8),
+                      Text('Email: ${data['Email'] ?? 'N/A'}'),
                       Text('Age: ${data['Age'] ?? 'N/A'}'),
                       Text('Gender: ${data['Gender'] ?? 'N/A'}'),
                       Text('Phone: ${data['Phone Number'] ?? 'N/A'}'),

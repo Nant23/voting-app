@@ -1,6 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:voting_app/admin/admin_dash.dart';
+import 'package:voting_app/officer/officer_dashboard.dart';
 import 'package:voting_app/signup.dart';
 import 'package:voting_app/login.dart';
+import 'package:voting_app/voter/voters_nav_bar.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -19,6 +26,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    navigateUser();
 
     _imageController = AnimationController(
       duration: const Duration(milliseconds: 1000),
@@ -45,6 +53,73 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     _imageController.dispose();
     _textController.dispose();
     super.dispose();
+  }
+
+  void navigateUser() async {
+    await Future.delayed(const Duration(seconds: 2)); // Show splash briefly
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+      );
+      return;
+    }
+
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (!snapshot.exists) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginPage()),
+        );
+        return;
+      }
+
+      String role = snapshot.get('role');
+      String status = snapshot.get('status');
+
+      if (status == "Inactive") {
+        await FirebaseAuth.instance.signOut();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginPage()),
+        );
+        return;
+      }
+
+      if (role == "Admin") {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => AdminDash()),
+        );
+      } else if (role == "User") {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => VoterNavBar()),
+        );
+      } else if (role == "Officer") {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => Officer()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginPage()),
+        );
+      }
+    } catch (e) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+      );
+    }
   }
 
   @override
