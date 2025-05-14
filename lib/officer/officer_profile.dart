@@ -178,11 +178,6 @@ class _ProfileState extends State<Profile> {
   }
 }
 
-const TextStyle _labelStyle = TextStyle(
-  fontSize: 16,
-  color: Colors.black87,
-  fontWeight: FontWeight.w500,
-);
 
 const TextStyle _valueStyle = TextStyle(
   fontSize: 16,
