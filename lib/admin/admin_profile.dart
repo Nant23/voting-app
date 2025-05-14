@@ -110,13 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(height: 20),
                     _buildInfoLabel('Country', userData?['country']),
-<<<<<<< HEAD
-                    const SizedBox(height: 15),
                     // _buildInfoLabel('ID', userData?['id']),
-                    // const SizedBox(height: 15),
-=======
-                    // _buildInfoLabel('ID', userData?['id']),
->>>>>>> main
                     _buildInfoLabel('User Type', userData?['role']),
                     const SizedBox(height: 40),
                     Row(
@@ -167,23 +161,12 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildInfoLabel(String label, dynamic value) {
-<<<<<<< HEAD
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('$label', style: _labelStyle),
-        const SizedBox(width: 10),
-        Text(value?.toString() ?? 'N/A', style: _valueStyle),
-        const SizedBox(height: 10),
-      ],
-=======
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Text(
         '$label: ${value?.toString() ?? 'N/A'}',
         style: _valueStyle,
       ),
->>>>>>> main
     );
   }
 }
