@@ -1,10 +1,11 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../components/my_textfield.dart';
 import '../dialogs.dart';
 import '../officer/officer_nav.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateElection extends StatefulWidget {
   final int selectedIndex;
@@ -25,7 +26,6 @@ class _CreateElectionState extends State<CreateElection> {
 
   final TextEditingController electionNameController = TextEditingController();
 
-  // List to store dynamically added options
   List<Map<String, dynamic>> options = [
     {'controller': TextEditingController(), 'isSelected': false},
     {'controller': TextEditingController(), 'isSelected': false},
@@ -36,20 +36,19 @@ class _CreateElectionState extends State<CreateElection> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-  title: Text('Create Election'),
-  actions: [
-    Padding(
-      padding: const EdgeInsets.only(right: 12.0),
-      child: Image.network(
-        "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
-        height: 60, // Adjust size as needed
-        width: 60,
-        fit: BoxFit.contain,
+        title: const Text('Create Election'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: Image.network(
+              "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+              height: 60,
+              width: 60,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ],
       ),
-    ),
-  ],
-),
-
       backgroundColor: const Color(0xFFBED2EE),
       body: SingleChildScrollView(
         child: SafeArea(
@@ -61,16 +60,12 @@ class _CreateElectionState extends State<CreateElection> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 20),
-
                   MyTextfield(
                     controller: electionNameController,
                     hintText: 'Election Name',
                     obscureText: false,
                   ),
-
                   const SizedBox(height: 20),
-
-                  // Build dynamic option rows
                   Column(
                     children: options.asMap().entries.map((entry) {
                       int index = entry.key;
@@ -82,15 +77,11 @@ class _CreateElectionState extends State<CreateElection> {
                       );
                     }).toList(),
                   ),
-
-                  // Plus icon button to add new options
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.start, // Adjust alignment
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(
-                            left: 6), // Move it slightly left
+                        padding: const EdgeInsets.only(left: 6),
                         child: FloatingActionButton(
                           onPressed: () {
                             setState(() {
@@ -107,12 +98,11 @@ class _CreateElectionState extends State<CreateElection> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 30),
-
                   ElevatedButton(
                     onPressed: () async {
                       String mainQuestion = electionNameController.text.trim();
+                      final uid = FirebaseAuth.instance.currentUser?.uid;
 
                       if (mainQuestion.isEmpty) {
                         CustomDialog.showDialogBox(
@@ -123,16 +113,26 @@ class _CreateElectionState extends State<CreateElection> {
                         return;
                       }
 
+                      if (uid == null) {
+                        CustomDialog.showDialogBox(
+                          context,
+                          title: "Error",
+                          message: "User not logged in.",
+                        );
+                        return;
+                      }
+
                       final ongoing = await FirebaseFirestore.instance
                           .collection('questions')
                           .where('status', isEqualTo: 'Ongoing')
+                          .where('officer_uid', isEqualTo: uid)
                           .get();
 
                       if (ongoing.docs.isNotEmpty) {
                         CustomDialog.showDialogBox(
                           context,
                           title: "Election Exists",
-                          message: "There is already an ongoing election.",
+                          message: "You already have an ongoing election.",
                         );
                         return;
                       }
@@ -151,29 +151,18 @@ class _CreateElectionState extends State<CreateElection> {
                         return;
                       }
 
-                      bool success = await storeQuestionData(context, optionTexts, mainQuestion);
+                      bool success = await storeQuestionData(
+                          context, optionTexts, mainQuestion, uid);
 
                       if (success) {
-                        // Clear the text fields
                         electionNameController.clear();
                         for (var option in options) {
                           option['controller'].clear();
                           option['isSelected'] = false;
                         }
-
-                        // Optional: reset to 3 default options if needed
-                        // setState(() {
-                        //   options = List.generate(3, (_) => {
-                        //     'controller': TextEditingController(),
-                        //     'isSelected': false,
-                        //   });
-                        // });
-                        
-                        setState(() {}); // Refresh the UI
+                        setState(() {});
                       }
                     },
-
-
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF46639B),
                       padding: const EdgeInsets.symmetric(
@@ -206,7 +195,6 @@ class _CreateElectionState extends State<CreateElection> {
     );
   }
 
-  // Build each row dynamically
   Widget buildOptionRow(int index) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -244,14 +232,21 @@ class _CreateElectionState extends State<CreateElection> {
   }
 }
 
+
 //backend
 // This function will store the questions along with options in database
 Future<bool> storeQuestionData(
-  BuildContext context, List<String> questionsArray, String mainQuestion) async {
+  BuildContext context,
+  List<String> questionsArray,
+  String mainQuestion,
+  String uid,
+) async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final CollectionReference questionsRef = firestore.collection('questions');
+  final CollectionReference usersRef = firestore.collection('users');
 
   try {
+    // Get the latest election ID
     QuerySnapshot snapshot =
         await questionsRef.orderBy('id', descending: true).limit(1).get();
     int nextId = 1;
@@ -260,19 +255,31 @@ Future<bool> storeQuestionData(
       nextId = lastId + 1;
     }
 
+    // Fetch officer's name using uid
+    DocumentSnapshot userDoc = await usersRef.doc(uid).get();
+    String officerName = '';
+    if (userDoc.exists) {
+      officerName = userDoc.get('name') ?? '';
+    }
+
+    // Build election data
     Map<String, dynamic> data = {
       'id': nextId,
       'question': mainQuestion,
       'status': 'Ongoing',
       'publish_status': 'Unpublished',
       'votedUsers': <String>[],
+      'officer_uid': uid,
+      'officer_name': officerName, // include officer's name
     };
 
+    // Add options and vote counters
     for (int i = 0; i < questionsArray.length; i++) {
       data['question ${i + 1}'] = questionsArray[i];
       data['q${i + 1}_votes'] = 0;
     }
 
+    // Save to Firestore
     await questionsRef.add(data);
     print("Election saved successfully.");
 
@@ -287,3 +294,5 @@ Future<bool> storeQuestionData(
     return false;
   }
 }
+
+
