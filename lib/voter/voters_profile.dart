@@ -153,15 +153,6 @@ class _ProfileState extends State<Profile> {
                 ),
         ),
       ),
-      // Uncomment and implement if you use a custom navbar
-      // bottomNavigationBar: NavbarOff(
-      //   currentIndex: _selectedIndex,
-      //   onTap: (index) {
-      //     setState(() {
-      //       _selectedIndex = index;
-      //     });
-      //   },
-      // ),
     );
   }
 
@@ -176,11 +167,6 @@ class _ProfileState extends State<Profile> {
   }
 }
 
-const TextStyle _labelStyle = TextStyle(
-  fontSize: 16,
-  color: Colors.black87,
-  fontWeight: FontWeight.w500,
-);
 
 const TextStyle _valueStyle = TextStyle(
   fontSize: 16,

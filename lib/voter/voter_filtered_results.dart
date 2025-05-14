@@ -173,7 +173,7 @@ class _VoterStatisticsState extends State<VoterStatistics> {
                       final barGroups =
                           sortedAgeEntries.asMap().entries.map((entry) {
                         final index = entry.key;
-                        final label = entry.value.key;
+                        //final label = entry.value.key;
                         final count = entry.value.value;
                         return BarChartGroupData(
                           x: index,
