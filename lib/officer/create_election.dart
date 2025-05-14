@@ -35,7 +35,21 @@ class _CreateElectionState extends State<CreateElection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Create Election')),
+      appBar: AppBar(
+  title: Text('Create Election'),
+  actions: [
+    Padding(
+      padding: const EdgeInsets.only(right: 12.0),
+      child: Image.network(
+        "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+        height: 60, // Adjust size as needed
+        width: 60,
+        fit: BoxFit.contain,
+      ),
+    ),
+  ],
+),
+
       backgroundColor: const Color(0xFFBED2EE),
       body: SingleChildScrollView(
         child: SafeArea(
