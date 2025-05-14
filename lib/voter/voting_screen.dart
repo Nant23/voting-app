@@ -17,9 +17,19 @@ class _VoteScreenState extends State<VoteScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFBED2EE),
       appBar: AppBar(
-        title: const Text("Vote", style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xFF46639B),
+  title: Text('Vote'),
+  actions: [
+    Padding(
+      padding: const EdgeInsets.only(right: 12.0),
+      child: Image.network(
+        "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+        height: 60, // Adjust size as needed
+        width: 60,
+        fit: BoxFit.contain,
       ),
+    ),
+  ],
+),
       body: FutureBuilder<QuerySnapshot>(
         future: firestore
             .collection('questions')
