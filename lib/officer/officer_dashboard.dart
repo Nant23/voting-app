@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'officer_nav.dart';
 import 'create_election.dart';
 import 'view_result_off.dart';
-//import 'package:voting_app/dialogs.dart';
 
 class Officer extends StatefulWidget {
   final int selectedIndex;
@@ -27,24 +26,33 @@ class _OfficerState extends State<Officer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Officer Dashboard'),
+  title: Text('Officer Dashboard'),
+  actions: [
+    Padding(
+      padding: const EdgeInsets.only(right: 12.0),
+      child: Image.network(
+        "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+        height: 60, // Adjust size as needed
+        width: 60,
+        fit: BoxFit.contain,
       ),
+    ),
+  ],
+),
+
       backgroundColor: const Color(0xFFBED2EE),
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Create Election Button
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => CreateElection(),
-                    ),
+                    MaterialPageRoute(builder: (context) => CreateElection()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -58,7 +66,7 @@ class _OfficerState extends State<Officer> {
                   "Create Election",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16, // match admin dashboard
+                    fontSize: 16,
                   ),
                 ),
               ),
@@ -73,8 +81,7 @@ class _OfficerState extends State<Officer> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text('Confirm Action'),
-                        content: Text(
-                            'Are you sure you want to close the ongoing election?'),
+                        content: Text('Are you sure you want to close the ongoing election?'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(false),
@@ -104,7 +111,7 @@ class _OfficerState extends State<Officer> {
                   "Close Ongoing Election",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16, // match admin dashboard
+                    fontSize: 16,
                   ),
                 ),
               ),
@@ -116,9 +123,7 @@ class _OfficerState extends State<Officer> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => ViewResult(),
-                    ),
+                    MaterialPageRoute(builder: (context) => ViewResult()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -132,8 +137,20 @@ class _OfficerState extends State<Officer> {
                   "View Result",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 16, // match admin dashboard
+                    fontSize: 16,
                   ),
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              // Image with 50% opacity
+              Opacity(
+                opacity: 0.5,
+                child: Image.network(
+                  "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+                  height: 300,
+                  fit: BoxFit.contain,
                 ),
               ),
             ],
