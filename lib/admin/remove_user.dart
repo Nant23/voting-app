@@ -29,9 +29,19 @@ class _RemoveUserState extends State<RemoveUser> {
     return Scaffold(
       backgroundColor: const Color(0xFFBED2EE),
       appBar: AppBar(
-        title: const Text('Remove User'),
-        backgroundColor: Colors.white,
+  title: Text('Remove User'),
+  actions: [
+    Padding(
+      padding: const EdgeInsets.only(right: 12.0),
+      child: Image.network(
+        "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+        height: 60, // Adjust size as needed
+        width: 60,
+        fit: BoxFit.contain,
       ),
+    ),
+  ],
+),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 50),
