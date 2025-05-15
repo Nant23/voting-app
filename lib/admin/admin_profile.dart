@@ -41,14 +41,20 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Profile',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
-        elevation: 1,
+  title: Text('Profile'),
+  actions: [
+    Padding(
+      padding: const EdgeInsets.only(right: 12.0),
+      child: Image.network(
+        "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+        height: 60, // Adjust size as needed
+        width: 60,
+        fit: BoxFit.contain,
       ),
+    ),
+  ],
+),
+
       backgroundColor: const Color(0xFFBED2EE),
       body: SafeArea(
         child: Padding(
@@ -110,13 +116,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(height: 20),
                     _buildInfoLabel('Country', userData?['country']),
-<<<<<<< HEAD
-                    const SizedBox(height: 15),
                     // _buildInfoLabel('ID', userData?['id']),
-                    // const SizedBox(height: 15),
-=======
-                    // _buildInfoLabel('ID', userData?['id']),
->>>>>>> main
                     _buildInfoLabel('User Type', userData?['role']),
                     const SizedBox(height: 40),
                     Row(
@@ -138,9 +138,47 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: const Text('Log Out'),
                         ),
                         ElevatedButton(
-                          onPressed: () {
-                            // TODO: Implement delete account logic
+                          onPressed: () async {
+                            bool? confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Confirm Deletion'),
+                                content: const Text('Are you sure you want to delete your account? This action cannot be undone.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, false),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                    ),
+                                    onPressed: () => Navigator.pop(context, true),
+                                    child: const Text('Delete'),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                            if (confirm == true) {
+                              try {
+                                final user = FirebaseAuth.instance.currentUser;
+                                if (user != null) {
+                                  await FirebaseFirestore.instance.collection('users').doc(user.uid).delete(); // delete Firestore data
+                                  await user.delete(); // delete Firebase Auth account
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => LoginPage()),
+                                  );
+                                }
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Error deleting account: $e')),
+                                );
+                              }
+                            }
                           },
+
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,
                           ),
@@ -167,32 +205,16 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildInfoLabel(String label, dynamic value) {
-<<<<<<< HEAD
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('$label', style: _labelStyle),
-        const SizedBox(width: 10),
-        Text(value?.toString() ?? 'N/A', style: _valueStyle),
-        const SizedBox(height: 10),
-      ],
-=======
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Text(
         '$label: ${value?.toString() ?? 'N/A'}',
         style: _valueStyle,
       ),
->>>>>>> main
     );
   }
 }
 
-const TextStyle _labelStyle = TextStyle(
-  fontSize: 16,
-  color: Colors.black87,
-  fontWeight: FontWeight.w500,
-);
 
 const TextStyle _valueStyle = TextStyle(
   fontSize: 16,

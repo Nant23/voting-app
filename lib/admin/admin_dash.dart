@@ -5,10 +5,10 @@ import 'package:voting_app/admin/remove_user.dart';
 import 'package:voting_app/admin/admin_nav.dart';
 import 'package:voting_app/admin/officer_reg.dart';
 
-class AdminDash extends StatefulWidget { 
+class AdminDash extends StatefulWidget {
   final int selectedIndex;
 
-  const AdminDash({super.key, this.selectedIndex = 0}); //default to 0
+  const AdminDash({super.key, this.selectedIndex = 0});
 
   @override
   State<AdminDash> createState() => _AdminDashState();
@@ -27,13 +27,25 @@ class _AdminDashState extends State<AdminDash> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFBED2EE),
-      appBar: AppBar(title: Text('Admin')),
+      appBar: AppBar(
+        title: Text('Admin'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: Image.network(
+              "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+              height: 60,
+              width: 60,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ],
+      ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // Center vertically
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Officer Registration Button
               ElevatedButton(
@@ -54,7 +66,7 @@ class _AdminDashState extends State<AdminDash> {
               ),
               SizedBox(height: 20),
 
-              // Voters Registration Button
+              // Remove Users Button
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF46639B),
@@ -73,7 +85,7 @@ class _AdminDashState extends State<AdminDash> {
               ),
               SizedBox(height: 20),
 
-              // View Result Button
+              // Past Election Button
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF46639B),
@@ -81,7 +93,7 @@ class _AdminDashState extends State<AdminDash> {
                       borderRadius: BorderRadius.circular(18)),
                   minimumSize: Size(double.infinity, 50),
                 ),
-                onPressed: () { 
+                onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => AdminStatistics()),
@@ -92,7 +104,7 @@ class _AdminDashState extends State<AdminDash> {
               ),
               SizedBox(height: 20),
 
-              // Election Button
+              // Report Button
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF46639B),
@@ -100,7 +112,6 @@ class _AdminDashState extends State<AdminDash> {
                       borderRadius: BorderRadius.circular(18)),
                   minimumSize: Size(double.infinity, 50),
                 ),
-                
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -110,17 +121,26 @@ class _AdminDashState extends State<AdminDash> {
                 child: Text('Report',
                     style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 40),
+
+              // Bottom faded logo
+              Opacity(
+                opacity: 0.5,
+                child: Image.network(
+                  "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+                  height: 300,
+                  fit: BoxFit.contain,
+                ),
+              ),
             ],
           ),
         ),
       ),
-      // Nav Bar
       bottomNavigationBar: NavBar(
         currentIndex: _selectedIndex,
         onTap: (index) {
           setState(() {
-            _selectedIndex = index; // Update the selected index
+            _selectedIndex = index;
           });
         },
       ),
