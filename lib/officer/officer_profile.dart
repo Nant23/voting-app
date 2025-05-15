@@ -40,15 +40,17 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 12.0),
             child: Image.network(
               "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
-              height: 60, // Adjust size as needed
+              height: 60,
               width: 60,
               fit: BoxFit.contain,
             ),
@@ -75,27 +77,23 @@ class _ProfileState extends State<Profile> {
                           const SizedBox(height: 10),
                           ElevatedButton.icon(
                             onPressed: () async {
-                              final result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EditProfilePage(
-                                    currentName: userData?['name'] ?? '',
-                                    currentEmail: userData?['email'] ?? '',
-                                    currentCountry: userData?['country'] ?? '',
-                                    uid: FirebaseAuth
-                                            .instance.currentUser?.uid ??
-                                        '',
+                              if (uid != null) {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        EditProfilePage(uid: uid),
                                   ),
-                                ),
-                              );
+                                );
 
-                              // If data was returned, update the local state
-                              if (result != null && mounted) {
-                                setState(() {
-                                  userData?['name'] = result['name'];
-                                  userData?['email'] = result['email'];
-                                  userData?['country'] = result['country'];
-                                });
+                                // If profile was updated
+                                if (result != null && mounted) {
+                                  setState(() {
+                                    userData?['name'] = result['name'];
+                                    userData?['email'] = result['email'];
+                                    userData?['country'] = result['country'];
+                                  });
+                                }
                               }
                             },
                             icon: const Icon(Icons.edit, size: 18),
@@ -188,9 +186,8 @@ class _ProfileState extends State<Profile> {
                                   await FirebaseFirestore.instance
                                       .collection('users')
                                       .doc(user.uid)
-                                      .delete(); // delete Firestore data
-                                  await user
-                                      .delete(); // delete Firebase Auth account
+                                      .delete();
+                                  await user.delete();
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
@@ -200,8 +197,8 @@ class _ProfileState extends State<Profile> {
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                      content:
-                                          Text('Error deleting account: $e')),
+                                    content: Text('Error deleting account: $e'),
+                                  ),
                                 );
                               }
                             }

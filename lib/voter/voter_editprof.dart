@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class EditProfilePage extends StatefulWidget {
-  final String uid;
+class VotEditProfile extends StatefulWidget {
+  final String uid; // Firestore document ID
 
-  EditProfilePage({required this.uid});
+  VotEditProfile({required this.uid});
 
   @override
-  _EditProfilePageState createState() => _EditProfilePageState();
+  _VotEditProfileState createState() => _VotEditProfileState();
 }
 
-class _EditProfilePageState extends State<EditProfilePage> {
+class _VotEditProfileState extends State<VotEditProfile> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final countryController = TextEditingController();
@@ -35,7 +35,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           .collection('users')
           .doc(widget.uid)
           .update({
-        'name': updatedName,
+        'userName': updatedName,
         'email': updatedEmail,
         'country': updatedCountry,
       });
@@ -45,7 +45,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       );
 
       Navigator.pop(context, {
-        'name': updatedName,
+        'userName': updatedName,
         'email': updatedEmail,
         'country': updatedCountry,
       });
@@ -78,7 +78,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
           // Initialize controllers once with data from Firestore
           if (!_hasInitialized) {
-            nameController.text = data['name'] ?? '';
+            nameController.text = data['userName'] ?? '';
             emailController.text = data['email'] ?? '';
             countryController.text = data['country'] ?? '';
             _hasInitialized = true;
