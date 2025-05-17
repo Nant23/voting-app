@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:voting_app/officer/edit_profile.dart';
 import 'package:voting_app/officer/officer_nav.dart';
 import 'package:voting_app/login.dart';
 
@@ -39,22 +40,23 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+
     return Scaffold(
       appBar: AppBar(
-  title: Text('Profile'),
-  actions: [
-    Padding(
-      padding: const EdgeInsets.only(right: 12.0),
-      child: Image.network(
-        "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
-        height: 60, // Adjust size as needed
-        width: 60,
-        fit: BoxFit.contain,
+        title: const Text('Profile'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: Image.network(
+              "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+              height: 60,
+              width: 60,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ],
       ),
-    ),
-  ],
-),
-
       backgroundColor: const Color(0xFFBED2EE),
       body: SafeArea(
         child: Padding(
@@ -74,12 +76,25 @@ class _ProfileState extends State<Profile> {
                           ),
                           const SizedBox(height: 10),
                           ElevatedButton.icon(
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Edit Profile clicked"),
-                                ),
-                              );
+                            onPressed: () async {
+                              if (uid != null) {
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        EditProfilePage(uid: uid),
+                                  ),
+                                );
+
+                                // If profile was updated
+                                if (result != null && mounted) {
+                                  setState(() {
+                                    userData?['name'] = result['name'];
+                                    userData?['email'] = result['email'];
+                                    userData?['country'] = result['country'];
+                                  });
+                                }
+                              }
                             },
                             icon: const Icon(Icons.edit, size: 18),
                             label: const Text("Edit Profile"),
@@ -144,17 +159,20 @@ class _ProfileState extends State<Profile> {
                               context: context,
                               builder: (context) => AlertDialog(
                                 title: const Text('Confirm Deletion'),
-                                content: const Text('Are you sure you want to delete your account? This action cannot be undone.'),
+                                content: const Text(
+                                    'Are you sure you want to delete your account? This action cannot be undone.'),
                                 actions: [
                                   TextButton(
-                                    onPressed: () => Navigator.pop(context, false),
+                                    onPressed: () =>
+                                        Navigator.pop(context, false),
                                     child: const Text('Cancel'),
                                   ),
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red,
                                     ),
-                                    onPressed: () => Navigator.pop(context, true),
+                                    onPressed: () =>
+                                        Navigator.pop(context, true),
                                     child: const Text('Delete'),
                                   ),
                                 ],
@@ -165,21 +183,26 @@ class _ProfileState extends State<Profile> {
                               try {
                                 final user = FirebaseAuth.instance.currentUser;
                                 if (user != null) {
-                                  await FirebaseFirestore.instance.collection('users').doc(user.uid).delete(); // delete Firestore data
-                                  await user.delete(); // delete Firebase Auth account
+                                  await FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(user.uid)
+                                      .delete();
+                                  await user.delete();
                                   Navigator.pushReplacement(
                                     context,
-                                    MaterialPageRoute(builder: (context) => LoginPage()),
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginPage()),
                                   );
                                 }
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Error deleting account: $e')),
+                                  SnackBar(
+                                    content: Text('Error deleting account: $e'),
+                                  ),
                                 );
                               }
                             }
                           },
-
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,
                           ),
@@ -215,7 +238,6 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
-
 
 const TextStyle _valueStyle = TextStyle(
   fontSize: 16,
