@@ -50,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.only(right: 12.0),
             child: Image.network(
               "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
-              height: 60, // Adjust size as needed
+              height: 60,
               width: 60,
               fit: BoxFit.contain,
             ),
@@ -137,13 +137,34 @@ class _ProfilePageState extends State<ProfilePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         OutlinedButton(
-                          onPressed: () {
-                            FirebaseAuth.instance.signOut();
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginPage()),
+                          onPressed: () async {
+                            bool? confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Confirm Logout'),
+                                content: const Text('Are you sure you want to log out?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, false),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () => Navigator.pop(context, true),
+                                    child: const Text('Log Out'),
+                                  ),
+                                ],
+                              ),
                             );
+
+                            if (confirm == true) {
+                              FirebaseAuth.instance.signOut();
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoginPage(),
+                                ),
+                              );
+                            }
                           },
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.red,
