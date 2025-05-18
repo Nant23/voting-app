@@ -13,6 +13,7 @@ class VotersInfoPage extends StatefulWidget {
 
 class _VotersInfoPageState extends State<VotersInfoPage> {
   late int _selectedIndex;
+  int? _longPressedIndex;
 
   @override
   void initState() {
@@ -20,10 +21,53 @@ class _VotersInfoPageState extends State<VotersInfoPage> {
     _selectedIndex = widget.selectedIndex;
   }
 
+  void _confirmAndRemove(DocumentSnapshot voterDoc) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Confirm Removal"),
+        content: Text("Are you sure you want to remove this voter?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text("Yes, Remove"),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      await FirebaseFirestore.instance
+          .collection('voter_registration')
+          .doc(voterDoc.id)
+          .delete();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Voter removed.")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Registered Voters')),
+      appBar: AppBar(
+        title: Text('Registered Voters'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: Image.network(
+              "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+              height: 60,
+              width: 60,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ],
+      ),
       backgroundColor: const Color(0xFFBED2EE),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -49,34 +93,54 @@ class _VotersInfoPageState extends State<VotersInfoPage> {
             padding: EdgeInsets.all(12),
             itemCount: voters.length,
             itemBuilder: (context, index) {
-              final data = voters[index].data() as Map<String, dynamic>;
+              final voterDoc = voters[index];
+              final data = voterDoc.data() as Map<String, dynamic>;
 
-              return Card(
-                elevation: 4,
-                margin: EdgeInsets.only(bottom: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        data['Name'] ?? 'No name',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+              return GestureDetector(
+                onLongPress: () {
+                  setState(() {
+                    _longPressedIndex = index;
+                  });
+                },
+                child: Card(
+                  elevation: 4,
+                  margin: EdgeInsets.only(bottom: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          data['Name'] ?? 'No name',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 8),
-                      Text('Email: ${data['Email'] ?? 'N/A'}'),
-                      Text('Age: ${data['Age'] ?? 'N/A'}'),
-                      Text('Gender: ${data['Gender'] ?? 'N/A'}'),
-                      Text('Phone: ${data['Phone Number'] ?? 'N/A'}'),
-                      Text('Country: ${data['Country'] ?? 'N/A'}'),
-                      Text('ID: ${data['id'] ?? 'N/A'}'),
-                    ],
+                        SizedBox(height: 8),
+                        Text('Email: ${data['Email'] ?? 'N/A'}'),
+                        Text('Age: ${data['Age'] ?? 'N/A'}'),
+                        Text('Gender: ${data['Gender'] ?? 'N/A'}'),
+                        Text('Phone: ${data['Phone Number'] ?? 'N/A'}'),
+                        Text('Country: ${data['Country'] ?? 'N/A'}'),
+                        Text('ID: ${data['id'] ?? 'N/A'}'),
+                        if (_longPressedIndex == index)
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton.icon(
+                              onPressed: () => _confirmAndRemove(voterDoc),
+                              icon: Icon(Icons.delete, color: Colors.red),
+                              label: Text(
+                                "Remove",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -95,3 +159,4 @@ class _VotersInfoPageState extends State<VotersInfoPage> {
     );
   }
 }
+

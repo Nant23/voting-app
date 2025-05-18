@@ -5,7 +5,6 @@ import 'package:voting_app/voter/voting_screen.dart';
 import 'voter_filtered_results.dart';
 import '../dialogs.dart';
 import '../utilities.dart';
-//import 'voters_nav_bar.dart';
 
 class HomeDashboard extends StatefulWidget {
   const HomeDashboard({super.key});
@@ -40,50 +39,62 @@ class _HomeDashboardState extends State<HomeDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hi, $userName!'),
+  title: Text('Hi, $userName!'),
+  actions: [
+    Padding(
+      padding: const EdgeInsets.only(right: 12.0),
+      child: Image.network(
+        "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+        height: 60, // Adjust size as needed
+        width: 60,
+        fit: BoxFit.contain,
       ),
+    ),
+  ],
+),
       backgroundColor: const Color(0xFFBED2EE),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 40),
-            const Spacer(),
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _dashboardButton('Vote', 0xFF46639B, () async {
-                    final currentUser = FirebaseAuth.instance.currentUser;
-                    bool isRegistered = await isUserRegistered(currentUser!.uid);
-                    if (isRegistered) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const VoteScreen()),
-                      );
-                    } else {
-                      CustomDialog.showDialogBox(
-                        context,
-                        title: "Not registered",
-                        message: "You must be a verified user to vote",
-                      );
-                    }
-                  }),
-                  const SizedBox(height: 24),
-                  _dashboardButton('View result', 0xFF46639B, () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const VoterStatistics()),
-                    );
-                  }),
-                ],
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _dashboardButton('Vote', 0xFF46639B, () async {
+                final currentUser = FirebaseAuth.instance.currentUser;
+                bool isRegistered = await isUserRegistered(currentUser!.uid);
+                if (isRegistered) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const VoteScreen()),
+                  );
+                } else {
+                  CustomDialog.showDialogBox(
+                    context,
+                    title: "Not registered",
+                    message: "You must be a verified user to vote",
+                  );
+                }
+              }),
+              const SizedBox(height: 24),
+              _dashboardButton('View result', 0xFF46639B, () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const VoterStatistics()),
+                );
+              }),
+              const SizedBox(height: 40),
+
+              // Image with 50% opacity
+              Opacity(
+                opacity: 0.5,
+                child: Image.network(
+                  "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+                  height: 300,
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
-            const Spacer(),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -98,7 +109,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Color(color),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
           child: Text(
@@ -112,4 +123,3 @@ class _HomeDashboardState extends State<HomeDashboard> {
         ),
       );
 }
-

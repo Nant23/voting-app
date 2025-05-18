@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ElectionResultsPage extends StatefulWidget {
+  const ElectionResultsPage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _ElectionResultsPageState createState() => _ElectionResultsPageState();
 }
 
@@ -14,7 +17,21 @@ class _ElectionResultsPageState extends State<ElectionResultsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFBED2EE),
-      appBar: AppBar(title: Text("Election Viewer")),
+      appBar: AppBar(
+  title: Text('Election Viewer'),
+  actions: [
+    Padding(
+      padding: const EdgeInsets.only(right: 12.0),
+      child: Image.network(
+        "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+        height: 60, // Adjust size as needed
+        width: 60,
+        fit: BoxFit.contain,
+      ),
+    ),
+  ],
+),
+
       body: Column(
         children: [
           Padding(
