@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:voting_app/officer/edit_election.dart';
 import 'officer_nav.dart';
 import 'details_off.dart';
@@ -14,6 +15,7 @@ class ViewResult extends StatefulWidget {
 
 class _ViewResultState extends State<ViewResult> {
   int _selectedIndex = 0;
+  final currentUser = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -46,7 +48,7 @@ class _ViewResultState extends State<ViewResult> {
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('questions')
-                  .where('status', isEqualTo: 'Ongoing')
+                  .where('officer_uid', isEqualTo: currentUser?.uid)
                   .limit(1)
                   .snapshots(),
               builder: (context, snapshot) {
@@ -56,7 +58,8 @@ class _ViewResultState extends State<ViewResult> {
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return const Center(
-                      child: Text('No vote data available.'));
+                    child: Text("You haven't created an election yet."),
+                  );
                 }
 
                 DocumentSnapshot doc = snapshot.data!.docs.first;
@@ -211,7 +214,7 @@ class _ViewResultState extends State<ViewResult> {
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                   Navigator.push(
+                                    Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => EditElection(documentId: doc.id),
@@ -236,7 +239,6 @@ class _ViewResultState extends State<ViewResult> {
                                 ),
                               ],
                             );
-
                           }
                         },
                       ),
