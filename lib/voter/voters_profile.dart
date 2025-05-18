@@ -85,7 +85,6 @@ class _ProfileState extends State<Profile> {
                                   ),
                                 );
 
-                                // If profile was updated
                                 if (result != null && mounted) {
                                   setState(() {
                                     userData?['userName'] = result['userName'];
@@ -135,6 +134,7 @@ class _ProfileState extends State<Profile> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        // Log Out Button
                         OutlinedButton(
                           onPressed: () async {
                             bool? confirm = await showDialog<bool>(
@@ -173,6 +173,8 @@ class _ProfileState extends State<Profile> {
                           ),
                           child: const Text('Log Out'),
                         ),
+
+                        // Delete Account Button
                         ElevatedButton(
                           onPressed: () async {
                             bool? confirm = await showDialog<bool>(
@@ -188,11 +190,11 @@ class _ProfileState extends State<Profile> {
                                     child: const Text('Cancel'),
                                   ),
                                   ElevatedButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, true),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red,
                                     ),
-                                    onPressed: () =>
-                                        Navigator.pop(context, true),
                                     child: const Text('Delete'),
                                   ),
                                 ],

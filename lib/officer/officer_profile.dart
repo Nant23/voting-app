@@ -138,20 +138,24 @@ class _ProfileState extends State<Profile> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        // Log Out
                         OutlinedButton(
                           onPressed: () async {
                             bool? confirm = await showDialog<bool>(
                               context: context,
                               builder: (context) => AlertDialog(
                                 title: const Text('Confirm Logout'),
-                                content: const Text('Are you sure you want to log out?'),
+                                content: const Text(
+                                    'Are you sure you want to log out?'),
                                 actions: [
                                   TextButton(
-                                    onPressed: () => Navigator.pop(context, false),
+                                    onPressed: () =>
+                                        Navigator.pop(context, false),
                                     child: const Text('Cancel'),
                                   ),
                                   ElevatedButton(
-                                    onPressed: () => Navigator.pop(context, true),
+                                    onPressed: () =>
+                                        Navigator.pop(context, true),
                                     child: const Text('Log Out'),
                                   ),
                                 ],
@@ -162,7 +166,8 @@ class _ProfileState extends State<Profile> {
                               FirebaseAuth.instance.signOut();
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => LoginPage()),
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()),
                               );
                             }
                           },
@@ -172,6 +177,8 @@ class _ProfileState extends State<Profile> {
                           ),
                           child: const Text('Log Out'),
                         ),
+
+                        // Delete Account
                         ElevatedButton(
                           onPressed: () async {
                             bool? confirm = await showDialog<bool>(
@@ -179,7 +186,8 @@ class _ProfileState extends State<Profile> {
                               builder: (context) => AlertDialog(
                                 title: const Text('Confirm Deletion'),
                                 content: const Text(
-                                    'Are you sure you want to delete your account? This action cannot be undone.'),
+                                  'Are you sure you want to delete your account? This action cannot be undone.',
+                                ),
                                 actions: [
                                   TextButton(
                                     onPressed: () =>

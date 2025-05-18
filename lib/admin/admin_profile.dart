@@ -28,8 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> fetchUserData() async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid != null) {
-      DocumentSnapshot doc =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      DocumentSnapshot doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
       if (doc.exists) {
         setState(() {
           userData = doc.data() as Map<String, dynamic>;
@@ -81,12 +80,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                 final result = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        AdEditProfile(uid: uid),
+                                    builder: (context) => AdEditProfile(uid: uid),
                                   ),
                                 );
 
-                                // If profile was updated
                                 if (result != null && mounted) {
                                   setState(() {
                                     userData?['name'] = result['name'];
@@ -130,7 +127,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(height: 20),
                     _buildInfoLabel('Country', userData?['country']),
-                    // _buildInfoLabel('ID', userData?['id']),
                     _buildInfoLabel('User Type', userData?['role']),
                     const SizedBox(height: 40),
                     Row(
@@ -160,9 +156,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               FirebaseAuth.instance.signOut();
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoginPage(),
-                                ),
+                                MaterialPageRoute(builder: (context) => LoginPage()),
                               );
                             }
                           },
@@ -178,20 +172,17 @@ class _ProfilePageState extends State<ProfilePage> {
                               context: context,
                               builder: (context) => AlertDialog(
                                 title: const Text('Confirm Deletion'),
-                                content: const Text(
-                                    'Are you sure you want to delete your account? This action cannot be undone.'),
+                                content: const Text('Are you sure you want to delete your account? This action cannot be undone.'),
                                 actions: [
                                   TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, false),
+                                    onPressed: () => Navigator.pop(context, false),
                                     child: const Text('Cancel'),
                                   ),
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red,
                                     ),
-                                    onPressed: () =>
-                                        Navigator.pop(context, true),
+                                    onPressed: () => Navigator.pop(context, true),
                                     child: const Text('Delete'),
                                   ),
                                 ],
@@ -205,20 +196,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                   await FirebaseFirestore.instance
                                       .collection('users')
                                       .doc(user.uid)
-                                      .delete(); // delete Firestore data
-                                  await user
-                                      .delete(); // delete Firebase Auth account
+                                      .delete(); // Firestore data
+                                  await user.delete(); // Auth account
                                   Navigator.pushReplacement(
                                     context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginPage()),
+                                    MaterialPageRoute(builder: (context) => LoginPage()),
                                   );
                                 }
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content:
-                                          Text('Error deleting account: $e')),
+                                  SnackBar(content: Text('Error deleting account: $e')),
                                 );
                               }
                             }
@@ -232,7 +219,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
         ),
