@@ -26,20 +26,19 @@ class _OfficerState extends State<Officer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-  title: Text('Officer Dashboard'),
-  actions: [
-    Padding(
-      padding: const EdgeInsets.only(right: 12.0),
-      child: Image.network(
-        "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
-        height: 60, // Adjust size as needed
-        width: 60,
-        fit: BoxFit.contain,
+        title: Text('Officer Dashboard'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: Image.network(
+              "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+              height: 60,
+              width: 60,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ],
       ),
-    ),
-  ],
-),
-
       backgroundColor: const Color(0xFFBED2EE),
       body: Center(
         child: SingleChildScrollView(
@@ -64,6 +63,32 @@ class _OfficerState extends State<Officer> {
                 ),
                 child: const Text(
                   "Create Election",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Edit Election Button
+              ElevatedButton(
+                onPressed: () {
+                  // TODO: Implement Edit Election functionality
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Edit Election clicked')),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF46639B),
+                  minimumSize: Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                ),
+                child: const Text(
+                  "Edit Election",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
