@@ -6,9 +6,7 @@ import 'admin_nav.dart';
 class AdminStatistics extends StatefulWidget {
   final int selectedIndex;
 
-  AdminStatistics({this.selectedIndex = 0});
-  //const AdminStatistics({super.key});
-
+  const AdminStatistics({super.key, this.selectedIndex = 0});
   @override
   State<AdminStatistics> createState() => _AdminStatisticsState();
 }
