@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:voting_app/components/my_textfield.dart';
 import 'package:voting_app/admin/admin_nav.dart';
 import 'package:voting_app/dialogs.dart';
+import 'package:email_validator/email_validator.dart';
 
 class OfficerReg extends StatefulWidget {
   const OfficerReg({Key? key}) : super(key: key);
@@ -36,19 +37,19 @@ class _OfficerRegState extends State<OfficerReg> {
     return Scaffold(
       backgroundColor: const Color(0xFFBED2EE),
       appBar: AppBar(
-  title: Text('Officer Registration'),
-  actions: [
-    Padding(
-      padding: const EdgeInsets.only(right: 12.0),
-      child: Image.network(
-        "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
-        height: 60, // Adjust size as needed
-        width: 60,
-        fit: BoxFit.contain,
+        title: Text('Officer Registration'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: Image.network(
+              "https://res.cloudinary.com/dmtsrrnid/image/upload/v1747203958/app_logo_vm9amj.png",
+              height: 60, // Adjust size as needed
+              width: 60,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ],
       ),
-    ),
-  ],
-),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -128,6 +129,32 @@ class _OfficerRegState extends State<OfficerReg> {
                         return;
                       }
 
+                      //email format validation
+                      if (!EmailValidator.validate(email)) {
+                        CustomDialog.showDialogBox(
+                          context,
+                          title: "Invalid Email",
+                          message: "Please enter a valid email address.",
+                        );
+                        return;
+                      }
+
+                      //allowed domains for officer registration
+                      List<String> allowedDomains = [
+                        'gmail.com',
+                        'outlook.com',
+                        'yahoo.com'
+                      ];
+                      String domain = email.split('@').last;
+                      if (!allowedDomains.contains(domain)) {
+                        CustomDialog.showDialogBox(
+                          context,
+                          title: "Unsupported Email Domain",
+                          message:
+                              "Only emails from ${allowedDomains.join(', ')} are allowed.",
+                        );
+                        return;
+                      }
                       //check password and confirm password
                       if (passwordController.text !=
                           confirmPassController.text) {
