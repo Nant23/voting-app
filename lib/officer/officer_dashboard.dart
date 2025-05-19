@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:voting_app/officer/edit_election.dart';
 import 'officer_nav.dart';
 import 'create_election.dart';
 import 'view_result_off.dart';
@@ -74,11 +76,35 @@ class _OfficerState extends State<Officer> {
 
               // Edit Election Button
               ElevatedButton(
-                onPressed: () {
-                  // TODO: Implement Edit Election functionality
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Edit Election clicked')),
-                  );
+                onPressed: () async {
+                  try {
+                    // Fetch the election created by the current officer (ongoing or latest)
+                    final currentUser = FirebaseAuth.instance.currentUser;
+                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+                        .collection('questions')
+                        .where('officer_uid', isEqualTo: currentUser?.uid)
+                        .limit(1)
+                        .get();
+
+                    if (querySnapshot.docs.isNotEmpty) {
+                      String documentId = querySnapshot.docs.first.id;
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditElection(documentId: documentId),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("No election found to edit.")),
+                      );
+                    }
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Error fetching election: $e")),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF46639B),
