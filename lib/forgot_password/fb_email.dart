@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:voting_app/components/my_textfield.dart';
-import 'package:voting_app/forgot_password/fp_otp.dart';
+//import 'package:voting_app/forgot_password/fp_otp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FpEmail extends StatefulWidget {
   const FpEmail({super.key});
@@ -57,43 +58,45 @@ class _FpEmailState extends State<FpEmail> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () async {
-                      String enteredEmail =
-                          emailController.text.trim().toLowerCase();
+                      String enteredEmail = emailController.text.trim().toLowerCase();
 
                       if (enteredEmail.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text("Please enter an email.")),
+                          const SnackBar(content: Text("Please enter an email.")),
                         );
                         return;
                       }
 
                       try {
-                        QuerySnapshot userQuery = await FirebaseFirestore
-                            .instance
+                        QuerySnapshot userQuery = await FirebaseFirestore.instance
                             .collection('users')
                             .where('email', isEqualTo: enteredEmail)
                             .get();
 
                         if (userQuery.docs.isNotEmpty) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const FpOtp()),
-                          );
+                          // ✅ Send password reset email using Firebase Auth
+                          try {
+                            await FirebaseAuth.instance.sendPasswordResetEmail(email: enteredEmail);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Password reset email sent.")),
+                            );
+
+                            // Optionally navigate back or to login screen
+                            Navigator.pop(context);
+                          } on FirebaseAuthException catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Error: ${e.message}")),
+                            );
+                          }
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content:
-                                    Text("Email not found in our records.")),
+                            const SnackBar(content: Text("Email not found in our records.")),
                           );
                         }
                       } catch (e) {
                         debugPrint("Firestore error: $e");
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content:
-                                  Text("An error occurred. Please try again.")),
+                          const SnackBar(content: Text("An error occurred. Please try again.")),
                         );
                       }
                     },

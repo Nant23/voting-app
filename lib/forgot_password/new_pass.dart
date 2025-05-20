@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 // import 'package:voting_app/admin/admin_dash.dart';
 import 'package:voting_app/components/my_textfield.dart';
@@ -111,11 +113,11 @@ Future<void> changePassword(BuildContext context, newPassword) async {
     if (user != null) {
       await user.updatePassword(newPassword);
       print("Password changed successfully.");
-      // CustomDialog.showDialogBox(
-      //   context,
-      //   title: "Success",
-      //   message: "Password changed successfully",
-      // );
+      CustomDialog.showDialogBox(
+        context,
+        title: "Success",
+        message: "Password changed successfully",
+      );
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
